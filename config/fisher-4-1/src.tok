@@ -1,0 +1,17 @@
+f sin
+lparen (
+f cos
+lparen (
+v 3
+plus +
+v 4
+rparen )
+plus +
+f tan
+lparen (
+v 0
+plus +
+v 2
+plus +
+v 4
+rparen )
