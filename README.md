@@ -33,5 +33,5 @@ Each token is separated by newlines, each line containing either TOKEN or TOKEN 
 ## CLI example 
 
 ```
-python parser.py config/language-slides/language.cfg config/language-slides/src.tok
+python3 parser.py config/language-slides/language.cfg config/language-slides/src.tok
 ```
