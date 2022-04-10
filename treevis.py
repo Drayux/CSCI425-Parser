@@ -191,7 +191,7 @@ if n in ( 'tree', 'parsetree' ) :
 elif n == 'fa' :
     write=fawrite
 else :
-    n=treewrite
+    write=treewrite
 
 sctail = re.compile( r';\s*$' )
 output=None
