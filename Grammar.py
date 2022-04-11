@@ -27,17 +27,19 @@ class Grammar:
 
         # Elements that must be generated
         self.emptySet = None        # Derives to lambda set
-        self.firstSet = None        # Dict of first sets
-        self.followSet = None       # Dict of follow sets
+        self.firstSet = {}          # Dict of first sets
+        self.followSet = {}         # Dict of follow sets
+        self.predictSet = {}        # Dict of predict sets
 
         try: self.load(path, True)
         except ConfigError as ce:
             print("ERROR:", ce)
             exit(1)
 
-        self.calcEmptySet()
-        # self.calcFirstSet()
-        # self.calcFollowSet()
+        self.calcEmpty()
+        self.calcFirst()
+        self.calcFollow()
+        # self.calcPredict()
 
     def __str__(self):
         ret = "-- GRAMMAR --\n"
@@ -187,7 +189,7 @@ class Grammar:
             if not self.symbolEmpty(token, empty, nonempty, ignore): return False
         return True
 
-    # Subroutone of calcEmptySet()
+    # Subroutone of calcEmpty()
     def symbolEmpty(self, symbol, empty, nonempty, ignore):
         if symbol in empty: return True
         if symbol in nonempty: return False
@@ -203,7 +205,7 @@ class Grammar:
         return False
 
     # Calculate the derives to lambda set
-    def calcEmptySet(self):
+    def calcEmpty(self):
         empty = set()
         nonempty = set()
 
@@ -213,12 +215,84 @@ class Grammar:
 
         self.emptySet = empty
 
+    # Subroutine of calcFirst() and calcFollow()
+    def ruleFirst(self, rule, ignore = set()):
+        first = set()
+        for token in rule:
+            # Skip if lambda
+            if token == self.empty:
+                break
+
+            # Terminal
+            if token in self.terminals:
+                first.add(token)
+                break
+
+            # Non-terminal
+            if token not in self.firstSet: self.symbolFirst(token, ignore)
+            first = first | self.firstSet[token]
+
+            # Check if non-terminal derives to lambda
+            if token not in self.emptySet: break
+        return first
+
+    # Subroutine of calcFirst()
+    def symbolFirst(self, symbol, ignore = set()):
+        if symbol in ignore:
+            raise ConfigError(f"Grammar has left recursion in nonterminal '{symbol}'")
+
+        first = set()
+        for rule in self.rules[symbol]:
+            first = first | self.ruleFirst(rule, ignore | set(symbol))
+
+        self.firstSet[symbol] = first
+
     # Calculate the first sets
-    def calcFirstSet(self):
-        pass
+    def calcFirst(self):
+        for nt in self.nonterminals:
+            if nt in self.firstSet: continue
+            self.symbolFirst(nt)
+
+    # Subroutine of calcFollow()
+    def symbolFollow(self, symbol, ignore = set()):
+        print("Following:", symbol)
+        follow = set()
+        if symbol in ignore:
+            self.followSet[symbol] = follow
+            return
+
+        # Find all rule occurences of the nonterminal
+        for nt in self.nonterminals:
+            for rule in self.rules[nt]:
+                for x, token in enumerate(rule):
+                    if token == symbol:
+                        print("Match:", nt, "->", rule)
+                        arr = rule[(x + 1):]
+                        follow = follow | self.ruleFirst(arr)
+
+                        # Check if the follow set of another nonterminal must be added
+                        atEnd = True
+                        for x in arr:
+                            if x not in self.emptySet:
+                                atEnd = False
+                                break
+
+                        if atEnd:
+                            print(symbol, "at end!")
+                            if nt not in self.followSet: self.symbolFollow(nt, ignore | set(symbol))
+                            follow = follow | self.followSet[nt]
+
+                        break
+
+        self.followSet[symbol] = follow
 
     # Calculate the follow sets
-    def calcFollowSet(self):
+    def calcFollow(self):
+        for nt in self.nonterminals:
+            self.symbolFollow(nt)
+
+    # Calculate the predict sets
+    def calcPredict(self):
         pass
 
 if __name__ == "__main__":
@@ -226,5 +300,15 @@ if __name__ == "__main__":
     grammar = Grammar(path)
 
     print(grammar)
+
     print("Derives to lamda:")
     print(grammar.emptySet)
+    print()
+
+    print("First sets:")
+    print(grammar.firstSet)
+    print()
+
+    print("Follow sets:")
+    print(grammar.followSet)
+    print()
