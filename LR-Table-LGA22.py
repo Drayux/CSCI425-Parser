@@ -21,7 +21,6 @@ class ParseTable_LR:
 
         # Get all the things from the *.lr file
         self.parse_file(file)
-        print(self.row[1][self.grammarMap["f"]])
 
     def parse_file(self, file):
         result_list = []
@@ -113,8 +112,8 @@ if __name__ == '__main__':
 
     lrTable = ParseTable_LR(input)
 
-    tup = (0, "f")
-    print(lrTable.lookUp_parsingAction(tup))
+#    tup = (0, "f")
+#    print(lrTable.lookUp_parsingAction(tup))
     print(lrTable)
     print(lrTable.lookUp_parsingAction.__doc__)
 
