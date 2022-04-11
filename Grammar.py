@@ -1,312 +1,400 @@
 import sys
 from ParseExceptions import GrammarError as ConfigError
+from ParseTable import ParseTable as Table
+from ParseTree import ParseTree
+from TokenStream import TokenStream
 
 # Set/List utility function (that isn't natively included for some reason?)
 def find(s, i):
-    arr = None
-    if type(s) is list: arr = s
-    elif type(s) is set:
-        arr = [x for x in s]
-    else: raise TypeError("Cannot retrieve elements from non-set type")
+	arr = None
+	if type(s) is list: arr = s
+	elif type(s) is set:
+		arr = [x for x in s]
+	else: raise TypeError("Cannot retrieve elements from non-set type")
 
-    for x in arr:
-        if x == i:
-            return x
+	for x in arr:
+		if x == i:
+			return x
 
-    return None
+	return None
 
 # Rule class
 class Grammar:
-    def __init__(self, path):
-        self.rules = {}                                 # Dict of lists of nonterminals/symbols
-        self.empty = 'lambda'                           # Name of empty rule character (as seen in the config file)
-        self.prodend = '$'                              # Character representing the end of production
-        self.start = None                               # Name of entry rule
-        self.nonterminals = []                          # Set of non-terminals (strings) : Keys of rules dict
-        self.terminals = { self.empty, self.prodend }   # Set of terminals (strings)
+	def __init__(self, path):
+		self.rules = {}                                 # Dict of lists of nonterminals/symbols
+		self.empty = 'lambda'                           # Name of empty rule character (as seen in the config file)
+		self.prodend = '$'                              # Character representing the end of production
+		self.start = None                               # Name of entry rule
+		self.nonterminals = []                          # Set of non-terminals (strings) : Keys of rules dict
+		self.terminals = { self.empty, self.prodend }   # Set of terminals (strings)
 
-        # Elements that must be generated
-        self.emptySet = None        # Derives to lambda set
-        self.firstSet = {}          # Dict of first sets
-        self.followSet = {}         # Dict of follow sets
-        self.predictSet = []        # Arr of predict sets
+		# Elements that must be generated
+		self.emptySet = None        # Derives to lambda set
+		self.firstSet = {}          # Dict of first sets
+		self.followSet = {}         # Dict of follow sets
+		self.predictSet = []        # Arr of predict sets
 
-        try: self.load(path, True)
-        except ConfigError as ce:
-            print("ERROR:", ce)
-            exit(1)
+		try: self.load(path, True)
+		except ConfigError as ce:
+			print("ERROR:", ce)
+			exit(1)
 
-        self.calcEmpty()
-        self.calcFirst()
-        self.calcFollow()
-        self.calcPredict()
+		self.calcEmpty()
+		self.calcFirst()
+		self.calcFollow()
+		self.calcPredict()
 
-    def __str__(self):
-        ret = "-- GRAMMAR --\n"
-        if self.start is None:
-            ret += "EMPTY"
-            return ret
+		self.table = Table(self)
 
-        # Start symbol
-        ret += f"START: {self.start}\n"
+	def __str__(self):
+		# ret = "-- GRAMMAR --\n"
+		ret = ""
+		if self.start is None:
+			ret += "EMPTY"
+			return ret
 
-        # Grammar rules
-        ruleno = 0
-        for nt in self.nonterminals:
-            for rule in self.rules[nt]:
-                ret += f"  {ruleno} : \t{nt} ->"
-                ruleno += 1
+		# Start symbol
+		ret += f"START: {self.start}\n"
 
-                for symbol in rule: ret += f" {symbol}"
-                ret += "\n"
+		# Grammar rules
+		ruleno = 0
+		for nt in self.nonterminals:
+			for rule in self.rules[nt]:
+				ret += f"  {ruleno} : \t{nt} ->"
+				ruleno += 1
 
-        # Nonterminals
-        ret += "\nTERMINALS:\n "
-        for t in self.terminals: ret += f" {t}"
+				for symbol in rule: ret += f" {symbol}"
+				ret += "\n"
 
-        # Terminals
-        ret += "\n\nNON-TERMINALS:\n "
-        for t in self.nonterminals: ret += f" {t}"
-        ret += "\n"
+		# Nonterminals
+		ret += "\nTERMINALS:\n "
+		for t in self.terminals: ret += f" {t}"
 
-        return ret
+		# Terminals
+		ret += "\n\nNON-TERMINALS:\n "
+		for t in self.nonterminals: ret += f" {t}"
+		ret += "\n"
 
-    # Loads a grammar from a configuration file
-    # strict -> Should the rules follow strict naming convention (nonterms must contain a capital)
-    def load(self, path, strict = False):
-        config = None
-        with open(path, "r") as inf: config = [l.strip().split(' ') for l in inf]
+		return ret
 
-        # Create a list of all of the nonterminal symbols
-        # Nonterminals defined as anything that precedes an arrow ( -> )
-        lineCount = 0
-        for rule in config:
-            lineCount += 1                  # For accurate error messages
-            symbol = None
-            try: symbol = rule[1]
-            except IndexError: continue     # Empty line
+	# Loads a grammar from a configuration file
+	# strict -> Should the rules follow strict naming convention (nonterms must contain a capital)
+	def load(self, path, strict = False):
+		config = None
+		with open(path, "r") as inf: config = [l.strip().split(' ') for l in inf]
 
-            # Line contains a rulename
-            if symbol == '->':
-                symbol = rule[0]
+		# Create a list of all of the nonterminal symbols
+		# Nonterminals defined as anything that precedes an arrow ( -> )
+		lineCount = 0
+		for rule in config:
+			lineCount += 1                  # For accurate error messages
+			symbol = None
+			try: symbol = rule[1]
+			except IndexError: continue     # Empty line
 
-                # Check for strict formatting rules
-                if strict and symbol == symbol.lower():
-                    raise ConfigError(f"Nonterminal '{symbol}' does not contain a capital letter ({path}: line {lineCount})")
+			# Line contains a rulename
+			if symbol == '->':
+				symbol = rule[0]
 
-                # Check for invalid characters...could be revised with stricter formatting
-                if symbol == '->' or symbol == '|' or symbol == self.empty or symbol == self.prodend:
-                    raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lineCount} ({path})")
+				# Check for strict formatting rules
+				if strict and symbol == symbol.lower():
+					raise ConfigError(f"Nonterminal '{symbol}' does not contain a capital letter ({path}: line {lineCount})")
 
-                tmp = find(self.nonterminals, symbol)
-                if tmp is None:
-                    self.nonterminals.append(symbol)
-                    self.rules[symbol] = []
+				# Check for invalid characters...could be revised with stricter formatting
+				if symbol == '->' or symbol == '|' or symbol == self.empty or symbol == self.prodend:
+					raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lineCount} ({path})")
 
-        # Build the dict of grammar rules
-        rulename = None     # Key under which to place rules in the grammar dictionary
-        for lc, rule in enumerate(config):
-            # Empty line, skip
-            if len(rule) == 0: continue
-            symbol = rule.pop(0)
+				tmp = find(self.nonterminals, symbol)
+				if tmp is None:
+					self.nonterminals.append(symbol)
+					self.rules[symbol] = []
 
-            # Rule with explicit name
-            if symbol in self.nonterminals:
-                # Check length (Needs to be at least 3, but we popped the first element)
-                if len(rule) < 2: raise ConfigError(f"Invalid rule ({path}: line {lc})")
-                rule.pop(0)     # Next token will be an arrow
-                rulename = symbol
+		# Build the dict of grammar rules
+		rulename = None     # Key under which to place rules in the grammar dictionary
+		for lc, rule in enumerate(config):
+			# Empty line, skip
+			if len(rule) == 0: continue
+			symbol = rule.pop(0)
 
-            # Config file syntax checking
-            elif symbol != '|':
-                raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lc} ({path})")
+			# Rule with explicit name
+			if symbol in self.nonterminals:
+				# Check length (Needs to be at least 3, but we popped the first element)
+				if len(rule) < 2: raise ConfigError(f"Invalid rule ({path}: line {lc})")
+				rule.pop(0)     # Next token will be an arrow
+				rulename = symbol
 
-            # Iterate through the rest of the line
-            # Determine token type (operator, non-terminal, or symbol)
-            rewrite = []        # Actual rule associated with the rulename
-            for token in rule:
-                pointer = None
+			# Config file syntax checking
+			elif symbol != '|':
+				raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lc} ({path})")
 
-                # Alternation: Save the new rule
-                if token == '|':
-                    if len(rewrite) == 0:
-                        raise ConfigError(f"Zero-length rule in line {lc} ({path})")
+			# Iterate through the rest of the line
+			# Determine token type (operator, non-terminal, or symbol)
+			rewrite = []        # Actual rule associated with the rulename
+			for token in rule:
+				pointer = None
 
-                    self.rules[rulename].append(rewrite)
-                    rewrite = []
-                    continue
+				# Alternation: Save the new rule
+				if token == '|':
+					if len(rewrite) == 0:
+						raise ConfigError(f"Zero-length rule in line {lc} ({path})")
 
-                # End or production: Save rule as start goal
-                if token == self.prodend:
-                    if self.start is not None and self.start != rulename:
-                        raise ConfigError(f"Multiple start symbols '{rulename}' and '{self.start}' ({path}: line {lc})")
-                    elif self.start is None: self.start = rulename
+					self.rules[rulename].append(rewrite)
+					rewrite = []
+					continue
 
-                    # Use the same pointer
-                    rewrite.append(self.prodend)
-                    continue
+				# End or production: Save rule as start goal
+				if token == self.prodend:
+					if self.start is not None and self.start != rulename:
+						raise ConfigError(f"Multiple start symbols '{rulename}' and '{self.start}' ({path}: line {lc})")
+					elif self.start is None: self.start = rulename
 
-                # Lambda rule: Can later be expanded to use special lamda char
-                if token == self.empty:
-                    if len(rewrite) > 0:
-                        raise ConfigError(f"Unexpected lambda in nonempty rewrite rule ({path}: line {lc})")
+					# Use the same pointer
+					rewrite.append(self.prodend)
+					continue
 
-                    rewrite.append(self.empty)
-                    break
+				# Lambda rule: Can later be expanded to use special lamda char
+				if token == self.empty:
+					if len(rewrite) > 0:
+						raise ConfigError(f"Unexpected lambda in nonempty rewrite rule ({path}: line {lc})")
 
-                # -- APPEND THE RULE COMPONENT --
-                # Find the item in the set to return the same pointer, prevents memory duplicates
-                pointer = find(self.nonterminals, token)
+					rewrite.append(self.empty)
+					break
 
-                # If nothing, token was a terminal
-                if pointer is None:
-                    if strict and (token != token.lower()):
-                        raise ConfigError(f"Terminal '{token}' contains a capital letter ({path}: line {lc})")
+				# -- APPEND THE RULE COMPONENT --
+				# Find the item in the set to return the same pointer, prevents memory duplicates
+				pointer = find(self.nonterminals, token)
 
-                    self.terminals.add(token)
-                    pointer = find(self.terminals, token)
+				# If nothing, token was a terminal
+				if pointer is None:
+					if strict and (token != token.lower()):
+						raise ConfigError(f"Terminal '{token}' contains a capital letter ({path}: line {lc})")
 
-                rewrite.append(pointer)
+					self.terminals.add(token)
+					pointer = find(self.terminals, token)
 
-            if len(rewrite) == 0:
-                raise ConfigError(f"Zero-length rule in line {lc} ({path})")
-            self.rules[rulename].append(rewrite)
+				rewrite.append(pointer)
 
-        # Ensure that the start rule is configured correctly
-        if self.start is None: raise ConfigError(f"Grammar has no start symbol")
-        for rule in self.rules[self.start]:
-            symbol = rule[-1]
-            if symbol != self.prodend:
-                raise ConfigError(f"Inconsistent end of production rules, symbol: '{self.start}'")
+			if len(rewrite) == 0:
+				raise ConfigError(f"Zero-length rule in line {lc} ({path})")
+			self.rules[rulename].append(rewrite)
 
-    # Subroutine of symbolEmpty()
-    def ruleEmpty(self, rule, empty, nonempty, ignore):
-        for token in rule:
-            if token == self.empty: return True
-            if token in self.terminals: return False
+		# Ensure that the start rule is configured correctly
+		if self.start is None: raise ConfigError(f"Grammar has no start symbol")
+		for rule in self.rules[self.start]:
+			symbol = rule[-1]
+			if symbol != self.prodend:
+				raise ConfigError(f"Inconsistent end of production rules, symbol: '{self.start}'")
 
-            # Else it's a nonterminal
-            if not self.symbolEmpty(token, empty, nonempty, ignore): return False
-        return True
+	# Returns an array of tuples the production rules in order
+	# *I should have thought to write this sooner: Might be worth refactoring some code*
+	def rulelist(self):
+		rules = []
+		for nt in self.nonterminals:
+			for rule in self.rules[nt]:
+				rules.append((nt, rule))
+		return rules
 
-    # Subroutone of calcEmpty()
-    def symbolEmpty(self, symbol, empty, nonempty, ignore):
-        if symbol in empty: return True
-        if symbol in nonempty: return False
-        if symbol in ignore: return False
+	# Subroutine of symbolEmpty()
+	def ruleEmpty(self, rule, empty, nonempty, ignore):
+		for token in rule:
+			if token == self.empty: return True
+			if token in self.terminals: return False
 
-        ignore.add(symbol)
-        for rule in self.rules[symbol]:
-            if self.ruleEmpty(rule, empty, nonempty, ignore):
-                empty.add(symbol)
-                return True
+			# Else it's a nonterminal
+			if not self.symbolEmpty(token, empty, nonempty, ignore): return False
+		return True
 
-        nonempty.add(symbol)
-        return False
+	# Subroutone of calcEmpty()
+	def symbolEmpty(self, symbol, empty, nonempty, ignore):
+		if symbol in empty: return True
+		if symbol in nonempty: return False
+		if symbol in ignore: return False
 
-    # Calculate the derives to lambda set
-    def calcEmpty(self):
-        empty = set()
-        nonempty = set()
+		ignore.add(symbol)
+		for rule in self.rules[symbol]:
+			if self.ruleEmpty(rule, empty, nonempty, ignore):
+				empty.add(symbol)
+				return True
 
-        # Symbol empty automatically adds the nonterminal to the respecitve set
-        for nt in self.nonterminals:
-            self.symbolEmpty(nt, empty, nonempty, set())
+		nonempty.add(symbol)
+		return False
 
-        self.emptySet = empty
+	# Calculate the derives to lambda set
+	def calcEmpty(self):
+		empty = set()
+		nonempty = set()
 
-    # Subroutine of calcFirst() and calcFollow()
-    def ruleFirst(self, rule, ignore = set()):
-        first = set()
-        for token in rule:
-            # Skip if lambda
-            if token == self.empty:
-                break
+		# Symbol empty automatically adds the nonterminal to the respecitve set
+		for nt in self.nonterminals:
+			self.symbolEmpty(nt, empty, nonempty, set())
 
-            # Terminal
-            if token in self.terminals:
-                first.add(token)
-                break
+		self.emptySet = empty
 
-            # Non-terminal
-            if token not in self.firstSet: self.symbolFirst(token, ignore)
-            first = first | self.firstSet[token]
+	# Subroutine of calcFirst() and calcFollow()
+	def ruleFirst(self, rule, ignore = set()):
+		first = set()
+		for token in rule:
+			# Skip if lambda
+			if token == self.empty:
+				break
 
-            # Check if non-terminal derives to lambda
-            if token not in self.emptySet: break
-        return first
+			# Terminal
+			if token in self.terminals:
+				first.add(token)
+				break
 
-    # Subroutine of calcFirst()
-    def symbolFirst(self, symbol, ignore = set()):
-        if symbol in ignore:
-            raise ConfigError(f"Grammar has left recursion in nonterminal '{symbol}'")
+			# Non-terminal
+			if token not in self.firstSet: self.symbolFirst(token, ignore)
+			first = first | self.firstSet[token]
 
-        first = set()
-        for rule in self.rules[symbol]:
-            first = first | self.ruleFirst(rule, ignore | set(symbol))
+			# Check if non-terminal derives to lambda
+			if token not in self.emptySet: break
+		return first
 
-        self.firstSet[symbol] = first
+	# Subroutine of calcFirst()
+	def symbolFirst(self, symbol, ignore = set()):
+		if symbol in ignore:
+			raise ConfigError(f"Grammar has left recursion in nonterminal '{symbol}'")
 
-    # Calculate the first sets
-    def calcFirst(self):
-        for nt in self.nonterminals:
-            if nt in self.firstSet: continue
-            self.symbolFirst(nt)
+		first = set()
+		for rule in self.rules[symbol]:
+			first = first | self.ruleFirst(rule, ignore | set(symbol))
 
-    # Subroutine of calcFollow()
-    def symbolFollow(self, symbol, ignore = set()):
-        follow = set()
-        if symbol in ignore:
-            self.followSet[symbol] = follow
-            return
+		self.firstSet[symbol] = first
 
-        # Find all rule occurences of the nonterminal
-        for nt in self.nonterminals:
-            for rule in self.rules[nt]:
-                for x, token in enumerate(rule):
-                    if token == symbol:
-                        arr = rule[(x + 1):]
-                        follow = follow | self.ruleFirst(arr)
+	# Calculate the first sets
+	def calcFirst(self):
+		for nt in self.nonterminals:
+			if nt in self.firstSet: continue
+			self.symbolFirst(nt)
 
-                        # Check if the follow set of another nonterminal must be added
-                        atEnd = True
-                        for x in arr:
-                            if x not in self.emptySet:
-                                atEnd = False
-                                break
+	# Subroutine of calcFollow()
+	def symbolFollow(self, symbol, ignore = set()):
+		follow = set()
+		if symbol in ignore:
+			self.followSet[symbol] = follow
+			return
 
-                        if atEnd:
-                            if nt not in self.followSet: self.symbolFollow(nt, ignore | set(symbol))
-                            follow = follow | self.followSet[nt]
-                        break
+		# Find all rule occurences of the nonterminal
+		for nt in self.nonterminals:
+			for rule in self.rules[nt]:
+				for x, token in enumerate(rule):
+					if token == symbol:
+						arr = rule[(x + 1):]
+						follow = follow | self.ruleFirst(arr)
 
-        self.followSet[symbol] = follow
+						# Check if the follow set of another nonterminal must be added
+						atEnd = True
+						for x in arr:
+							if x not in self.emptySet:
+								atEnd = False
+								break
 
-    # Calculate the follow sets
-    def calcFollow(self):
-        for nt in self.nonterminals:
-            self.symbolFollow(nt)
+						if atEnd:
+							if nt not in self.followSet: self.symbolFollow(nt, ignore | set(symbol))
+							follow = follow | self.followSet[nt]
+						break
 
-    # Calculate the predict sets
-    def calcPredict(self):
-        for nt in self.nonterminals:
-            for rule in self.rules[nt]:
-                predict = self.ruleFirst(rule)
+		self.followSet[symbol] = follow
 
-                # Determine if rule derives to lambda
-                # (Had I known this routine beforehand I would have formatted calcEmpty differnetly)
-                empty = True
-                for token in rule:
-                    if token != self.empty and token not in self.emptySet:
-                        empty = False
-                        break
+	# Calculate the follow sets
+	def calcFollow(self):
+		for nt in self.nonterminals:
+			self.symbolFollow(nt)
 
-                if empty: predict = predict | self.followSet[nt]
-                self.predictSet.append(predict)
+	# Calculate the predict sets
+	def calcPredict(self):
+		for nt in self.nonterminals:
+			for rule in self.rules[nt]:
+				predict = self.ruleFirst(rule)
 
+				# Determine if rule derives to lambda
+				# (Had I known this routine beforehand I would have formatted calcEmpty differnetly)
+				empty = True
+				for token in rule:
+					if token != self.empty and token not in self.emptySet:
+						empty = False
+						break
+
+				if empty: predict = predict | self.followSet[nt]
+				self.predictSet.append(predict)
+
+	def parse(self, path):
+		stream = TokenStream(path)
+		token = stream.next()[0]
+
+		symbols = [self.start]                # This is the stack of tokens
+		line = 1                              # Current line of token stream
+		tree = ParseTree("ROOT", None)        # Final parse tree
+		curNode = tree                        # Active tree node
+
+		rules = self.rulelist()
+
+		# Continue parsing nodes until the queue is empty
+		while len(symbols) > 0:
+			symbol = symbols.pop()
+			# token = stream.front[0]      # Token value not currently necessary
+
+			# Debug output
+			# print("STACK: ", symbols)
+			# print("FROM STACK: ", symbol)
+			# print("QUEUE: ", tokens)
+			# print("FROM QUEUE: ", token)
+			# print()
+
+			# Check for end of production marker
+			if symbol == '*':
+				curNode = curNode.parent
+				continue
+
+			# Check if the stack is a terminal and continue
+			if symbol in self.terminals:
+				if symbol == "lambda":
+					curNode.addChild("lambda")
+					continue
+
+				if symbol == token:
+					# Remove the terminal from the queue
+					lasttok = token
+					try: token = stream.next()[0]
+					except StopIteration: token = self.prodend
+
+					line += 1
+					curNode.addChild(lasttok)
+					continue
+
+				# Terminals do not line up
+				print("SYNTAX ERROR!")
+				print(f"Parser expected '{symbol}' but got '{token}' (Line {line})")
+				return None		# return tree for debug
+
+			# If no token, there was a syntax error
+			# This condition should be impossible
+			if token is None:
+				print("SYNTAX ERROR!")
+				print(f"Unexpected end of token stream (Line {line})")
+				return None 	# return tree for debug
+
+			# Get the next production rule from the table
+			rule_i = self.table.getProduction(symbol, token)
+			LHS, RHS = rules[rule_i]
+
+			# More debug
+			# print("RULE: ", LHS, " -> ", RHS)
+
+			# Add the new rule to the stack
+			symbols.append('*')                         # End of production marker
+			for r in reversed(RHS):
+				symbols.append(r)
+
+			# Update the tree
+			curNode = curNode.addChild(LHS)
+
+		if curNode != tree: print("SYNTAX ERROR!")
+		return tree
 
 if __name__ == "__main__":
-    path = sys.argv[1]
-    grammar = Grammar(path)
+	path = sys.argv[1]
+	grammar = Grammar(path)
 
-    print(grammar)
+	print(grammar)
