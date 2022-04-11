@@ -29,7 +29,7 @@ class Grammar:
         self.emptySet = None        # Derives to lambda set
         self.firstSet = {}          # Dict of first sets
         self.followSet = {}         # Dict of follow sets
-        self.predictSet = {}        # Dict of predict sets
+        self.predictSet = []        # Arr of predict sets
 
         try: self.load(path, True)
         except ConfigError as ce:
@@ -39,7 +39,7 @@ class Grammar:
         self.calcEmpty()
         self.calcFirst()
         self.calcFollow()
-        # self.calcPredict()
+        self.calcPredict()
 
     def __str__(self):
         ret = "-- GRAMMAR --\n"
@@ -255,7 +255,6 @@ class Grammar:
 
     # Subroutine of calcFollow()
     def symbolFollow(self, symbol, ignore = set()):
-        print("Following:", symbol)
         follow = set()
         if symbol in ignore:
             self.followSet[symbol] = follow
@@ -266,7 +265,6 @@ class Grammar:
             for rule in self.rules[nt]:
                 for x, token in enumerate(rule):
                     if token == symbol:
-                        print("Match:", nt, "->", rule)
                         arr = rule[(x + 1):]
                         follow = follow | self.ruleFirst(arr)
 
@@ -278,10 +276,8 @@ class Grammar:
                                 break
 
                         if atEnd:
-                            print(symbol, "at end!")
                             if nt not in self.followSet: self.symbolFollow(nt, ignore | set(symbol))
                             follow = follow | self.followSet[nt]
-
                         break
 
         self.followSet[symbol] = follow
@@ -293,22 +289,24 @@ class Grammar:
 
     # Calculate the predict sets
     def calcPredict(self):
-        pass
+        for nt in self.nonterminals:
+            for rule in self.rules[nt]:
+                predict = self.ruleFirst(rule)
+
+                # Determine if rule derives to lambda
+                # (Had I known this routine beforehand I would have formatted calcEmpty differnetly)
+                empty = True
+                for token in rule:
+                    if token != self.empty and token not in self.emptySet:
+                        empty = False
+                        break
+
+                if empty: predict = predict | self.followSet[nt]
+                self.predictSet.append(predict)
+
 
 if __name__ == "__main__":
     path = sys.argv[1]
     grammar = Grammar(path)
 
     print(grammar)
-
-    print("Derives to lamda:")
-    print(grammar.emptySet)
-    print()
-
-    print("First sets:")
-    print(grammar.firstSet)
-    print()
-
-    print("Follow sets:")
-    print(grammar.followSet)
-    print()
