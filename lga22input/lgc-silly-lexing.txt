@@ -1,0 +1,47 @@
+Submission notes for lga-silly-lexing LGA Check.  There are four
+separate "lgc" slots on the schedule page, one for each task below.
+PLEASE have only one group member upload work for one particular slot
+(but YOU DON'T HAVE to have one group member upload for all the tasks).
+
+Each task is worth 1 participation point for the whole group in
+attendance.
+
+1. lgcLLParser: Run your LL(1) parser logic on the grammar
+   fischer-4-1.cfg and token stream in fischer-4-1t_src.tok. Capture the
+   output (or some demonstration of what is being calculated) and submit
+   to the appropriate upload slot on the course webpage.
+
+2. lgcSLRTable: Run your SLR table reading code on cytron-67.lr.  Post
+   evidence of 
+     a) your SLR table in memory (if you are using a language with an
+     interactive shell) or 
+     b) the output of your testing harness to the submission slot on the
+     course webpage.
+
+3. lgcParseVis: Generate the visualization input for the parse tree in
+   ptvis-check.pdf or one that is more complex, for instance one you
+   have used for testing. Submit the following:
+     a. A copy of your parse tree to visualization routine (do NOT
+        provide links to online repos)
+     b. The visualization data your routine generated for
+        ptvis-check.pdf (or your preferred substitute tree).
+   Upload to the appropriate submission slot at the course webpage AND
+   CITE a URL for the visualization package or application you're group
+   is using (you can use the upload comment input box if you choose). 
+
+   (b) may not be applicable depending on the technology you're using,
+   if this is the case just say so when you mention the URL.
+
+4. lgcSillyLexer: Run your silly lexing input function for the RE LL(1)
+   parser on this string:
+
+     \\-ab-zA\-Z(\(|\|\))\*\+*\-          
+
+   and submit two things:
+
+     a. A file with two columns of data representing the token stream
+        generated for a parser.
+     b. Your code for the silly RE scanner (do NOT provide links to
+        online repos)
+
+
