@@ -1,5 +1,5 @@
 import sys
-from ParseExceptions import GrammarConfigError as ConfigError
+from ParseExceptions import GrammarError as ConfigError
 
 # Set/List utility function (that isn't natively included for some reason?)
 def find(s, i):
@@ -25,10 +25,19 @@ class Grammar:
         self.nonterminals = []                          # Set of non-terminals (strings) : Keys of rules dict
         self.terminals = { self.empty, self.prodend }   # Set of terminals (strings)
 
+        # Elements that must be generated
+        self.emptySet = None        # Derives to lambda set
+        self.firstSet = None        # Dict of first sets
+        self.followSet = None       # Dict of follow sets
+
         try: self.load(path, True)
         except ConfigError as ce:
             print("ERROR:", ce)
             exit(1)
+
+        self.calcEmptySet()
+        # self.calcFirstSet()
+        # self.calcFollowSet()
 
     def __str__(self):
         ret = "-- GRAMMAR --\n"
@@ -87,8 +96,10 @@ class Grammar:
                 if symbol == '->' or symbol == '|' or symbol == self.empty or symbol == self.prodend:
                     raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lineCount} ({path})")
 
-                self.nonterminals.append(symbol)
-                self.rules[symbol] = []
+                tmp = find(self.nonterminals, symbol)
+                if tmp is None:
+                    self.nonterminals.append(symbol)
+                    self.rules[symbol] = []
 
         # Build the dict of grammar rules
         rulename = None     # Key under which to place rules in the grammar dictionary
@@ -166,10 +177,54 @@ class Grammar:
             if symbol != self.prodend:
                 raise ConfigError(f"Inconsistent end of production rules, symbol: '{self.start}'")
 
+    # Subroutine of symbolEmpty()
+    def ruleEmpty(self, rule, empty, nonempty, ignore):
+        for token in rule:
+            if token == self.empty: return True
+            if token in self.terminals: return False
+
+            # Else it's a nonterminal
+            if not self.symbolEmpty(token, empty, nonempty, ignore): return False
+        return True
+
+    # Subroutone of calcEmptySet()
+    def symbolEmpty(self, symbol, empty, nonempty, ignore):
+        if symbol in empty: return True
+        if symbol in nonempty: return False
+        if symbol in ignore: return False
+
+        ignore.add(symbol)
+        for rule in self.rules[symbol]:
+            if self.ruleEmpty(rule, empty, nonempty, ignore):
+                empty.add(symbol)
+                return True
+
+        nonempty.add(symbol)
+        return False
+
+    # Calculate the derives to lambda set
+    def calcEmptySet(self):
+        empty = set()
+        nonempty = set()
+
+        # Symbol empty automatically adds the nonterminal to the respecitve set
+        for nt in self.nonterminals:
+            self.symbolEmpty(nt, empty, nonempty, set())
+
+        self.emptySet = empty
+
+    # Calculate the first sets
+    def calcFirstSet(self):
+        pass
+
+    # Calculate the follow sets
+    def calcFollowSet(self):
+        pass
 
 if __name__ == "__main__":
     path = sys.argv[1]
     grammar = Grammar(path)
 
     print(grammar)
-    print("test")
+    print("Derives to lamda:")
+    print(grammar.emptySet)
