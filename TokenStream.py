@@ -6,7 +6,7 @@ class TokenStream:
 	def load(self, path):
 		with open(path, 'r') as inf:
 			for line in inf:
-				data = line.strip().split(" ")
+				data = line.strip().split()
 				hasValue = True if len(data) > 1 else False
 				token = (data[0], None if not hasValue else data[1])
 				yield token

@@ -81,7 +81,7 @@ class Grammar:
 	# strict -> Should the rules follow strict naming convention (nonterms must contain a capital)
 	def load(self, path, strict = False):
 		config = None
-		with open(path, "r") as inf: config = [l.strip().split(' ') for l in inf]
+		with open(path, "r") as inf: config = [l.strip().split() for l in inf]
 
 		# Create a list of all of the nonterminal symbols
 		# Nonterminals defined as anything that precedes an arrow ( -> )
@@ -108,6 +108,8 @@ class Grammar:
 				if tmp is None:
 					self.nonterminals.append(symbol)
 					self.rules[symbol] = []
+
+		print(self.nonterminals)
 
 		# Build the dict of grammar rules
 		rulename = None     # Key under which to place rules in the grammar dictionary
@@ -258,7 +260,7 @@ class Grammar:
 
 		first = set()
 		for rule in self.rules[symbol]:
-			first = first | self.ruleFirst(rule, ignore | set(symbol))
+			first = first | self.ruleFirst(rule, ignore | { symbol })
 
 		self.firstSet[symbol] = first
 
@@ -270,6 +272,10 @@ class Grammar:
 
 	# Subroutine of calcFollow()
 	def symbolFollow(self, symbol, ignore = set()):
+		# DEBUG OUTPUT
+		# print("Following:", symbol)
+		# print("Ignore:", ignore)
+
 		follow = set()
 		if symbol in ignore:
 			self.followSet[symbol] = follow
@@ -291,7 +297,7 @@ class Grammar:
 								break
 
 						if atEnd:
-							if nt not in self.followSet: self.symbolFollow(nt, ignore | set(symbol))
+							if nt not in self.followSet: self.symbolFollow(nt, ignore | { symbol })
 							follow = follow | self.followSet[nt]
 						break
 
