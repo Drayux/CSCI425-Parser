@@ -1,7 +1,7 @@
 # Class for exceptions
 
 # Exception rasied whenever the configuration file is determined to be malformed
-class GrammarConfigError(Exception):
+class GrammarError(Exception):
     def __init__(self, *args):
         super().__init__(args)
 
