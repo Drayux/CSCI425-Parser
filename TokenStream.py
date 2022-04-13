@@ -18,16 +18,15 @@ class TokenStream:
 	# Handles regex operator characters and escape sequences
 	def consume(self, stream):
 		c = stream.pop()
-		match c:
-			case '|': return ("pipe", '|')
-			case '*': return ("kleene", '*')
-			case '+': return ("plus", '+')
-			case '(': return ("open", '(')
-			case ')': return ("close", ')')
-			case '.': return ("dot", '.')
-			case '-': return ("dash", '-')
-			case '\\': return ("char", stream.pop())
-			case _: return ("char", c)
+		if c == '|': return ("pipe", '|')
+		elif c == '*': return ("kleene", '*')
+		elif c == '+': return ("plus", '+')
+		elif c == '(': return ("open", '(')
+		elif c == ')': return ("close", ')')
+		elif c == '.': return ("dot", '.')
+		elif c == '-': return ("dash", '-')
+		elif c == '\\': return ("char", stream.pop())
+		else: return ("char", c)
 
 	# Generate a regex token stream for parsing with config/regex.cfg
 	def scan(self, string):

@@ -189,7 +189,7 @@ class Grammar:
 
 	# Returns an array of tuples the production rules in order
 	# *I should have thought to write this sooner: Might be worth refactoring some code*
-	def rulelist(self):
+	def ruleList(self):
 		rules = []
 		for nt in self.nonterminals:
 			for rule in self.rules[nt]:
@@ -334,7 +334,7 @@ class Grammar:
 		tree = ParseTree("ROOT", None)        # Final parse tree
 		curNode = tree                        # Active tree node
 
-		rules = self.rulelist()
+		rules = self.ruleList()
 
 		# Continue parsing nodes until the queue is empty
 		while len(symbols) > 0:
@@ -361,10 +361,10 @@ class Grammar:
 
 				if symbol == token:
 					# Remove the terminal from the queue
-					if token == 'char':
-						lasttok = stream.front[1]
-					else:
-						lasttok = token
+					# NOTE: This seems to be specific to the regex grammar
+					#		Be careful using other grammars with a 'char' token
+					if token == 'char': lasttok = stream.front[1]
+					else: lasttok = token
 					try: token = stream.next()[0]
 					except StopIteration: token = self.prodend
 
@@ -412,4 +412,3 @@ if __name__ == "__main__":
 
 	print(grammar)
 	print(tree)
-
