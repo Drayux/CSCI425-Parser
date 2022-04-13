@@ -16,7 +16,7 @@ class TokenStream:
 
 	# Subroutine of scan():
 	# Handles regex operator characters and escape sequences
-	def consume(stream):
+	def consume(self, stream):
 		c = stream.pop()
 		match c:
 			case '|': return ("pipe", '|')
@@ -36,7 +36,7 @@ class TokenStream:
 
 		# Loop through regex string
 		while stream:
-			token = consume(stream)
+			token = self.consume(stream)
 			yield token
 
 	def next(self):
