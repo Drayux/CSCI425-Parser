@@ -1,0 +1,38 @@
+37 x21 A B C D E a b c d e f g h i j k l m n o p
+- 32 33  A B C D E a b c d e f g h i j k l m n o p
+- 35 36  f
+- 5 6  a
+- 8 9  A B C D E a b c d e f g h i j k l m n o p
+- 11 12  b
+- 14 15  A B C D E a b c d e f g h i j k l m n o p
+- 17 18  c
+- 20 21  A B C D E a b c d e f g h i j k l m n o p
+- 23 24  d
+- 26 27  A B C D E a b c d e f g h i j k l m n o p
+- 29 30  e
+- 15 13 x21
+- 4 8 x21
+- 22 26 x21
+- 13 17 x21
+- 24 22 x21
+- 7 11 x21
+- 2 5 x21
+- 34 3 x21
+- 12 10 x21
+- 18 16 x21
+- 27 25 x21
+- 30 28 x21
+- 31 35 x21
+- 21 19 x21
+- 6 4 x21
+- 28 32 x21
+- 3 1 x21
+- 10 14 x21
+- 36 34 x21
+- 16 20 x21
+- 19 23 x21
+- 9 7 x21
+- 0 2 x21
+- 25 29 x21
+- 33 31 x21
++ 1 1
