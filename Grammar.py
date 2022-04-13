@@ -361,7 +361,10 @@ class Grammar:
 
 				if symbol == token:
 					# Remove the terminal from the queue
-					lasttok = token
+					if token == 'char':
+						lasttok = stream.front[1]
+					else:
+						lasttok = token
 					try: token = stream.next()[0]
 					except StopIteration: token = self.prodend
 
@@ -399,8 +402,14 @@ class Grammar:
 		if curNode != tree: print("SYNTAX ERROR!")
 		return tree
 
+
 if __name__ == "__main__":
-	path = sys.argv[1]
-	grammar = Grammar(path)
+	pathgrammar = sys.argv[1]
+	pathtokens = sys.argv[2]
+	#path = 'llre.cfg'
+	grammar = Grammar(pathgrammar)
+	tree = grammar.parse(pathtokens)
 
 	print(grammar)
+	print(tree)
+

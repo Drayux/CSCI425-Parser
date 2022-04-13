@@ -1,6 +1,5 @@
 import sys
 
-
 class ParseTable_LR:
     def __init__(self, file):
         """
