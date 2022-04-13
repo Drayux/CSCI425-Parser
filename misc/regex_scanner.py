@@ -23,7 +23,7 @@ def consume(stream):
         case _:
             return ("char", c)
 
-def scan(input): 
+def scan(input):
     stream = list(input)
     stream.reverse()
     output = []
@@ -35,8 +35,8 @@ def scan(input):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Not Enought Arguments!")
-    else: 
+        print("Not Enough Arguments!")
+    else:
         input = sys.argv[1]
         token_stream = scan(input)
         for token in token_stream:
