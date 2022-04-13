@@ -326,7 +326,7 @@ class Grammar:
 				self.predictSet.append(predict)
 
 	def parse(self, path):
-		stream = TokenStream(path)
+		stream = TokenStream(path, True)	  # True denotes that token stream is a path
 		token = stream.next()[0]
 
 		symbols = [self.start]                # This is the stack of tokens
@@ -385,7 +385,11 @@ class Grammar:
 				return None 	# return tree for debug
 
 			# Get the next production rule from the table
-			rule_i = self.table.getProduction(symbol, token)
+			try: rule_i = self.table.getProduction(symbol, token)
+			except ValueError:
+				print("PARSING ERROR!")
+				print(f"Symbol '{token}' not defined in this grammar (Line {line})")
+				return None
 			LHS, RHS = rules[rule_i]
 
 			# More debug
