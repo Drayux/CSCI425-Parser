@@ -37,8 +37,11 @@ def format_parse_tree(output, tree):
 				output.write(" {}".format(nodeMap[child]))
 
 
-def main(file_name, token_stream = None, treeOutput = ""):
-# def main(config, stream = None):
+# MAIN
+# config -> Path to language definition file
+# stream -> Regex expression (TODO: or path - perhaps add another parameter?)
+# output -> Output file for tree visualization
+def main(config, stream = None, output = None):
 	grammar = Grammar(config)
 	print("  -- GRAMMAR --")
 	print(grammar)
@@ -77,34 +80,28 @@ def main(file_name, token_stream = None, treeOutput = ""):
 	print("Parse table:")
 	print(grammar.table)
 
+	# -- PARSE TREE --
 	parseTree = grammar.parse(stream)
-	if parseTree is not None:
-		print("Parse tree:  (forgive the currently jankey formatting)")
-		print(parseTree)
-  
-	if len(treeOutput) > 0:
-		with open(treeOutput, "w") as parseTreeFile:
-			print(f"Sending parse tree to {treeOutput}. Execute the following command to view the tree:")
-			print(f"cat {treeOutput} | ./treevis.py | dot -Tpng -o parse.png")
-			format_parse_tree(parseTreeFile, parse_tree)
+
+	# Old output format
+	# if parseTree is not None:
+	# 	print("Parse tree:  (forgive the currently jankey formatting)")
+	# 	print(parseTree)
+
+	if output is not None:
+		with open(output, "w") as outf:
+			print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
+			print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
+			format_parse_tree(outf, parseTree)
 	else:
 		print("No tree output provided, skipping parse tree visualization.")
 
 if __name__ == '__main__':
 	argc = len(sys.argv)
-	if (argc < 2):
+	if (argc < 2 or argc > 4):
 		print(f"Usage: {sys.argv[0]} <grammar config> [token stream]")
 		exit(1)
 
-	elif argc == 2:
-		main(sys.argv[1])
-
-	elif argc == 3:
-		main(sys.argv[1], sys.argv[2])
-
-	elif argc == 4:
-		main(sys.argv[1], sys.argv[2], treeOutput=sys.argv[3])
-
-	else:
-		print("Too many arguments")
-		exit(1)
+	elif argc == 2: main(sys.argv[1])
+	elif argc == 3: main(sys.argv[1], sys.argv[2])
+	else: main(sys.argv[1], sys.argv[2], sys.argv[3])
