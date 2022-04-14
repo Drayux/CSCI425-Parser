@@ -1,3 +1,4 @@
+from enum import Enum
 import sys
 
 # DEFINE LL AND LR PARSE TABLES
@@ -73,6 +74,51 @@ class LLParseTable:
 		return ret
 
 
+class ActionType(Enum):
+	NONE = 0
+	SHIFT = 1
+	REDUCE = 2
+
+class LRAction():
+	# def __init__(self, action = ActionType.NONE, value = -1):
+	def __init__(self, string):
+		self.type = ActionType.NONE
+		self.value = -1
+		self.convert(string)
+
+	# Convert a table string (ex: 'sh-2') into the respective Action and Value elements
+	def convert(self, string):
+		if len(string) == 0: return
+
+		values = [s.lower() for s in string.split('-')]
+		if not (len(values) == 2):
+			print("WARNING: SLR table has invalid format; Entry skipped.")
+			return
+
+		state = None
+		try: state = int(values[1])
+		except ValueError:
+			print("WARNING: SLR table has invalid format; Entry skipped.")
+			return
+
+		self.value = state
+
+		# Shift action
+		if values[0] == "sh": self.type = ActionType.SHIFT
+		elif values[0] == "r": self.type = ActionType.REDUCE
+		else: print("WARNING: SLR table has invalid format; Entry skipped.")
+
+	# Convert back into string format
+	def __str__(self):
+		ret = None
+
+		if self.type == ActionType.NONE: return ""
+		elif self.type == ActionType.SHIFT: ret = "sh-"
+		elif self.type == ActionType.REDUCE: ret = "r-"
+
+		ret += str(self.value)
+		return ret
+
 # Table for LR(0) parser
 class LRParseTable:
 	def __init__(self, file):
@@ -85,17 +131,18 @@ class LRParseTable:
 		"""
 		self.data = None                # Renamed from table
 		self.row = []                   # This is the PARSING STATES
-		self.col_labels = []            # This is the GRAMMAR SYMBOLS
+		self.colLabels = []            # This is the GRAMMAR SYMBOLS
 		self.grammarMap = dict()        # This will come in handy for the interface
+		# TODO: self.empty = grammar.empty
 
 		# Nifty little guy to read a string or a file object
 		if(type(file) == str):
-			file = open(file, "r")
+			with open(file, 'r') as f: self.parseFile(f)
 
 		# Get all the things from the *.lr file
-		self.parse_file(file)
+		else: self.parseFile(file)
 
-	def parse_file(self, file):
+	def parseFile(self, file):
 		result_list = []
 		# open file and put it in an array of lines
 		with file as f:
@@ -109,7 +156,7 @@ class LRParseTable:
 				if items[i] == '.':
 					continue
 				else:
-					self.col_labels.append(items[i])
+					self.colLabels.append(items[i])
 					self.grammarMap[items[i]] = i-1
 
 			# Read in the following lines to get all the parsing states
@@ -118,24 +165,28 @@ class LRParseTable:
 					continue
 				items = line.split(',')
 				items[-1] = items[-1].replace("\n", "")  # remove newline if exists
-				self.row.append(items[1:])
 
-	def lookUp_parsingAction(self, state, grammar_symbol: str = "f"):
+				row = []
+				for j in range(1, len(items)):
+					row.append(LRAction(items[j]))
+				self.row.append(row)
+
+	def getAction(self, state, grammar_symbol: str = "f"):
 		"""
 		:param state: a tuple<int,str> or integer
 		:param grammar_symbol: a string or empty if state is a tuple
 		:return: a string representing parsing action in the LR table
 
 		# Parse Table Lookup
-			The lookUp_parsingAction function will return the
+			The getAction function will return the
 			appropriate action. The function will accept a tuple
 			of type <int, str> or can accept two parameters of type
 			int and of type str
 
 			Example:
 			tup = (0, "f")
-			print(lrTable.lookUp_parsingAction(tup))
-			print(lrTable.lookUp_parsingAction(0, "f")
+			print(lrTable.getAction(tup))
+			print(lrTable.getAction(0, "f")
 		"""
 		row = state
 		col = self.grammarMap[grammar_symbol]
@@ -156,14 +207,14 @@ class LRParseTable:
 		:return: a table of the LR table when asked to print
 		"""
 		# Print column labels
-		ret = "\t  ||\t"
-		for label in self.col_labels:
+		ret = "\t   ||\t"
+		for label in self.colLabels:
 			if label == 'lambda': continue
 			ret += f"{label}\t"
 		ret += "\n"
 
 		# Seperator bar
-		for x in range(len(self.col_labels) + 1):
+		for x in range(len(self.colLabels) + 2):
 			ret += "========"
 		ret += "\n"
 
@@ -171,7 +222,7 @@ class LRParseTable:
 		for linenum, line in enumerate(self.row):
 			ret += f"{linenum}\t   ||\t"
 			for item in line:
-				ret += f"{'-' if item == '' else item}\t"
+				ret += f"{'-' if item.type == ActionType.NONE else str(item)}\t"
 			ret += "\n"
 
 		return ret
@@ -188,4 +239,4 @@ if __name__ == "__main__":
 	lrTable = ParseTable_LR(input)
 
 	print(lrTable)
-	print(lrTable.lookUp_parsingAction.__doc__)
+	print(lrTable.getAction.__doc__)

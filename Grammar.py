@@ -109,7 +109,8 @@ class Grammar:
 					self.nonterminals.append(symbol)
 					self.rules[symbol] = []
 
-		print(self.nonterminals)
+		# Debug output 
+		# print(self.nonterminals)
 
 		# Build the dict of grammar rules
 		rulename = None     # Key under which to place rules in the grammar dictionary

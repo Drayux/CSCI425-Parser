@@ -111,16 +111,35 @@ class LLParser:
 
 # LR(0) Parser
 class LRParser:
-	def __init__(self, path):
+	def __init__(self, grammar, tablepath):
 		# Grammar can be passed as string to definition or grammar obj itself
 		if type(grammar) is not Grammar: grammar = Grammar(grammar)
 
 		self.grammar = grammar					# Grammar definition
-		# self.table = LRTable(self.grammar)		# Generate the parse table (TODO), currently just read from file
-		self.table = LRTable(path)
+		self.table = LRTable(tablepath)
+		# self.table = LRTable(grammar)			# Generate the parse table (TODO), currently just read from file
 
 	def parse(self, stream: TokenStream):
-		raise NotImplementedError("LR(0) Parsing (Parser.py)")
+		result = self.table.getAction(9, 'a')
+		print("TYPE:", type(result))
+		print(f"RESULT: '{result}'")
+		# raise NotImplementedError("LR(0) Parsing (Parser.py)")
 
 	def __str__(self):
 		return str(self.table)
+
+
+# TABLE TESTING
+if __name__ == "__main__":
+	grammar = Grammar("assignments/LGA-22/fischer-4-1.cfg")
+	parser = LRParser(grammar, "assignments/LGA-22/cytron-67.lr")
+	stream = TokenStream("assignments/LGA-22/fischer-4-1t_src.tok")
+
+	print("GRAMMAR:")
+	print(grammar)
+
+	print("LR TABLE:")
+	print(parser)
+
+	tree = parser.parse(stream)
+	print(tree)
