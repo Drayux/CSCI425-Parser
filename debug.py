@@ -1,6 +1,7 @@
 import sys
 from Grammar import Grammar
 from Parser import LLParser
+from ParseExceptions import ParseError
 from TokenStream import TokenStream
 
 def format_parse_tree(output, tree):
@@ -87,7 +88,9 @@ def main(config, stream = None, output = None):
 
 	# -- PARSE TREE --
 	stream = TokenStream(stream, True)	# Update token stream to a stream type
-	parseTree = parser.parse(stream)
+	parseTree = None
+	try: parser.parse(stream)
+	except ParseError as pe: print(pe)
 
 	# Jankey tree output to console if no output file specified
 	if output is None:

@@ -67,23 +67,26 @@ class LLParser:
 					continue
 
 				# Terminals do not line up
-				print("SYNTAX ERROR!")
-				print(f"Parser expected '{symbol}' but got '{token}' (Line {line})")
-				return None		# return tree for debug
+				# print("SYNTAX ERROR!")
+				# print(f"Parser expected '{symbol}' but got '{token}' (Line {line})")
+				# return None		# return tree for debug
+				raise ParseError(f"SYNTAX ERROR: Parser expected '{symbol}' but got '{token}' (Line {line})")
 
 			# If no token, there was a syntax error
 			# This condition should be impossible
 			if token is None:
-				print("SYNTAX ERROR!")
-				print(f"Unexpected end of token stream (Line {line})")
-				return None 	# return tree for debug
+				# print("SYNTAX ERROR!")
+				# print(f"Unexpected end of token stream (Line {line})")
+				# return None 	# return tree for debug
+				raise ParseError(f"SYNTAX ERROR: Unexpected end of token stream (Line {line})")
 
 			# Get the next production rule from the table
 			try: rule_i = self.table.getProduction(symbol, token)
 			except ValueError:
-				print("PARSING ERROR!")
-				print(f"Symbol '{token}' not defined in this grammar (Line {line})")
-				return None
+				# print("PARSING ERROR!")
+				# print(f"Symbol '{token}' not defined in this grammar (Line {line})")
+				# return None
+				raise ParseError(f"PARSING ERROR: Symbol '{token}' not defined in this grammar (Line {line})")
 			LHS, RHS = rules[rule_i]
 
 			# More debug
@@ -97,7 +100,9 @@ class LLParser:
 			# Update the tree
 			curNode = curNode.addChild(LHS)
 
-		if curNode != tree: print("SYNTAX ERROR!")
+		if curNode != tree:
+			# print("SYNTAX ERROR!")
+			raise ParseError(f"SYNTAX ERROR: Mismatched end of production (Line {line})")
 		return tree
 
 	def __str__(self):

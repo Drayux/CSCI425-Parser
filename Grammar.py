@@ -38,7 +38,7 @@ class Grammar:
 
 		try: self.load(path, True)
 		except ConfigError as ce:
-			print("ERROR:", ce)
+			print("CONFIG ERROR:", ce)
 			exit(1)
 
 		self.calcEmpty()
