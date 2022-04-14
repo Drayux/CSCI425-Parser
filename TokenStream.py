@@ -1,7 +1,8 @@
 class TokenStream:
 	def __init__(self, input, isPath = False):
 		if isPath: self.generator = self.load(input)
-		else: self.generator = self.scan(input)
+		else:
+			self.generator = self.scan(input)
 		self.front = None
 
 	# Load a generated token stream from a file
@@ -25,7 +26,11 @@ class TokenStream:
 		elif c == ')': return ("close", ')')
 		elif c == '.': return ("dot", '.')
 		elif c == '-': return ("dash", '-')
-		elif c == '\\': return ("char", stream.pop())
+		# Proposed changes
+		elif c == '\\':
+			nextCharacter = stream.pop();
+			return ("char", "\\" + nextCharacter)
+		# end proposed changes
 		else: return ("char", c)
 
 	# Generate a regex token stream for parsing with config/regex.cfg
@@ -41,3 +46,5 @@ class TokenStream:
 	def next(self):
 		self.front = next(self.generator)
 		return self.front
+
+
