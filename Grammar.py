@@ -18,7 +18,9 @@ def find(s, i):
 
 	return None
 
-# Rule class
+
+# Grammar class
+# Contains set of grammar production rules and preliminary parse operations
 class Grammar:
 	def __init__(self, path):
 		self.rules = {}                                 # Dict of lists of nonterminals/symbols
@@ -29,10 +31,10 @@ class Grammar:
 		self.terminals = { self.empty, self.prodend }   # Set of terminals (strings)
 
 		# Elements that must be generated
-		self.emptySet = None        # Derives to lambda set
-		self.firstSet = {}          # Dict of first sets
-		self.followSet = {}         # Dict of follow sets
-		self.predictSet = []        # Arr of predict sets
+		self.emptySet = None        					# Derives to lambda set
+		self.firstSet = {}          					# Dict of first sets
+		self.followSet = {}         					# Dict of follow sets
+		self.predictSet = []        					# Arr of predict sets
 
 		try: self.load(path, True)
 		except ConfigError as ce:
@@ -44,7 +46,8 @@ class Grammar:
 		self.calcFollow()
 		self.calcPredict()
 
-		self.table = Table(self)
+		# Moved to child parser class
+		# self.table = Table(self)
 
 	def __str__(self):
 		# ret = "-- GRAMMAR --\n"
@@ -325,6 +328,7 @@ class Grammar:
 				if empty: predict = predict | self.followSet[nt]
 				self.predictSet.append(predict)
 
+	# TODO MOVE TO CHILD PARSER CLASS
 	def parse(self, path):
 		stream = TokenStream(path, True)	  # True denotes that token stream is a path
 		token = stream.next()[0]

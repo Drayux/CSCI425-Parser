@@ -6,6 +6,6 @@ class GrammarError(Exception):
         super().__init__(args)
 
 # Exception raised whenever the source file we are compiling has a syntax error
-class SourceSyntaxError(Exception):
+class ParseError(Exception):
     def __init__(self, *args):
         super().__init__(args)
