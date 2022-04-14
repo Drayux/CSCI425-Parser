@@ -2,7 +2,7 @@ class TokenStream:
 	def __init__(self, input, isPath = False):
 		if isPath: self.generator = self.load(input)
 		else:
-			self.generator = self.scan(repr(input)[1:-1])
+			self.generator = self.scan((input))
 		self.front = None
 
 	# Load a generated token stream from a file
@@ -27,9 +27,7 @@ class TokenStream:
 		elif c == '.': return ("dot", '.')
 		elif c == '-': return ("dash", '-')
 		# Proposed changes
-		elif c == '\\':
-			nextCharacter = stream.pop();
-			return ("char", "\\" + nextCharacter)
+		elif c == '\\': return ("char", c + stream.pop())
 		# end proposed changes
 		else: return ("char", c)
 
@@ -46,5 +44,6 @@ class TokenStream:
 	def next(self):
 		self.front = next(self.generator)
 		return self.front
+
 
 
