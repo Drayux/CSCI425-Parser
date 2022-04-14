@@ -1,5 +1,9 @@
 import sys
 
+from Grammar import Grammar
+from Parser import LLParser as Parser
+from TokenStream import TokenStream
+
 # Util code from Andrew's luther
 def SubstituteHex(inStr):
     i = 0
@@ -39,11 +43,21 @@ class Regex:
         self.tokenName = tokenName
 
 def CompileRegex(regex, language):
-    # 1. feed regex to scanner
+    # PART ONE - Feed regex to scanner
+	grammar = Grammar("config/regex.cfg")		# This will always be regex so we can hard-code it
+	regexParser = Parser(grammar)				# Build the LL(1) parser from the regex grammar
+	stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
+
+	regexCST = regexParser.parse(stream)		# Might need a try-catch for syntax errors? Haven't looked at the files yet
+
+	# -- TODO -- #
+
     # 2. make a concrete syntax tree
     # 3. convert to AST
     # 4. generate L and T tables
     print("...")
+
+	# ---------- #
 
 def main():
     if len(sys.argv) != 3:
