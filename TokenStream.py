@@ -2,7 +2,7 @@ class TokenStream:
 	def __init__(self, input, isPath = False):
 		if isPath: self.generator = self.load(input)
 		else:
-			self.generator = self.scan(input)
+			self.generator = self.scan(repr(input)[1:-1])
 		self.front = None
 
 	# Load a generated token stream from a file
