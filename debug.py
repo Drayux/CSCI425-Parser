@@ -1,5 +1,7 @@
 import sys
 from Grammar import Grammar
+from Parser import LLParser
+from TokenStream import TokenStream
 
 def format_parse_tree(output, tree):
 	# Node generation
@@ -77,29 +79,38 @@ def main(config, stream = None, output = None):
 		print("No token stream provided.")
 		exit()
 
+	# Create the LL parser instance
+	parser = LLParser(grammar)
+
 	print("Parse table:")
-	print(grammar.table)
+	print(parser)
 
 	# -- PARSE TREE --
-	parseTree = grammar.parse(stream)
+	stream = TokenStream(stream, True)	# Update token stream to a stream type
+	parseTree = parser.parse(stream)
 
-	# Old output format
-	# if parseTree is not None:
-	# 	print("Parse tree:  (forgive the currently jankey formatting)")
-	# 	print(parseTree)
-
-	if output is not None:
-		with open(output, "w") as outf:
-			print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
-			print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
-			format_parse_tree(outf, parseTree)
-	else:
+	# Jankey tree output to console if no output file specified
+	if output is None:
 		print("No tree output provided, skipping parse tree visualization.")
+
+		# Old output format
+		if parseTree is not None:
+			print("Parse tree:  (forgive the currently jankey formatting)")
+			print(parseTree)
+
+		exit()
+
+	# Else pretty output to output file
+	with open(output, "w") as outf:
+		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
+		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
+		format_parse_tree(outf, parseTree)
+
 
 if __name__ == '__main__':
 	argc = len(sys.argv)
 	if (argc < 2 or argc > 4):
-		print(f"Usage: {sys.argv[0]} <grammar config> [token stream]")
+		print(f"Usage: {sys.argv[0]} <grammar config> [token stream] [treevis out path]")
 		exit(1)
 
 	elif argc == 2: main(sys.argv[1])

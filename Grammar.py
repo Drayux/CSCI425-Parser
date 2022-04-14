@@ -1,8 +1,8 @@
 import sys
 from ParseExceptions import GrammarError as ConfigError
-from ParseTable import ParseTable as Table
 from ParseTree import ParseTree
 from TokenStream import TokenStream
+# from ParseTable import ParseTable as Table
 
 # Set/List utility function (that isn't natively included for some reason?)
 def find(s, i):
@@ -45,9 +45,6 @@ class Grammar:
 		self.calcFirst()
 		self.calcFollow()
 		self.calcPredict()
-
-		# Moved to child parser class
-		# self.table = Table(self)
 
 	def __str__(self):
 		# ret = "-- GRAMMAR --\n"
@@ -327,88 +324,6 @@ class Grammar:
 
 				if empty: predict = predict | self.followSet[nt]
 				self.predictSet.append(predict)
-
-	# TODO MOVE TO CHILD PARSER CLASS
-	def parse(self, path):
-		stream = TokenStream(path, True)	  # True denotes that token stream is a path
-		token = stream.next()[0]
-
-		symbols = [self.start]                # This is the stack of tokens
-		line = 1                              # Current line of token stream
-		tree = ParseTree("ROOT", None)        # Final parse tree
-		curNode = tree                        # Active tree node
-
-		rules = self.ruleList()
-
-		# Continue parsing nodes until the queue is empty
-		while len(symbols) > 0:
-			symbol = symbols.pop()
-			# token = stream.front[0]      # Token value not currently necessary
-
-			# Debug output
-			# print("STACK: ", symbols)
-			# print("FROM STACK: ", symbol)
-			# print("QUEUE: ", tokens)
-			# print("FROM QUEUE: ", token)
-			# print()
-
-			# Check for end of production marker
-			if symbol == '*':
-				curNode = curNode.parent
-				continue
-
-			# Check if the stack is a terminal and continue
-			if symbol in self.terminals:
-				if symbol == "lambda":
-					curNode.addChild("lambda")
-					continue
-
-				if symbol == token:
-					# Remove the terminal from the queue
-					# NOTE: This seems to be specific to the regex grammar
-					#		Be careful using other grammars with a 'char' token
-					if token == 'char': lasttok = stream.front[1]
-					else: lasttok = token
-					try: token = stream.next()[0]
-					except StopIteration: token = self.prodend
-
-					line += 1
-					curNode.addChild(lasttok)
-					continue
-
-				# Terminals do not line up
-				print("SYNTAX ERROR!")
-				print(f"Parser expected '{symbol}' but got '{token}' (Line {line})")
-				return None		# return tree for debug
-
-			# If no token, there was a syntax error
-			# This condition should be impossible
-			if token is None:
-				print("SYNTAX ERROR!")
-				print(f"Unexpected end of token stream (Line {line})")
-				return None 	# return tree for debug
-
-			# Get the next production rule from the table
-			try: rule_i = self.table.getProduction(symbol, token)
-			except ValueError:
-				print("PARSING ERROR!")
-				print(f"Symbol '{token}' not defined in this grammar (Line {line})")
-				return None
-			LHS, RHS = rules[rule_i]
-
-			# More debug
-			# print("RULE: ", LHS, " -> ", RHS)
-
-			# Add the new rule to the stack
-			symbols.append('*')                         # End of production marker
-			for r in reversed(RHS):
-				symbols.append(r)
-
-			# Update the tree
-			curNode = curNode.addChild(LHS)
-
-		if curNode != tree: print("SYNTAX ERROR!")
-		return tree
 
 
 if __name__ == "__main__":
