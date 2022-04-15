@@ -54,7 +54,7 @@ class LLParser:
 				if symbol == token:
 					# Remove the terminal from the queue
 					############################################################
-					# NOTE: This seems to be specific to the regex grammar
+					# NOTE: This is specific to the regex grammar
 					#		Be careful using other grammars with a 'char' token
 					if token == 'char': lasttok = stream.front[1]
 					############################################################
@@ -143,3 +143,11 @@ if __name__ == "__main__":
 
 	tree = parser.parse(stream)
 	print(tree)
+
+	# cst stuff for wreck
+	llgrammar = Grammar("config/regex.cfg")
+	llparser = LLParser(llgrammar)
+	LLstream = TokenStream(r"a-d.q(A|B|)*de+", False)
+	CSTtree = llparser.parse(LLstream)
+	print(CSTtree)
+	# end cst stuff for wreck
