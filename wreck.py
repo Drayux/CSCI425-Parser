@@ -71,7 +71,10 @@ def main():
     with open(sys.argv[1], "r") as lexingConfig, open(sys.argv[2], "w") as scannerConfig:
         lexConfigLines = lexingConfig.readlines()
         originalLanguage = lexConfigLines[0].strip().replace(" ", "")
+        noHexLanguage = SubstituteHexInverse(originalLanguage)
         hexLanguage = SubstituteHex(originalLanguage)
+
+        basicLanguageList = [ c for c in noHexLanguage ]
 
         regexes = []
         for i in range(1, len(lexConfigLines)):
@@ -88,7 +91,9 @@ def main():
         for regex in regexes:
             nfas.append(CompileRegex(regex, hexLanguage))
 
-        # Write out to file...
+        for nfa in nfas:
+            with open(nfa.tokenName + ".nfa", "w") as nfaFile:
+                nfa.writeToFile(lambdaChar, basicLanguageList, nfaFile)
 
 if __name__ == "__main__":
     main()
