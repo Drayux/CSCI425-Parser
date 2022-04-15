@@ -93,7 +93,7 @@ def main():
 
         for nfa in nfas:
             with open(nfa.tokenName + ".nfa", "w") as nfaFile:
-                nfa.writeToFile(lambdaChar, basicLanguageList, nfaFile)
+                nfa.writeToFile(SubstituteHexInverse(lambdaChar), basicLanguageList, nfaFile)
 
 if __name__ == "__main__":
     main()
