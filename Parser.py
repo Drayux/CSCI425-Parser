@@ -1,4 +1,6 @@
 import sys
+
+import AST
 from Grammar import Grammar
 from ParseExceptions import ParseError
 from ParseTable import LLParseTable as LLTable
@@ -42,6 +44,7 @@ class LLParser:
 
 			# Check for end of production marker
 			if symbol == '*':
+				if True: AST.AST_SDT_Procedure((curNode)) # This applies AST procedures for REGEX, turn off if otherwise
 				curNode = curNode.parent
 				continue
 
@@ -147,7 +150,7 @@ if __name__ == "__main__":
 	# cst stuff for wreck
 	llgrammar = Grammar("config/regex.cfg")
 	llparser = LLParser(llgrammar)
-	LLstream = TokenStream(r"a-d.q(A|B|)*de+", False)
+	LLstream = TokenStream(r"((\n|\s|\\)|\+0-9(:|\+|<))*(@?>=|<)", False)
 	CSTtree = llparser.parse(LLstream)
 	print(CSTtree)
 	# end cst stuff for wreck

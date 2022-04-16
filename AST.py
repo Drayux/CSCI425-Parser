@@ -1,11 +1,11 @@
 from ParseTree import ParseTree
 
 # TODO      RE -> ALT $
-# TODO     ALT -> SEQ ALTLIST
-# TODO ALTLIST -> pipe SEQ ALTLIST
-# TODO          | lambda
-# TODO     SEQ -> ATOM SEQLIST
-# TODO 	     | lambda
+# DONE?     ALT -> SEQ ALTLIST
+# DONE ALTLIST -> pipe SEQ ALTLIST
+# DONE          | lambda
+# DONE     SEQ -> ATOM SEQLIST
+# DONE 	     | lambda
 # DONE SEQLIST -> ATOM SEQLIST
 # DONE 		 | lambda
 # DONE    ATOM -> NUCLEUS ATOMMOD
@@ -17,29 +17,26 @@ from ParseTree import ParseTree
 # DONE          | lambda
 
 LAMBDA = "lambda"
+charLAMBDA = "_lambda"
 
 def RootReplace(node: ParseTree, data, children):
     node.data=data
     node.children = children
 
 def replace_node_with_new_node(node: ParseTree, new_node: ParseTree):
-    if node.parent is None:
-        RootReplace(node, new_node.data, new_node.children)
-        return
-    for i in range(len(node.parent.children)):
-        if node.parent.children[i] == node:
-            node.parent.children[i] = new_node
+    RootReplace(node, new_node.data, new_node.children)
+    return
 
 def procedure_NUCLEUS(node: ParseTree):
     # open ALT close
     if node.children[0].data == "open":
-        replace_node_with_new_node(node, node.children[1])
+        node.removeChild(node.children[2])
+        node.removeChild(node.children[0])
         return
     # dot
     if node.children[0].data == "dot":
-        replace_node_with_new_node(node, node.children[0])
         return
-    # char CHARRNG
+    # char CHARRNG to range
     for child in node.children:
         if child.data == "CHARRNG":
             if child.children[0].data == "lambda":
@@ -49,12 +46,8 @@ def procedure_NUCLEUS(node: ParseTree):
                 rangeNode = ParseTree("range", node.parent)
                 rangeNode.addChild(node.children[0])
                 rangeNode.addChild(child.children[1])
-                for forsakenChild in node.children:
-                    node.children.pop()
-                if len(node.children) == 1:
-                    replace_node_with_new_node(node.children[0], rangeNode)
-                else:
-                    node.addChild(rangeNode)
+                replace_node_with_new_node(child, rangeNode)
+                node.removeChild(node.children[0])
                 return
 
 
@@ -86,6 +79,41 @@ def procedure_SEQLIST(node: ParseTree):
         node.parent.removeChild(node)
 
 
+def procedure_SEQ(node: ParseTree):
+    for child in node.children:
+        if child.data == "SEQLIST":
+            # Diswon SEQLIST but raise its children as your own
+            # Adopt SEQLISTS children
+            for adoptedChildren in child.children:
+                node.addChild(adoptedChildren)
+            # Disown disgraced SEQLIST
+            node.removeChild(child)
+    i = 0
+    if len(node.children) == 1:
+        replace_node_with_new_node(node, node.children[0])
+
+
+def procedure_ALTLIST(node: ParseTree):
+    for child in node.children:
+        if child.data == LAMBDA and len(node.children) == 1:
+            node.parent.removeChild(node)
+            return
+        if child.data == "pipe":
+            continue
+        node.parent.addChild(child)
+    node.parent.removeChild(node)
+
+
+def procedure_ALT(node: ParseTree):
+    if len(node.children) == 1:
+        replace_node_with_new_node(node, node.children[0])
+        return
+
+
+def procedure_RE(node: ParseTree):
+    if node.children[1].data == "$":
+        replace_node_with_new_node(node, node.children[0])
+
 
 def AST_SDT_Procedure(node: ParseTree):
     if node.data == "NUCLEUS":
@@ -94,7 +122,14 @@ def AST_SDT_Procedure(node: ParseTree):
         procedure_ATOM(node);
     elif node.data == "SEQLIST":
         procedure_SEQLIST(node)
-
+    elif node.data == "SEQ":
+        procedure_SEQ(node)
+    elif node.data == "ALTLIST":
+        procedure_ALTLIST(node)
+    elif node.data == "ALT":
+        procedure_ALT(node)
+    elif node.data == "RE":
+        procedure_RE(node)
 
 # Testing
 if __name__ == "__main__":
@@ -106,12 +141,37 @@ if __name__ == "__main__":
     SEQLIST = ParseTree("SEQLIST", None)
     SEQ = ParseTree("SEQ", None)
     CHARRNG = ParseTree("CHARRNG", None)
-    test = "SEQ"
+    ALTLIST = ParseTree("ALTLIST", None)
+    ALT = ParseTree("ALT", None)
+    RE = ParseTree("RE", None)
+    test = "SEQLISTlambda"
 
+    if test == "RE":
+        RE.addChild(SEQ)
+        RE.addChild("$")
+        root.addChild(RE)
+        print(root)
+        AST_SDT_Procedure(RE)
+    if test == "ALTsinglechild":
+        ALT.addChild(SEQ)
+        root.addChild(ALT)
+        print(root)
+        AST_SDT_Procedure(ALT)
+    if test == "ALTLISTlambda":
+        ALTLIST.addChild(LAMBDA)
+        ALT.addChild(ALTLIST)
+        root.addChild(ALT)
+        print(root)
+        AST_SDT_Procedure(ALTLIST)
+    if test == "SEQsinglechild":
+        SEQ.addChild("range")
+        root.addChild(SEQ)
+        print(root)
+        AST_SDT_Procedure(SEQ)
     if test == "SEQ":
         SEQ.addChild("range")
         SEQLIST.addChild("dot")
-        SEQLIST.addChild("plus")
+        SEQLIST.addChild("plus and stuff")
         SEQ.addChild(SEQLIST)
         root.addChild(SEQ)
         print(root)
@@ -145,12 +205,14 @@ if __name__ == "__main__":
         ATOM.addChild(nuke)
         ATOM.addChild(ATOMMOD)
         root.addChild(ATOM)
+        print(root)
         AST_SDT_Procedure(ATOM)
     if test == "paren":
         nuke.addChild("open")
         nuke.addChild("ALT")
         nuke.addChild("close")
         root.addChild(nuke)
+        print(root)
         AST_SDT_Procedure(nuke)
     if test == "range":
         CHARRNG.addChild("dash")
@@ -158,12 +220,14 @@ if __name__ == "__main__":
         nuke.addChild("a")
         nuke.addChild(CHARRNG)
         root.addChild(nuke)
+        print(root)
         AST_SDT_Procedure(nuke)
     if test == "CHARRNGlambda":
         CHARRNG.addChild("lambda")
         nuke.addChild("q")
         nuke.addChild(CHARRNG)
         root.addChild(nuke)
+        print(root)
         AST_SDT_Procedure(nuke)
 
     print(root)
