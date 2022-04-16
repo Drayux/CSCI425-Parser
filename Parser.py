@@ -150,7 +150,7 @@ if __name__ == "__main__":
 	# cst stuff for wreck
 	llgrammar = Grammar("config/regex.cfg")
 	llparser = LLParser(llgrammar)
-	LLstream = TokenStream(r"((\n|\s|\\)|\+0-9(:|\+|<))*(@?>=|<)", False)
-	CSTtree = llparser.parse(LLstream)
+	LLstream = TokenStream(r"z-a", False)
+	CSTtree = llparser.parse(LLstream, True)
 	print(CSTtree)
 	# end cst stuff for wreck

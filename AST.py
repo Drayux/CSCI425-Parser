@@ -1,3 +1,5 @@
+import sys
+
 from ParseTree import ParseTree
 
 # TODO      RE -> ALT $
@@ -27,6 +29,28 @@ def replace_node_with_new_node(node: ParseTree, new_node: ParseTree):
     RootReplace(node, new_node.data, new_node.children)
     return
 
+
+def semantic_Check(node: ParseTree):
+    if node.data == "range":
+        lowerCase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+        upperCase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+        numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        lefty = node.children[0].data
+        righty = node.children[1].data
+        if all(x in lowerCase for x in [lefty, righty]) or \
+        all(x in upperCase for x in [lefty, righty])    or \
+        all(x in numbers for x in [lefty, righty]):
+            pass
+        else:
+            print("SEMANTIC ERROR: the two values are of different cases or types")
+            sys.exit(2)
+        try:
+            if lefty > righty:
+                raise ValueError("Left")
+        except Exception:
+            print("SEMANTIC ERROR: Left value is greater than right value in range")
+            sys.exit(2)
+
 def procedure_NUCLEUS(node: ParseTree):
     # open ALT close
     if node.children[0].data == "open":
@@ -46,6 +70,7 @@ def procedure_NUCLEUS(node: ParseTree):
                 rangeNode = ParseTree("range", node.parent)
                 rangeNode.addChild(node.children[0])
                 rangeNode.addChild(child.children[1])
+                semantic_Check(rangeNode)
                 replace_node_with_new_node(child, rangeNode)
                 node.removeChild(node.children[0])
                 return
