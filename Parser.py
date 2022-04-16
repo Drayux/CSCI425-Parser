@@ -20,7 +20,7 @@ class LLParser:
 		self.table = LLTable(grammar)			# Generate the parse table
 
 	# LL parsing algorithm
-	def parse(self, stream: TokenStream):
+	def parse(self, stream: TokenStream, ast_Tree = False):
 		token = stream.next()[0]
 
 		symbols = [self.grammar.start]			# This is the stack of tokens
@@ -44,7 +44,7 @@ class LLParser:
 
 			# Check for end of production marker
 			if symbol == '*':
-				if True: AST.AST_SDT_Procedure((curNode)) # This applies AST procedures for REGEX, turn off if otherwise
+				if ast_Tree: AST.AST_SDT_Procedure((curNode)) # This applies AST procedures for REGEX, turn off if otherwise
 				curNode = curNode.parent
 				continue
 
