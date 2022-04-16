@@ -8,6 +8,7 @@ class ParseTree:
 	# Returns the new child
 	def addChild(self, data):
 		if type(data) == ParseTree:
+			data.parent = self
 			self.children.append(data)
 			return data
 
