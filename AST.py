@@ -2,7 +2,7 @@ import sys
 
 from ParseTree import ParseTree
 
-# TODO      RE -> ALT $
+# DONE      RE -> ALT $
 # DONE?     ALT -> SEQ ALTLIST
 # DONE ALTLIST -> pipe SEQ ALTLIST
 # DONE          | lambda
@@ -21,9 +21,11 @@ from ParseTree import ParseTree
 LAMBDA = "lambda"
 charLAMBDA = "_lambda"
 
+
 def RootReplace(node: ParseTree, data, children):
     node.data=data
     node.children = children
+
 
 def replace_node_with_new_node(node: ParseTree, new_node: ParseTree):
     RootReplace(node, new_node.data, new_node.children)
@@ -50,6 +52,7 @@ def semantic_Check(node: ParseTree):
         except Exception:
             print("SEMANTIC ERROR: Left value is greater than right value in range")
             sys.exit(2)
+
 
 def procedure_NUCLEUS(node: ParseTree):
     # open ALT close
@@ -113,7 +116,6 @@ def procedure_SEQ(node: ParseTree):
                 node.addChild(adoptedChildren)
             # Disown disgraced SEQLIST
             node.removeChild(child)
-    i = 0
     if len(node.children) == 1:
         replace_node_with_new_node(node, node.children[0])
 
@@ -155,6 +157,7 @@ def AST_SDT_Procedure(node: ParseTree):
         procedure_ALT(node)
     elif node.data == "RE":
         procedure_RE(node)
+
 
 # Testing
 if __name__ == "__main__":
@@ -256,3 +259,4 @@ if __name__ == "__main__":
         AST_SDT_Procedure(nuke)
 
     print(root)
+

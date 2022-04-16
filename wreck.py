@@ -48,16 +48,18 @@ def CompileRegex(regex, language):
     regexParser = Parser(grammar)				# Build the LL(1) parser from the regex grammar
     stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
     regexCST = regexParser.parse(stream)		# Might need a try-catch for syntax errors? Haven't looked at the files yet
+    stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
     regexAST = regexParser.parse(stream, True)  # Same thing as above, but now in FABULOUS AST
+
 
 
 # -- DONE -- #
     # 1. Load .lut file
     # 2. make a concrete syntax tree
+    # 3. convert to AST
 
 # -- TODO -- #
 
-    # 3. convert to AST
     # 4. generate L and T tables
     # 5. Change L an T table into an NFA file
     #print("...")
@@ -72,7 +74,7 @@ def main():
     with open(sys.argv[1], "r") as lexingConfig, open(sys.argv[2], "w") as scannerConfig:
         lexConfigLines = lexingConfig.readlines()
         originalLanguage = lexConfigLines[0].strip().replace(" ", "")
-        noHexLanguage = SubstituteHexInverse(originalLanguage)
+        noHexLanguage = SubstituteHexInverse(None, originalLanguage)
         hexLanguage = SubstituteHex(originalLanguage)
 
         basicLanguageList = [ c for c in noHexLanguage ]
@@ -80,7 +82,11 @@ def main():
         regexes = []
         for i in range(1, len(lexConfigLines)):
             line = lexConfigLines[i].strip()
-            regex, tokenName = line.split()
+            lineAttributes= line.split()
+            if len(lineAttributes) == 3:
+                regex, tokenName, substitute = lineAttributes
+            else:
+                regex, tokenName = lineAttributes
             regex = regex.strip()
             tokenName = tokenName.strip()
             regexes.append(Regex(regex, tokenName))

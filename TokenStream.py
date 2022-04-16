@@ -32,8 +32,12 @@ class TokenStream:
 		else: return ("char", c)
 
 	# Generate a regex token stream for parsing with config/regex.cfg
-	def scan(self, string):
-		stream = list(string)
+	def scan(self, regex):
+		if type(regex) == type(""):
+			pass
+		else:
+			regex = regex.string
+		stream = list(regex)
 		stream.reverse()
 
 		# Loop through regex string
