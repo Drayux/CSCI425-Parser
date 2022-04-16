@@ -92,10 +92,6 @@ class TransitionTable:
 
 		return ret
 
-	# Opted to remove this one as I'm just storing it as a member variable
-	# def rowCount(self):
-	# 	return -1
-
 
 class NFATable:
 	def __init__(self, tree: ParseTree):
@@ -116,7 +112,6 @@ class NFATable:
 		# Sanity checks
 		assert(type(lambdaChar) == str)
 		assert(len(lambdaChar) == 1)
-		assert(type(language) == str)
 		assert(len(language) > 0)
 		assert(not file.closed)
 
@@ -125,7 +120,7 @@ class NFATable:
 		# States: - for normal or + for accepting, from state id, to state id, transition characters...
 
 		nodeCount = self.T.rowCount
-		languageString = language.join(" ")
+		languageString = " ".join(language)
 
 		file.write(f"{nodeCount} {lambdaChar} {languageString}\n")
 		for i in range(nodeCount):
@@ -144,6 +139,7 @@ class NFATable:
 
 
 # Code testing
+import sys
 if __name__ == "__main__":
 	print("EMPTY:")
 	table = TransitionTable()
@@ -168,3 +164,9 @@ if __name__ == "__main__":
 	for x in range(table.rowCount):
 		print("row:", x)
 		print(table.getRow(x))
+	print()
+
+	print ("\nNFA TABLE FILE OUT:")
+	nfaTable = NFATable(tree=ParseTree(data="", parent=None))
+	nfaTable.T = table
+	nfaTable.writeToFile("#", [ 'a', 'b', 'c', 'd', 'e', 'f', 'g' ], sys.stdout)
