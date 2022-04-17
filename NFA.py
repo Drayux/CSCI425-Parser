@@ -91,7 +91,7 @@ class TransitionTable:
 			ret.append((rowId, x, val))
 
 		return ret
-    
+
 class TTable:
 	def __init__(self):
 		self.stateCount = 1
@@ -109,7 +109,7 @@ class TTable:
 			self.data.append({})
 			self.stateCount += 1
         #Add Transition
-		self.data[fromState][transitionChar] = toState 
+		self.data[fromState][transitionChar] = toState
 
 	def getRow(self, fromState):
 		#Checks
@@ -125,9 +125,10 @@ class TTable:
 		return ret
 
 class NFATable:
-	def __init__(self, tree: ParseTree):
+	def __init__(self, name: str, alphabet: list, tree: ParseTree):
+		self.tokenName = name
+		self.alphabet = alphabet
 		self.stateCount = 2
-		self.alphabet = {}
 		self.T = TTable()			# Standard state transitions
 		self.L = TransitionTable()			# Lambda state transitions
 		# -- TODO --
@@ -162,7 +163,7 @@ class NFATable:
 		elif tree.data == "range":
 			start = tree.children[0].data
 			stop = tree.children[1].data
-			for n in range(ord(start), ord(stop) + 1): 
+			for n in range(ord(start), ord(stop) + 1):
 				if chr(n) in self.alphabet:
 					self.T.addTransition(fromId, chr(n), toId)
 		#Lambda Leaf
@@ -227,7 +228,7 @@ if __name__ == "__main__":
 	subTree.addChild(ParseTree("c", None))
 	parseTree.addChild(subTree)
 	nfaTable = NFATable(parseTree)
-	nfaTable.writeToFile("#", alphabet, sys.stdout) 
+	nfaTable.writeToFile("#", alphabet, sys.stdout)
 
 #print("EMPTY:")
 #table = TransitionTable()
