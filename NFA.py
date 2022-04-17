@@ -91,14 +91,91 @@ class TransitionTable:
 			ret.append((rowId, x, val))
 
 		return ret
+    
+class TTable:
+	def __init__(self):
+		self.stateCount = 1
+		self.data = [{}]
 
+	def addTransition(self, fromState, transitionChar, toState):
+		#Type Checks
+		if fromState < 0 or toState < 0:
+			print(f"WARNING: fromState: {fromState}, toState: {toState}")
+			raise ValueError("State IDs must be non-negative")
+		if type(transitionChar) is str:
+			transitionChar = ord(transitionChar[0])
+        #AddEntries if not present
+		while fromState >= self.stateCount:
+			self.data.append({})
+			self.stateCount += 1
+        #Add Transition
+		self.data[fromState][transitionChar] = toState 
+
+	def getRow(self, fromState):
+		#Checks
+		row = None
+		ret = []
+		try: row = self.data[fromState]
+		except IndexError:
+			print(f"WARNING: Invalid row ID specifed in getRow({rowId})")
+			return ret
+		#Accumulate output
+		for transitionChar, toState in row.items():
+			ret.append((fromState, transitionChar, toState))
+		return ret
 
 class NFATable:
 	def __init__(self, tree: ParseTree):
-		self.T = TransitionTable()			# Standard state transitions
+		self.stateCount = 2
+		self.alphabet = {}
+		self.T = TTable()			# Standard state transitions
 		self.L = TransitionTable()			# Lambda state transitions
-
 		# -- TODO --
+		self.processNode(tree, 0, 1)
+
+	def processNode(self, tree, fromId, toId):
+		#Alt Node
+		if tree.data == "ALT":
+			for child in tree.children:
+				self.processNode(child, fromId, toId)
+		#SEQ Node
+		elif tree.data == "SEQ":
+			childFromId = fromId
+			childToId = self.stateCount
+			self.stateCount += 1
+			for child in tree.children:
+				self.processNode(child, childFromId, childToId)
+				childFromId = childToId
+				childToId = self.stateCount
+				self.stateCount += 1
+			self.L.addTransition(childFromId, toId)
+		#Kleen Node
+		elif tree.data == "kleene":
+			self.L.addTransition(fromId, toId)
+			self.L.addTransition(toId, fromId)
+			self.processNode(tree.children[0], fromId, toId)
+		#Plus Node
+		elif tree.data == "plus":
+			self.L.addTransition(toId, fromId)
+			self.processNode(tree.children[0], fromId, toId)
+			#Range Node
+		elif tree.data == "range":
+			start = tree.children[0].data
+			stop = tree.children[1].data
+			for n in range(ord(start), ord(stop) + 1): 
+				if chr(n) in self.alphabet:
+					self.T.addTransition(fromId, chr(n), toId)
+		#Lambda Leaf
+		elif tree.data == "lambda":
+			self.L.addTransition(fromId, toId)
+		#Dot Leaf
+		elif tree.data == "dot":
+			for char in self.alphabet:
+				self.T.addTransition(fromId, char, toId)
+		#Char leaf
+		else:
+			self.T.addTransition(fromId, tree.data, toId)
+
 
 	# Add a normal transition
 	def addTransition(self, fromId, toId, char):
@@ -119,7 +196,7 @@ class NFATable:
 		# Header: # states, lambda char, alphabet...
 		# States: - for normal or + for accepting, from state id, to state id, transition characters...
 
-		nodeCount = self.T.rowCount
+		nodeCount = self.T.stateCount
 		languageString = " ".join(language)
 
 		file.write(f"{nodeCount} {lambdaChar} {languageString}\n")
@@ -129,8 +206,9 @@ class NFATable:
 			isAccepting = False  # TODO
 			acceptingStr = "+" if isAccepting else "-"
 
-			for fromId, toId, char in transitions:
+			for fromId, char, toId in transitions:
 				# assert(char in language, f"Unrecognized transition character: {char}")
+				char = chr(char)
 				file.write(f"{acceptingStr} {fromId} {toId} {char}\n")
 
 			for fromId, toId, char in lambdas:
@@ -141,32 +219,42 @@ class NFATable:
 # Code testing
 import sys
 if __name__ == "__main__":
-	print("EMPTY:")
-	table = TransitionTable()
-	print(table)
-	print()
+	alphabet = [ 'a', 'b', 'c' ]
+	parseTree = ParseTree("SEQ", None)
+	parseTree.addChild(ParseTree("a", None))
+	subTree = ParseTree("ALT", None)
+	subTree.addChild(ParseTree("b", None))
+	subTree.addChild(ParseTree("c", None))
+	parseTree.addChild(subTree)
+	nfaTable = NFATable(parseTree)
+	nfaTable.writeToFile("#", alphabet, sys.stdout) 
 
-	# Add some transitions
-	table.addTransition(1, 1)
-	table.addTransition(3, 6)
-	table.addTransition(1, 4, 'a')
-	table.addTransition(5, 4, 'b')
-	table.addTransition(3, 3, 'c')
-	table.addTransition(0, 1, 'd')
-	table.addTransition(0, 1, 'e')
-	table.addTransition(2, 0, 'f')
+#print("EMPTY:")
+#table = TransitionTable()
+#print(table)
+#print()
 
-	print("\nMODIFIED:")
-	print(table)
-	print()
+# Add some transitions
+#table.addTransition(1, 1)
+#table.addTransition(3, 6)
+#table.addTransition(1, 4, 'a')
+#table.addTransition(5, 4, 'b')
+#table.addTransition(3, l, 'c')
+#table.addTransition(0, 1, 'd')
+#table.addTransition(0, 1, 'e')
+#table.addTransition(2, 0, 'f')
 
-	print("\nROWS:")
-	for x in range(table.rowCount):
-		print("row:", x)
-		print(table.getRow(x))
-	print()
+#print("\nMODIFIED:")
+#print(table)
+#print()
 
-	print ("\nNFA TABLE FILE OUT:")
-	nfaTable = NFATable(tree=ParseTree(data="", parent=None))
-	nfaTable.T = table
-	nfaTable.writeToFile("#", [ 'a', 'b', 'c', 'd', 'e', 'f', 'g' ], sys.stdout)
+#print("\nROWS:")
+#for x in range(table.rowCount):
+#	print("row:", x)
+#	print(table.getRow(x))
+#print()
+
+#print ("\nNFA TABLE FILE OUT:")
+#nfaTable = NFATable(tree=ParseTree(data="", parent=None))
+#nfaTable.T = table
+   #nfaTable.writeToFile("#", [ 'a', 'b', 'c', 'd', 'e', 'f', 'g' ], sys.stdout)
