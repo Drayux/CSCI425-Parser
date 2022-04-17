@@ -48,8 +48,8 @@ def CompileRegex(regex, language):
     # PART ONE - Feed regex to scanner
     grammar = Grammar("config/regex.cfg")		# This will always be regex so we can hard-code it
     regexParser = Parser(grammar)				# Build the LL(1) parser from the regex grammar
-    stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
-    regexCST = regexParser.parse(stream)		# Might need a try-catch for syntax errors? Haven't looked at the files yet
+    #stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
+    #regexCST = regexParser.parse(stream)		# Might need a try-catch for syntax errors? Haven't looked at the files yet
     stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
     regexAST = regexParser.parse(stream, True)  # Same thing as above, but now in FABULOUS AST
     nfaTable = NFATable(regex.tokenName, language, regexAST)
@@ -60,10 +60,10 @@ def CompileRegex(regex, language):
     # 1. Load .lut file
     # 2. make a concrete syntax tree
     # 3. convert to AST
+    # 4. generate L and T tables
 
 # -- TODO -- #
 
-    # 4. generate L and T tables
     # 5. Change L an T table into an NFA file
     #print("...")
 

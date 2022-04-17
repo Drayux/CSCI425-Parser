@@ -106,6 +106,7 @@ class LLParser:
 		if curNode != tree:
 			# print("SYNTAX ERROR!")
 			raise ParseError(f"SYNTAX ERROR: Mismatched end of production (Line {line})")
+		AST.AST_SDT_Procedure(tree)
 		return tree
 
 	def __str__(self):

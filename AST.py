@@ -142,6 +142,10 @@ def procedure_RE(node: ParseTree):
         replace_node_with_new_node(node, node.children[0])
 
 
+def procedure_ROOT(node: ParseTree):
+    replace_node_with_new_node(node, node.children[0])
+
+
 def AST_SDT_Procedure(node: ParseTree):
     if node.data == "NUCLEUS":
         procedure_NUCLEUS(node)
@@ -157,6 +161,8 @@ def AST_SDT_Procedure(node: ParseTree):
         procedure_ALT(node)
     elif node.data == "RE":
         procedure_RE(node)
+    elif node.data == "ROOT":
+        procedure_ROOT(node)
 
 
 # Testing
