@@ -39,7 +39,7 @@ def VerifyLambda(hexLanguage, hexLambdaChar):
 		raise "Lambda character isn't unique... uhoh"
 
 class Regex:
-	def __init__(self, string, tokenName, substitue = ""):
+	def __init__(self, string, tokenName, substitue = None):
 		self.string = string
 		self.tokenName = tokenName
 		self.substitute = substitue
@@ -91,7 +91,7 @@ def main():
 
 		regexes = []
 		for i in range(1, len(lexConfigLines)):
-			substitute = ""
+			substitute = None
 			line = lexConfigLines[i].strip()
 			lineAttributes= line.split()
 			if len(lineAttributes) == 3:
@@ -102,9 +102,15 @@ def main():
 			tokenName = tokenName.strip()
 			regexes.append(Regex(regex, tokenName, substitute))
 
+		# Begin output of scan.u file
+		scannerConfig.write(f"{SubstituteHexInverse(hexLanguage)}\n")
+
 		nfas = []
 		for regex in regexes:
 			nfas.append(CompileRegex(regex, basicLanguageList))
+			scannerConfig.write(f"{regex.tokenName}.tt\t\t{regex.string}")
+			if regex.substitute is not None: scannerConfig.write(f"\t\t{regex.substitute}\n")
+			else: scannerConfig.write("\n")
 
 		for nfa in nfas:
 			with open(nfa.tokenName + ".nfa", "w") as nfaFile:
