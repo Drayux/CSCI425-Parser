@@ -1,6 +1,7 @@
 import sys
 
 from Grammar import Grammar
+from NFA import NFATable
 from Parser import LLParser as Parser
 from TokenStream import TokenStream
 
@@ -38,9 +39,10 @@ def VerifyLambda(hexLanguage, hexLambdaChar):
         raise "Lambda character isn't unique... uhoh"
 
 class Regex:
-    def __init__(self, string, tokenName):
+    def __init__(self, string, tokenName, substitue = ""):
         self.string = string
         self.tokenName = tokenName
+        self.substitute = substitue
 
 def CompileRegex(regex, language):
     # PART ONE - Feed regex to scanner
@@ -50,7 +52,8 @@ def CompileRegex(regex, language):
     regexCST = regexParser.parse(stream)		# Might need a try-catch for syntax errors? Haven't looked at the files yet
     stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
     regexAST = regexParser.parse(stream, True)  # Same thing as above, but now in FABULOUS AST
-
+    nfaTable = NFATable(regex.tokenName, language, regexAST)
+    return nfaTable;
 
 
 # -- DONE -- #
@@ -74,6 +77,7 @@ def main():
     with open(sys.argv[1], "r") as lexingConfig, open(sys.argv[2], "w") as scannerConfig:
         lexConfigLines = lexingConfig.readlines()
         originalLanguage = lexConfigLines[0].strip().replace(" ", "")
+        # The following two are
         noHexLanguage = SubstituteHexInverse(None, originalLanguage)
         hexLanguage = SubstituteHex(originalLanguage)
 
@@ -81,6 +85,7 @@ def main():
 
         regexes = []
         for i in range(1, len(lexConfigLines)):
+            substitute = ""
             line = lexConfigLines[i].strip()
             lineAttributes= line.split()
             if len(lineAttributes) == 3:
@@ -89,14 +94,14 @@ def main():
                 regex, tokenName = lineAttributes
             regex = regex.strip()
             tokenName = tokenName.strip()
-            regexes.append(Regex(regex, tokenName))
+            regexes.append(Regex(regex, tokenName, substitute))
 
         lambdaChar = "x01"
         VerifyLambda(hexLanguage, lambdaChar)
 
         nfas = []
         for regex in regexes:
-            nfas.append(CompileRegex(regex, hexLanguage))
+            nfas.append(CompileRegex(regex, basicLanguageList))
 
         for nfa in nfas:
             with open(nfa.tokenName + ".nfa", "w") as nfaFile:
