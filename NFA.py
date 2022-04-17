@@ -210,9 +210,9 @@ class NFATable:
 		# Header: # states, lambda char, alphabet...
 		# States: - for normal or + for accepting, from state id, to state id, transition characters...
 
-		print(self.tokenName)
-		print(self.L)
-		print()
+		# print(self.tokenName)
+		# print(self.L)
+		# print()
 
 		languageString = " ".join(self.alphabet)
 		file.write(f"{self.stateCount + 1} {lambdaChar} {formatOutput(languageString)}")

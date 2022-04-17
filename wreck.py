@@ -3,6 +3,7 @@ import sys
 from Grammar import Grammar
 from NFA import NFATable
 from Parser import LLParser as Parser
+from ParseExceptions import ParseError
 from TokenStream import TokenStream
 
 # Util code from Andrew's luther
@@ -51,7 +52,13 @@ def CompileRegex(regex, language):
 	#stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
 	#regexCST = regexParser.parse(stream)		# Might need a try-catch for syntax errors? Haven't looked at the files yet
 	stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
-	regexAST = regexParser.parse(stream, True)  # Same thing as above, but now in FABULOUS AST
+
+	regexAST = None
+	try: regexAST = regexParser.parse(stream, True)  # Same thing as above, but now in FABULOUS AST
+	except ParseError as e:
+		print(e)
+		exit(2)					# Exit with status two if a syntax error was found
+
 	nfaTable = NFATable(regex.tokenName, language, regexAST)
 	return nfaTable
 
@@ -116,6 +123,9 @@ def main():
 			with open(nfa.tokenName + ".nfa", "w") as nfaFile:
 				# nfa.writeToFile(lambdaChar, basicLanguageList, nfaFile)
 				nfa.writeToFile(lambdaStr, nfaFile)
+				print(f"Created nfa file {nfa.tokenName}.nfa")
+
+	print(f"Wrote scanner config to {sys.argv[2]}")
 
 if __name__ == "__main__":
 	main()
