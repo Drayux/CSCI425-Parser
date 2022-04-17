@@ -1,5 +1,6 @@
 from copy import copy
 from io import TextIOWrapper
+from ParseExceptions import StructureError
 from ParseTree import ParseTree
 
 # Subcomponent classes specific to the NFA Table class
@@ -186,11 +187,11 @@ class NFATable:
 	def addLambda(self, fromId, toId):
 		self.L.addTransition(fromId, toId)
 
-	def writeToFile(self, lambdaChar, language: list, file: TextIOWrapper):
+	def writeToFile(self, lambdaChar, file: TextIOWrapper):
 		# Sanity checks
 		assert(type(lambdaChar) == str)
-		assert(len(lambdaChar) == 1)
-		assert(len(language) > 0)
+		assert(len(lambdaChar) == 3)
+		assert(len(self.language) > 0)
 		assert(not file.closed)
 
 		# NFA file definition:
@@ -198,23 +199,31 @@ class NFATable:
 		# States: - for normal or + for accepting, from state id, to state id, transition characters...
 
 		nodeCount = self.T.stateCount
-		languageString = " ".join(language)
-
+		languageString = " ".join(self.language)
 		file.write(f"{nodeCount} {lambdaChar} {languageString}\n")
+
+		# Get transitions for all NFA states
 		for i in range(nodeCount):
 			transitions = self.T.getRow(i)
 			lambdas = self.L.getRow(i)
-			isAccepting = False  # TODO
-			acceptingStr = "+" if isAccepting else "-"
+
+			# NOTE: getRow(1) should return an empty list
+			# This is because it is the only accepting state
+			# assert((len(transitions) + len(lambdas) == 0), "NFA tables are malformed!")
+			if (len(transitions) + len(lambdas)) > 0:
+				raise StructureError("NFA tables are malformed")
 
 			for fromId, char, toId in transitions:
-				# assert(char in language, f"Unrecognized transition character: {char}")
+				# assert((char in self.language), f"Unrecognized transition character: {char}")
 				char = chr(char)
-				file.write(f"{acceptingStr} {fromId} {toId} {char}\n")
+				file.write(f"- {fromId} {toId} {char}\n")
 
-			for fromId, toId, char in lambdas:
-				# assert(char == lambdaChar, f"Lambda char mismatch, found {char} but should be {lambdaChar}")
-				file.write(f"{acceptingStr} {fromId} {toId} {char}\n")
+			for fromId, toId in lambdas:
+				# assert((char == lambdaChar), f"Lambda char mismatch, found {char} but should be {lambdaChar}")
+				file.write(f"- {fromId} {toId} {lambdaChar}\n")
+
+		# Every RegEx NFA will have exactly 1 accepting state
+		file.write("+ 1 1\n")
 
 
 # Code testing

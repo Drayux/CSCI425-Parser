@@ -9,3 +9,8 @@ class GrammarError(Exception):
 class ParseError(Exception):
     def __init__(self, *args):
         super().__init__(args)
+
+# Exception raised if internal data structures appear to be malformed
+class StructureError(Exception):
+	def __init__(self, *args):
+		super().__init__(args)
