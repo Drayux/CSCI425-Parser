@@ -45,13 +45,10 @@ def semantic_Check(node: ParseTree):
             pass
         else:
             print("SEMANTIC ERROR: the two values are of different cases or types")
-            sys.exit(2)
-        try:
-            if lefty > righty:
-                raise ValueError("Left")
-        except Exception:
+            sys.exit(3)
+        if lefty > righty:
             print("SEMANTIC ERROR: Left value is greater than right value in range")
-            sys.exit(2)
+            sys.exit(3)
 
 
 def procedure_NUCLEUS(node: ParseTree):
