@@ -3,6 +3,18 @@ from io import TextIOWrapper
 from ParseExceptions import StructureError
 from ParseTree import ParseTree
 
+# Utility function for output
+def formatOutput(str):
+	outStr = ""
+	for x, c in enumerate(str):
+		hexStr = hex(ord(c))
+		hexStr = hexStr[2:]  # Trim the 0x
+		if len(hexStr) == 1:
+			hexStr = "0" + hexStr
+		if x != 0: outStr += " "
+		outStr += "x" + hexStr
+	return outStr
+
 # Subcomponent classes specific to the NFA Table class
 # Dynamically adds rows and columns as necessary
 class TransitionTable:
@@ -191,39 +203,45 @@ class NFATable:
 		# Sanity checks
 		assert(type(lambdaChar) == str)
 		assert(len(lambdaChar) == 3)
-		assert(len(self.language) > 0)
+		assert(len(self.alphabet) > 0)
 		assert(not file.closed)
 
 		# NFA file definition:
 		# Header: # states, lambda char, alphabet...
 		# States: - for normal or + for accepting, from state id, to state id, transition characters...
 
-		nodeCount = self.T.stateCount
-		languageString = " ".join(self.language)
-		file.write(f"{nodeCount} {lambdaChar} {languageString}\n")
+		print(self.tokenName)
+		print(self.L)
+		print()
 
-		# Get transitions for all NFA states
-		for i in range(nodeCount):
+		languageString = " ".join(self.alphabet)
+		file.write(f"{self.stateCount + 1} {lambdaChar} {formatOutput(languageString)}")
+
+		# Get character transitions for all NFA states
+		for i in range(self.T.stateCount):
 			transitions = self.T.getRow(i)
-			lambdas = self.L.getRow(i)
 
 			# NOTE: getRow(1) should return an empty list
 			# This is because it is the only accepting state
 			# assert((len(transitions) + len(lambdas) == 0), "NFA tables are malformed!")
-			if (len(transitions) + len(lambdas)) > 0:
-				raise StructureError("NFA tables are malformed")
+			# if i == 1 and (len(transitions) + len(lambdas)) > 0:
+			# 	raise StructureError("NFA tables are malformed")
 
 			for fromId, char, toId in transitions:
 				# assert((char in self.language), f"Unrecognized transition character: {char}")
 				char = chr(char)
-				file.write(f"- {fromId} {toId} {char}\n")
+				file.write(f"\n- {fromId} {toId} {formatOutput(char)}")
 
-			for fromId, toId in lambdas:
+		# Get lambda transitions for all NFA states
+		for i in range(self.L.rowCount):
+			lambdas = self.L.getRow(i)
+
+			for fromId, toId, _ in lambdas:
 				# assert((char == lambdaChar), f"Lambda char mismatch, found {char} but should be {lambdaChar}")
-				file.write(f"- {fromId} {toId} {lambdaChar}\n")
+				file.write(f"\n- {fromId} {toId} {lambdaChar}")
 
 		# Every RegEx NFA will have exactly 1 accepting state
-		file.write("+ 1 1\n")
+		file.write("\n+ 1 1\n")
 
 
 # Code testing

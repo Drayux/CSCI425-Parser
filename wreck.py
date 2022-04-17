@@ -53,8 +53,7 @@ def CompileRegex(regex, language):
 	stream = TokenStream(regex, False)			# False denotes that we are passing in a regex string, not a path
 	regexAST = regexParser.parse(stream, True)  # Same thing as above, but now in FABULOUS AST
 	nfaTable = NFATable(regex.tokenName, language, regexAST)
-	return nfaTable;
-
+	return nfaTable
 
 # -- DONE -- #
 	# 1. Load .lut file
@@ -85,6 +84,7 @@ def main():
 		basicLanguageList.sort()
 
 		# Determine the lambda character
+		# POTENTIAL TODO: Wraparound does not check
 		charVal = ord(basicLanguageList[-1]) + 1
 		hexVal = hex(charVal % 256)[2:]
 		lambdaStr = f"x{'0' if len(hexVal) < 2 else ''}{hexVal}"
@@ -102,11 +102,6 @@ def main():
 			tokenName = tokenName.strip()
 			regexes.append(Regex(regex, tokenName, substitute))
 
-		# lambdaChar = "x01"
-		# VerifyLambda(hexLanguage, lambdaChar)
-
-		print("dog balls")
-
 		nfas = []
 		for regex in regexes:
 			nfas.append(CompileRegex(regex, basicLanguageList))
@@ -114,7 +109,7 @@ def main():
 		for nfa in nfas:
 			with open(nfa.tokenName + ".nfa", "w") as nfaFile:
 				# nfa.writeToFile(lambdaChar, basicLanguageList, nfaFile)
-				nfa.writeToFile(lambdaStr, basicLanguageList, nfaFile)
+				nfa.writeToFile(lambdaStr, nfaFile)
 
 if __name__ == "__main__":
 	main()
