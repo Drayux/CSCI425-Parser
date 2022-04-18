@@ -177,7 +177,7 @@ class NFATable:
 				self.stateCount += 1
 				self.L.addTransition(fromId, childFromId)
 				self.L.addTransition(childToId, toId)
-				self.processNode(child, fromId, toId)
+				self.processNode(child, childFromId, childToId)
 		#SEQ Node
 		elif tree.data == "SEQ":
 			childFromId = fromId
