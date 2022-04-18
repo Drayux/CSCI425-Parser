@@ -137,7 +137,7 @@ class TTable:
 			raise ValueError("State IDs must be non-negative")
 		if type(transitionChar) is str:
 			if transitionChar == r'\\':
-				transitionChar = 92
+				transitionChar = ord('&#92')
 			elif len(transitionChar) == 2:
 				transitionChar = ord(transitionChar[1])
 			else:
