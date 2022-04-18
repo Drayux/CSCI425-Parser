@@ -76,7 +76,6 @@ def CompileRegex(regex, language):
 	# ---------- #
 
 def main():
-	print(sys.argv)
 	if len(sys.argv) != 3:
 		print("ERROR: A lexing config file and a scanner config file must be provided")
 		print(f"Usage: {sys.argv[0]} <lexing config (.lut)> <scanner output (.u)>")
