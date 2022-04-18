@@ -184,23 +184,23 @@ class NFATable:
 				self.stateCount += 1
 			self.L.addTransition(childFromId, toId)
 		#Kleen Node
-		elif tree.data == "kleene":
-			self.L.addTransition(fromId, toId)
-			self.L.addTransition(toId, fromId)
+		elif tree.data == "kleene": 	
 			childFromId = self.stateCount
 			self.stateCount += 1
 			childToId = self.stateCount
-			self.stateCount += 1
+			self.stateCount += 1 
+			self.L.addTransition(childFromId, childToId)
+			self.L.addTransition(childToId, childFromId)
 			self.L.addTransition(childToId, toId)
 			self.L.addTransition(fromId, childFromId)
 			self.processNode(tree.children[0], childFromId, childToId)
 		#Plus Node
-		elif tree.data == "plus":
-			self.L.addTransition(toId, fromId) 
+		elif tree.data == "plus": 
 			childFromId = self.stateCount
 			self.stateCount += 1
 			childToId = self.stateCount
-			self.stateCount += 1
+			self.stateCount += 1 
+			self.L.addTransition(childToId, childFromId) 
 			self.L.addTransition(childToId, toId)
 			self.L.addTransition(fromId, childFromId)
 			self.processNode(tree.children[0], childFromId, childToId)
