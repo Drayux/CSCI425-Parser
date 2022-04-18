@@ -3,9 +3,7 @@
 __pycache__*
 .vscode
 .idea/
-*.nfa
 WRECK
 farts
 reprogram.tok
 tick.tok
-*.u
