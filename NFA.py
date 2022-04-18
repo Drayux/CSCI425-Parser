@@ -187,12 +187,25 @@ class NFATable:
 		elif tree.data == "kleene":
 			self.L.addTransition(fromId, toId)
 			self.L.addTransition(toId, fromId)
-			self.processNode(tree.children[0], fromId, toId)
+			childFromId = self.stateCount
+			self.stateCount += 1
+			childToId = self.stateCount
+			self.stateCount += 1
+			self.L.addTransition(childToId, toId)
+			self.L.addTransition(fromId, childFromId)
+			self.processNode(tree.children[0], childFromId, childToId)
 		#Plus Node
 		elif tree.data == "plus":
-			self.L.addTransition(toId, fromId)
-			self.processNode(tree.children[0], fromId, toId)
-			#Range Node
+			self.L.addTransition(toId, fromId) 
+			childFromId = self.stateCount
+			self.stateCount += 1
+			childToId = self.stateCount
+			self.stateCount += 1
+			self.L.addTransition(childToId, toId)
+			self.L.addTransition(fromId, childFromId)
+			self.processNode(tree.children[0], childFromId, childToId)
+
+		#Range Node
 		elif tree.data == "range":
 			start = tree.children[0].data
 			stop = tree.children[1].data
