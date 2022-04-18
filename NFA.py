@@ -4,19 +4,35 @@ from ParseExceptions import StructureError
 from ParseTree import ParseTree
 
 # Utility function for output
-# This is copy-pasted from wreck.py, oh well
+# Takes any input encoding, converts all alphanums to plain output, every other to hex encoded.
 def formatOutput(str):
 	outStr = ""
-	for x, c in enumerate(str):
-		if c.isalnum() and c != "x":
+	i = 0
+	while i < len(str):
+		c = str[i]
+		if c == "x":
+			# Might need to convert to plain encoding, otherwise skip
+			hexStr = str[i + 1] + str[i + 2]
+			decoded = chr(int(hexStr, 16))
+			# Don't decode x
+			if decoded.isalnum() and decoded != "x":
+				outStr += decoded
+			else:
+				outStr += str[i : i + 3]
+			i += 3  # hex is three characters, which we need to skip past.
+		elif c.isalnum():
+			# Do nothing
 			outStr += c
+			i += 1
 		else:
+			# Convert to hex encoding
 			hexStr = hex(ord(c))
 			hexStr = hexStr[2:]  # Trim the 0x
 			if len(hexStr) == 1:
 				hexStr = "0" + hexStr
-			if x != 0: outStr += " "
+			if i != 0: outStr += " "
 			outStr += "x" + hexStr
+			i += 1
 	return outStr
 
 # Subcomponent classes specific to the NFA Table class
@@ -242,7 +258,7 @@ class NFATable:
 
 			for fromId, toId, _ in lambdas:
 				# assert((char == lambdaChar), f"Lambda char mismatch, found {char} but should be {lambdaChar}")
-				file.write(f"\n- {fromId} {toId} {lambdaChar}")
+				file.write(f"\n- {fromId} {toId} {formatOutput(lambdaChar)}")
 
 		# Every RegEx NFA will have exactly 1 accepting state
 		file.write("\n+ 1 1\n")
