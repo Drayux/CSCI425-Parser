@@ -30,9 +30,9 @@ def formatOutput(str):
 			hexStr = hexStr[2:]  # Trim the 0x
 			if len(hexStr) == 1:
 				hexStr = "0" + hexStr
-			if i != 0: outStr += " "
 			outStr += "x" + hexStr
 			i += 1
+		if i != 0: outStr += " "
 	return outStr
 
 # Subcomponent classes specific to the NFA Table class
