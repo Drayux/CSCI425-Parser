@@ -137,9 +137,9 @@ class TTable:
 			raise ValueError("State IDs must be non-negative")
 		if type(transitionChar) is str:
 			if len(transitionChar) == 2:
-				transitionChar = ord(repr(transitionChar[1]))
+				transitionChar = ord(repr(transitionChar))
 			else:
-				transitionChar = ord(transitionChar)
+				transitionChar = ord(transitionChar[0])
         #AddEntries if not present
 		while fromState >= self.stateCount:
 			self.data.append({})
