@@ -140,13 +140,13 @@ class TTable:
 				escapeChar = transitionChar[1]
 				if escapeChar == 'n':
 					transitionChar = 10
-				if escapeChar == 's':
+				elif escapeChar == 's':
 					transitionChar = 32
-				if escapeChar == '+':
+				elif escapeChar == '+':
 					transitionChar = 43
-				if escapeChar == '(':
+				elif escapeChar == '(':
 					transitionChar = 40
-				if escapeChar == '\\':
+				elif escapeChar == '\\':
 					transitionChar = 92
 				else:
 					transitionChar = ord(transitionChar[1])
