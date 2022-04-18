@@ -15,6 +15,9 @@ def format_parse_tree(output, tree):
 	while len(queue) > 0:
 		node = queue.pop(0)
 
+		if node.data == "\\\\":
+			node.data = "BAD NODE DATA: DOUBLE BACK SLASH"
+
 		output.write("node{} {}\n".format(counter, node.data))
 		nodeMap[node] = "node{}".format(counter)
 		counter += 1
