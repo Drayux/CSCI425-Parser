@@ -171,6 +171,12 @@ class NFATable:
 		#Alt Node
 		if tree.data == "ALT":
 			for child in tree.children:
+				childFromId = self.stateCount
+				self.stateCount += 1
+				childToId = self.stateCount
+				self.stateCount += 1
+				self.L.addTransition(fromId, childFromId)
+				self.L.addTransition(childToId, toId)
 				self.processNode(child, fromId, toId)
 		#SEQ Node
 		elif tree.data == "SEQ":
@@ -204,8 +210,7 @@ class NFATable:
 			self.L.addTransition(childToId, toId)
 			self.L.addTransition(fromId, childFromId)
 			self.processNode(tree.children[0], childFromId, childToId)
-
-		#Range Node
+		#Range Leaf 
 		elif tree.data == "range":
 			start = tree.children[0].data
 			stop = tree.children[1].data
