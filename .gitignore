@@ -1,6 +1,7 @@
 *.swp
+submission/*
 .DS_Store
-__pycache__*
+_*
 .vscode
 .idea/
 WRECK
