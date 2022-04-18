@@ -115,7 +115,7 @@ def main():
 		nfas = []
 		for regex in regexes:
 			nfas.append(CompileRegex(regex, basicLanguageList))
-			scannerConfig.write(f"{regex.tokenName}.tt\t\t{regex.string}")
+			scannerConfig.write(f"{regex.tokenName}.tt\t\t{regex.tokenName}")
 			if regex.substitute is not None: scannerConfig.write(f"\t\t{regex.substitute}\n")
 			else: scannerConfig.write("\n")
 
