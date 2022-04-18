@@ -4,15 +4,19 @@ from ParseExceptions import StructureError
 from ParseTree import ParseTree
 
 # Utility function for output
+# This is copy-pasted from wreck.py, oh well
 def formatOutput(str):
 	outStr = ""
 	for x, c in enumerate(str):
-		hexStr = hex(ord(c))
-		hexStr = hexStr[2:]  # Trim the 0x
-		if len(hexStr) == 1:
-			hexStr = "0" + hexStr
-		if x != 0: outStr += " "
-		outStr += "x" + hexStr
+		if c.isalnum() and c != "x":
+			outStr += c
+		else:
+			hexStr = hex(ord(c))
+			hexStr = hexStr[2:]  # Trim the 0x
+			if len(hexStr) == 1:
+				hexStr = "0" + hexStr
+			if x != 0: outStr += " "
+			outStr += "x" + hexStr
 	return outStr
 
 # Subcomponent classes specific to the NFA Table class
