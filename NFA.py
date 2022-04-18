@@ -137,7 +137,7 @@ class TTable:
 			raise ValueError("State IDs must be non-negative")
 		if type(transitionChar) is str:
 			if len(transitionChar) == 2:
-				transitionChar = ord(transitionChar[1])
+				transitionChar = ord(repr(transitionChar[1]))
 			else:
 				transitionChar = ord(transitionChar[0])
         #AddEntries if not present
