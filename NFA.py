@@ -214,7 +214,7 @@ class NFATable:
 		# print(self.L)
 		# print()
 
-		languageString = " ".join(self.alphabet)
+		languageString = "".join(self.alphabet)
 		file.write(f"{self.stateCount + 1} {lambdaChar} {formatOutput(languageString)}")
 
 		# Get character transitions for all NFA states
