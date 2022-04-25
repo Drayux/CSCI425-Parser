@@ -1,5 +1,11 @@
 # ZOBOS
 
+## Big Ideas
+
+1. Pasre the token stream into a CST, check for syntax. Token stream provided in .tok files
+2. During the parse, massage the tree into an AST
+3. Check for semantic errors in the AST
+
 ## WORK TODOS
 
 - [ ] Parse a token stream with LR
@@ -28,10 +34,4 @@
 	- [ ] Emit will write sybol tables to disk 
 	- [ ] Warnings and errors will be emitted 
 - [ ] ZOBOS will exit(0) if no errors, exit(1) on error
-
-## Big Ideas
-
-1. Pasre the token stream into a CST, check for syntax. Token stream provided in .tok files
-2. During the parse, massage the tree into an AST
-3. Check for semantic errors and write to disk in the .out
 
