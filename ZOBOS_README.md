@@ -2,7 +2,7 @@
 
 ## Big Ideas
 
-1. Pasre the token stream into a CST, check for syntax. Token stream provided in .tok files
+1. Parse the token stream into a CST, check for syntax. Token stream provided in .tok files
 2. During the parse, massage the tree into an AST
 3. Check for semantic errors in the AST
 
@@ -31,7 +31,7 @@
 		- [ ] BRACESTMTS
 	- [ ] Simple Tree representation of AST to disk
 - [ ] Semantic checks on AST on variable, expression and function
-	- [ ] Emit will write sybol tables to disk 
+	- [ ] Emit will write symbol tables to disk 
 	- [ ] Warnings and errors will be emitted 
 - [ ] ZOBOS will exit(0) if no errors, exit(1) on error
 
