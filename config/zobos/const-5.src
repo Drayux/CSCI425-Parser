@@ -1,0 +1,13 @@
+string yarn = "many threads";
+int silly()
+returns r = 1
+{
+    string thread = "many fibers";
+
+    thread = "lite weight process";
+    yarn   = "browser";
+
+    emit thread, 0, 1;
+    emit yarn,   0, 1;
+    r=silly();
+}

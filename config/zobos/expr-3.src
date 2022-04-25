@@ -1,0 +1,8 @@
+int miami( bool tampa );
+const float x = 3 + miami % 2;
+
+int miami( bool tampa )
+returns r = 0
+{
+    if( int(tampa) == 1 ) r = int(x);
+}

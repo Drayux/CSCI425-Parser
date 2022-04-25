@@ -1,0 +1,17 @@
+DECLARE in scope=0 name=georgia  type=int//int/bool/float line=1 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=on  const=True line=1 valued=True type=int col=18
+DECLARE in scope=1 name=my  const=True line=1 valued=True type=bool col=27
+DECLARE in scope=1 name=mind  const=True line=1 valued=True type=float col=37
+DECLARE in scope=1 name=r  returns=True used=True type=int line=2 col=9
+open scope 2
+DECLARE in scope=2 name=x  const=False line=4 type=float col=11
+USED identifier georgia marked as used.
+USED identifier georgia (re)marked as used.
+USED identifier on marked as used.
+USED identifier my marked as used.
+USED identifier mind marked as used.
+USED identifier x marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

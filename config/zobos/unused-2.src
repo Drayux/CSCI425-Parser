@@ -1,0 +1,2 @@
+string a, b, c = "wat", d;
+string x = y = z = "wat", g;

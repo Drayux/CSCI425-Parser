@@ -1,0 +1,11 @@
+DECLARE in scope=0 name=pacific  type=float//float line=1 valued=True const=True col=7
+open scope 1
+DECLARE in scope=1 name=salmon  const=True line=1 valued=True type=float col=22
+OUTPUT :WARN: 2 9 :REIDENT:
+REASON salmon previously declared at 1 22
+open scope 2
+USED identifier pacific marked as used.
+USED identifier salmon marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

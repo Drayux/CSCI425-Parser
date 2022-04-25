@@ -1,0 +1,9 @@
+DECLARE in scope=0 name=word  const=True line=1 type=string col=8
+DECLARE in scope=0 name=speak  type=int// line=2 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=3 col=9
+open scope 2
+USED identifier word marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

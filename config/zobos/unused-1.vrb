@@ -1,0 +1,28 @@
+DECLARE in scope=0 name=main  type=int// line=1 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=2 col=9
+open scope 2
+DECLARE in scope=2 name=x  const=False line=4 type=int col=9
+DECLARE in scope=2 name=j  const=False line=5 type=float col=11
+DECLARE in scope=2 name=k  const=False line=5 type=float col=15
+USED identifier k marked as used.
+DECLARE in scope=2 name=m  const=True line=6 type=string col=12
+DECLARE in scope=2 name=mlen  const=False line=7 type=int col=9
+USED identifier x marked as used.
+USED identifier k (re)marked as used.
+open scope 3
+DECLARE in scope=3 name=j  const=False line=9 type=float col=15
+DECLARE in scope=3 name=q  const=False line=10 type=int col=13
+USED identifier j marked as used.
+open scope 4
+DECLARE in scope=4 name=oops  const=True line=12 type=string col=20
+DECLARE in scope=4 name=b  const=False line=13 type=bool col=18
+USED identifier m marked as used.
+USED identifier mlen marked as used.
+close scope 4 complete
+USED identifier x (re)marked as used.
+USED identifier x (re)marked as used.
+close scope 3 complete
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

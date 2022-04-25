@@ -1,0 +1,2 @@
+OUTPUT :SYNTAX: 2 14 :SYNTAX:
+Parsing error in state 102; input: sc; expected=lbrace

@@ -1,0 +1,35 @@
+DECLARE in scope=0 name=A  line=1 valued=True type=int//int col=5
+DECLARE in scope=0 name=F  type=int//int line=3 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=g  const=True line=3 valued=True type=int col=12
+DECLARE in scope=1 name=r  returns=True used=True type=int line=4 col=9
+open scope 2
+USED identifier g marked as used.
+open scope 3
+USED identifier A marked as used.
+USED identifier F marked as used.
+USED identifier A (re)marked as used.
+USED identifier g (re)marked as used.
+close scope 3 complete
+close scope 2 complete
+close scope 1 complete
+open scope 1
+DECLARE in scope=1 name=b  const=True line=11 valued=True type=int col=12
+DECLARE in scope=1 name=r  returns=True used=True type=int line=12 col=9
+open scope 2
+USED identifier b marked as used.
+open scope 3
+USED identifier A (re)marked as used.
+USED identifier A (re)marked as used.
+USED identifier b (re)marked as used.
+close scope 3 complete
+close scope 2 complete
+close scope 1 complete
+DECLARE in scope=0 name=main  type=int// line=19 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=20 col=9
+open scope 2
+USED identifier F (re)marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

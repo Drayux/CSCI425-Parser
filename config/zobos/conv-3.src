@@ -1,0 +1,8 @@
+int H( bool b, int i, float f )
+returns r = 0
+{
+    string noway = "this won't work";
+    r = H( i, i, b );
+    r = H( noway, i, f );
+    r = H( f, f, b );
+}

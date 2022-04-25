@@ -1,0 +1,15 @@
+DECLARE in scope=0 name=r  type=float//float/int/float line=1 valued=True const=True col=7
+open scope 1
+DECLARE in scope=1 name=a  const=True line=1 valued=True type=float col=16
+DECLARE in scope=1 name=b  const=True line=1 valued=True type=int col=23
+OUTPUT :WARN: 1 32 :REIDENT:
+REASON a previously declared at 1 16
+DECLARE in scope=1 name=x  returns=True used=True type=float line=2 col=9
+open scope 2
+USED identifier r marked as used.
+USED identifier a marked as used.
+USED identifier b marked as used.
+USED identifier x (re)marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

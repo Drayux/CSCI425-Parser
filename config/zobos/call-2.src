@@ -1,0 +1,15 @@
+int newyork();
+int chicago( bool state, int lsd );
+float mc( int franklin, int wabash, int sixth );
+bool golden( float washington );
+
+int silly()
+returns r = 0
+{
+    float s = -3, t = +21;
+    int n = newyork( t );
+    int c = chicago( bool(0), int(s) );
+    s = mc();
+    r = chicago( bool(c), r, float(golden( mc(32+n, newyork()) )));
+    r = silly();
+}

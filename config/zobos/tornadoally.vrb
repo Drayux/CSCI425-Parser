@@ -1,0 +1,76 @@
+DECLARE in scope=0 name=true  const=True line=1 type=bool col=12
+DECLARE in scope=0 name=false  const=True line=2 type=bool col=12
+DECLARE in scope=0 name=hail  type=int//int/bool line=4 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=n  const=True line=4 valued=True type=int col=15
+DECLARE in scope=1 name=test  const=True line=4 valued=True type=bool col=23
+DECLARE in scope=1 name=p  returns=True used=True type=int line=5 col=9
+USED identifier n marked as used.
+open scope 2
+DECLARE in scope=2 name=g  const=False line=7 type=bool col=10
+USED identifier true marked as used.
+USED identifier test marked as used.
+USED identifier true (re)marked as used.
+open scope 3
+USED identifier n (re)marked as used.
+close scope 3 complete
+USED identifier g marked as used.
+USED identifier true (re)marked as used.
+open scope 3
+USED identifier n (re)marked as used.
+close scope 3 complete
+close scope 2 complete
+close scope 1 complete
+DECLARE in scope=0 name=stone  line=17 valued=True type=int//int/bool col=5
+DECLARE in scope=0 name=main  type=int//int line=19 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=n  const=True line=19 valued=True type=int col=14
+DECLARE in scope=1 name=r  returns=True used=True type=int line=20 col=9
+open scope 2
+DECLARE in scope=2 name=count  const=False line=22 type=int col=9
+DECLARE in scope=2 name=p  const=False line=23 type=int col=9
+DECLARE in scope=2 name=q  const=False line=23 type=int col=12
+USED identifier n marked as used.
+USED identifier n (re)marked as used.
+open scope 3
+USED identifier count marked as used.
+USED identifier hail marked as used.
+USED identifier n (re)marked as used.
+USED identifier true (re)marked as used.
+USED identifier p marked as used.
+USED identifier n (re)marked as used.
+open scope 4
+USED identifier stone marked as used.
+USED identifier n (re)marked as used.
+USED identifier false marked as used.
+close scope 4 complete
+open scope 4
+USED identifier p (re)marked as used.
+close scope 4 complete
+USED identifier main marked as used.
+USED identifier q marked as used.
+close scope 3 complete
+open scope 3
+USED identifier count (re)marked as used.
+close scope 3 complete
+close scope 2 complete
+close scope 1 complete
+open scope 1
+DECLARE in scope=1 name=n  const=True line=38 valued=True type=int col=16
+DECLARE in scope=1 name=test  const=True line=38 valued=True type=bool col=24
+DECLARE in scope=1 name=p  returns=True used=True type=int line=39 col=9
+USED identifier n marked as used.
+open scope 2
+DECLARE in scope=2 name=g  const=False line=41 type=bool col=10
+USED identifier true (re)marked as used.
+USED identifier test marked as used.
+USED identifier true (re)marked as used.
+open scope 3
+USED identifier n (re)marked as used.
+close scope 3 complete
+USED identifier g marked as used.
+USED identifier true (re)marked as used.
+USED identifier n (re)marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

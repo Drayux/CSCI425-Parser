@@ -1,0 +1,31 @@
+DECLARE in scope=0 name=needle  const=True line=1 type=float col=13
+DECLARE in scope=0 name=here_fishy_fishy  type=int// line=2 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=guess  returns=True used=True type=int line=3 col=9
+open scope 2
+DECLARE in scope=2 name=haymin  const=False line=5 type=float col=11
+DECLARE in scope=2 name=haymax  const=False line=5 type=float col=27
+DECLARE in scope=2 name=onandon  const=False line=7 type=bool col=10
+USED identifier onandon marked as used.
+open scope 3
+USED identifier guess (re)marked as used.
+USED identifier needle marked as used.
+open scope 4
+USED identifier guess (re)marked as used.
+close scope 4 complete
+USED identifier guess (re)marked as used.
+USED identifier needle (re)marked as used.
+open scope 4
+USED identifier guess (re)marked as used.
+close scope 4 complete
+open scope 4
+close scope 4 complete
+USED identifier onandon (re)marked as used.
+open scope 4
+USED identifier haymax marked as used.
+USED identifier haymin marked as used.
+close scope 4 complete
+close scope 3 complete
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

@@ -1,0 +1,25 @@
+DECLARE in scope=0 name=ONE  const=True line=1 type=int col=11
+DECLARE in scope=0 name=rabbits  type=int// line=2 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=current  returns=True used=True type=int line=3 col=9
+USED identifier ONE marked as used.
+open scope 2
+DECLARE in scope=2 name=prev  const=False line=5 type=int col=9
+USED identifier current (re)marked as used.
+DECLARE in scope=2 name=begin  const=True line=6 type=string col=12
+USED identifier begin marked as used.
+USED identifier current (re)marked as used.
+open scope 3
+DECLARE in scope=3 name=tmp  const=False line=9 type=int col=13
+USED identifier current (re)marked as used.
+USED identifier current (re)marked as used.
+USED identifier prev marked as used.
+USED identifier tmp marked as used.
+USED identifier current (re)marked as used.
+close scope 3 complete
+DECLARE in scope=2 name=end  const=True line=15 type=string col=12
+USED identifier end marked as used.
+USED identifier end (re)marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete
