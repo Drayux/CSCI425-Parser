@@ -1,3 +1,4 @@
+import codecs
 from copy import copy
 from io import TextIOWrapper
 from ParseExceptions import StructureError
@@ -142,7 +143,6 @@ class TTable:
 				elif transitionChar[1] == 's':
 					transitionChar= 32
 				else:
-					transitionChar = ord(transitionChar[1])
 			else:
 				transitionChar = ord(transitionChar[0])
         #AddEntries if not present
