@@ -5,6 +5,7 @@ from Grammar import Grammar
 from ParseExceptions import ParseError
 from ParseTable import LLParseTable as LLTable
 from ParseTable import LRParseTable as LRTable
+from ParseTable import ActionType
 from ParseTree import ParseTree
 from TokenStream import TokenStream
 
@@ -123,10 +124,54 @@ class LRParser:
 		self.table = LRTable(tablepath)
 		# self.table = LRTable(grammar)			# Generate the parse table (TODO), currently just read from file
 
+	def next(self, queue, stream = None):
+		if type(queue) is not list:
+			raise TypeError("Invalid usage of LRParser.next()")
+
+		if stream is None:
+			try: return queue[-1]
+			except IndexError: return None
+
+		if type(stream) is not TokenStream:
+			raise TypeError("Invalid usage of LRParser.next()")
+
+		if len(queue) > 0: return queue.pop(0)
+		try: return stream.next()
+		except StopIteration: return self.grammar.prodend
+
 	def parse(self, stream: TokenStream):
-		result = self.table.getAction(9, 'a')
+		stack = [ 0 ]		# Stack of state numbers
+		queue = []			# Queue of nonterminal transitions (call stream.next() if empty)
+
+		# Every stack element refers to an index in this array for storing intermediate trees
+		trees = [ None for x in range(len(self.table.row)) ]
+
+		# Main parsing loop
+		while True:
+			# Get the table value
+			state = self.next(stack)
+			symbol = self.next(queue, stream)
+
+			try: action = self.table.getAction(state, symbol)
+			except StopIteration:
+				if type(symbol) is ParseTree and symbol.data == self.grammar.start: return symbol
+				raise ParseError("SYNTAX ERROR (1)")
+
+			# -- SHIFT ACTION --
+			if action.type == ActionType.SHIFT:
+				pass
+
+			# -- REDUCE ACTION --
+			elif action.type == ActionType.REDUCE:
+				pass
+
+			# -- NO ACTION --
+			else: raise ParseError("SYNTAX ERROR (2)")
+
+		# Debug testing
+		result = self.table.getAction(10, '$')
 		print("TYPE:", type(result))
-		print(f"RESULT: '{result}'")
+		print(f"RESULT: {result.type} / {result.value}")
 		# raise NotImplementedError("LR(0) Parsing (Parser.py)")
 
 	def __str__(self):
@@ -149,10 +194,9 @@ if __name__ == "__main__":
 	print(tree)
 
 	# cst stuff for wreck
-	llgrammar = Grammar("config/regex.cfg")
-	llparser = LLParser(llgrammar)
-	LLstream = TokenStream(r"((\n|\s|\\)|\+0-9(:|\+|<))*(@?>=|<)", False)
-	CSTtree = llparser.parse(LLstream, True)
-	print(CSTtree)
+	# llgrammar = Grammar("config/regex.cfg")
+	# llparser = LLParser(llgrammar)
+	# LLstream = TokenStream(r"((\n|\s|\\)|\+0-9(:|\+|<))*(@?>=|<)", False)
+	# CSTtree = llparser.parse(LLstream, True)
+	# print(CSTtree)
 	# end cst stuff for wreck
-	'\\\\'

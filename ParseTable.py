@@ -131,7 +131,7 @@ class LRParseTable:
 		"""
 		self.data = None                # Renamed from table
 		self.row = []                   # This is the PARSING STATES
-		self.colLabels = []            # This is the GRAMMAR SYMBOLS
+		self.colLabels = []				# This is the GRAMMAR SYMBOLS
 		self.grammarMap = dict()        # This will come in handy for the interface
 		# TODO: self.empty = grammar.empty
 
@@ -194,10 +194,15 @@ class LRParseTable:
 		if type(state) is tuple:
 			row = state[0]
 			col = self.grammarMap[state[1]]
-		ret = self.row[row][col]
+
+		try: return self.row[row][col]
+		except IndexError: raise StopIteration		# Start symbol reached
+
+		## This part is now deprecated ##
 		if ret == '':
 			ret = "ERROR"
 		return ret
+		#################################
 
 	# Output the production table
 	def __str__(self):
