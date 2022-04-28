@@ -136,42 +136,75 @@ class LRParser:
 			raise TypeError("Invalid usage of LRParser.next()")
 
 		if len(queue) > 0: return queue.pop(0)
-		try: return stream.next()
-		except StopIteration: return self.grammar.prodend
+		try:
+			ret = stream.next()
+			print(ret)
+			return ParseTree(ret[0], None)
+		except StopIteration: return ParseTree(self.grammar.prodend, None)
 
 	def parse(self, stream: TokenStream):
-		stack = [ 0 ]		# Stack of state numbers
-		queue = []			# Queue of nonterminal transitions (call stream.next() if empty)
+		stack = [ (0, None) ]		# Stack of state numbers
+		queue = []					# Queue of nonterminal transitions (call stream.next() if empty)
 
 		# Every stack element refers to an index in this array for storing intermediate trees
-		trees = [ None for x in range(len(self.table.row)) ]
+		# trees = [ None for x in range(len(self.table.row)) ]
 
-		# Main parsing loop
+		# -- PARSING LOOP --
+		# Get the table value
+		state = stack[0]
+		symbol = self.next(queue, stream)
+
 		while True:
-			# Get the table value
 			state = self.next(stack)
-			symbol = self.next(queue, stream)
+			action = self.table.getAction(state[0], symbol.data)
 
-			try: action = self.table.getAction(state, symbol)
-			except StopIteration:
-				if type(symbol) is ParseTree and symbol.data == self.grammar.start: return symbol
-				raise ParseError("SYNTAX ERROR (1)")
+			# try: action = self.table.getAction(state[0], symbol.data)
+			# except StopIteration:
+			# 	if type(symbol) is ParseTree and symbol.data == self.grammar.start: return symbol
+			# 	raise ParseError("SYNTAX ERROR (1)")
 
 			# -- SHIFT ACTION --
 			if action.type == ActionType.SHIFT:
-				pass
+				# Build the tuple for the stack
+				knit = (action.value, symbol)
+				stack.append(knit)			# Push state onto stack (TODO: what if duplicate state??)
+
+				# Pop the queue
+				symbol = self.next(queue, stream)
+				continue
 
 			# -- REDUCE ACTION --
-			elif action.type == ActionType.REDUCE:
-				pass
+			if action.type == ActionType.REDUCE:
+				# Get the production rule
+				rule = self.grammar.ruleList()[action.value]
+				length = len(rule[1])
+
+				# Create the new rule tree
+				tree = ParseTree(rule[0], None)
+				states = []
+
+				# Pop as many elements as there were rules
+				for x in range(length):
+					states.append(stack.pop()[1])
+
+				# Append freshly-popped states
+				states.reverse()
+				for s in states:
+					tree.addChild(s)
+
+				queue.insert(0, tree)
+
+				# Exit the parse if we've reduced the start symbol
+				if rule[0] == self.grammar.start: return tree
+				continue
 
 			# -- NO ACTION --
-			else: raise ParseError("SYNTAX ERROR (2)")
+			raise ParseError("SYNTAX ERROR (2)")
 
 		# Debug testing
-		result = self.table.getAction(10, '$')
-		print("TYPE:", type(result))
-		print(f"RESULT: {result.type} / {result.value}")
+		# result = self.table.getAction(10, '$')
+		# print("TYPE:", type(result))
+		# print(f"RESULT: {result.type} / {result.value}")
 		# raise NotImplementedError("LR(0) Parsing (Parser.py)")
 
 	def __str__(self):
@@ -182,7 +215,7 @@ class LRParser:
 if __name__ == "__main__":
 	grammar = Grammar("assignments/LGA-22/fischer-4-1.cfg")
 	parser = LRParser(grammar, "assignments/LGA-22/cytron-67.lr")
-	stream = TokenStream("assignments/LGA-22/fischer-4-1t_src.tok")
+	stream = TokenStream("assignments/LGA-22/fischer-4-1t_src.tok", True)
 
 	print("GRAMMAR:")
 	print(grammar)

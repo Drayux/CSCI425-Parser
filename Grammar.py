@@ -109,7 +109,7 @@ class Grammar:
 					self.nonterminals.append(symbol)
 					self.rules[symbol] = []
 
-		# Debug output 
+		# Debug output
 		# print(self.nonterminals)
 
 		# Build the dict of grammar rules
@@ -196,6 +196,12 @@ class Grammar:
 			for rule in self.rules[nt]:
 				rules.append((nt, rule))
 		return rules
+
+	# Returns True if the specified state number is an accepting state
+	def isAccept(self, x):
+		l = self.ruleList()
+		if l[x][0] == self.start: return True
+		return False
 
 	# Subroutine of symbolEmpty()
 	def ruleEmpty(self, rule, empty, nonempty, ignore):
