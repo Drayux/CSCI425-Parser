@@ -8,12 +8,12 @@
 
 ## WORK TODOS
 
-- [ ] Parse a token stream with LR
+- [ ] Parse a token stream with LR - Liam
 	- [ ] Use LR knitting
 	- [ ] Use SLR table 
 	- [ ] Use zlang.cfg
 	- [ ] Check for syntax errors
-- [ ] Develop SDTs to make an AST during the above parse
+- [ ] Develop SDTs to make an AST during the above parse - Konch and Andrew
 	- [ ] EXPR will be simplified to 
 		- [ ] leaves are literals or variables
 		- [ ] root and internal nodes are non-termianls:
@@ -30,7 +30,7 @@
 		- [ ] STMTS
 		- [ ] BRACESTMTS
 	- [ ] Simple Tree representation of AST to disk
-- [ ] Semantic checks on AST on variable, expression and function
+- [ ] Semantic checks on AST on variable, expression and function - Chris
 	- [ ] Emit will write symbol tables to disk 
 	- [ ] Warnings and errors will be emitted 
 - [ ] ZOBOS will exit(0) if no errors, exit(1) on error
