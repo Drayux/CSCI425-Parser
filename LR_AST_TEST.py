@@ -5,7 +5,7 @@ from LR_AST import LR_AST_EOP
 from ParseTree import ParseTree
 
 
-class MyTestCase(unittest.TestCase):
+class ASTTestCase(unittest.TestCase):
     def test_FUNTYPE_leaf_procedure(self):
         parentData = "PARAMLIST"
         expected = "type:int"
@@ -92,8 +92,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual("3", parent.getChild().children[0].data)  # The EXPR should have saved its children
         self.assertEqual("4", parent.getChild().children[1].data)  # Same here
 
-
-
     def test_PLUS_TIMES_procedure(self):
         parentData = "SUM"
         expected = "-"
@@ -112,7 +110,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.children[1].data)
 
-    @unittest.skip("IF test in progress")
+    @unittest.skip("IF test development in progress")
     def test_basic_if(self):
         t = ParseTree("IF", None)
         t.addChild("if")
@@ -179,7 +177,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual("intval:321", parent.getChild().data)
         self.assertEqual(0, len(parent.getChild().children))
-
 
     def test_PRODUCT_procedure(self):
         # AEXPR -> SUM -> firsty + secondy : AEXPR -> + -> firsty secondy
@@ -280,6 +277,23 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual("==", parent.getChild().data)
         self.assertEqual(firstExpr, parent.getChild().children[0].data)
         self.assertEqual(secondExpr, parent.getChild().children[1].data)
+
+    def test_CASTR_procedure(self):
+        parentData = "VALUE"
+        castType = "bool"
+        exprVal = "id:tampa"
+        parent = ParseTree(parentData, None)
+        parent.addChild("CAST")
+        CAST = parent.getChild()
+        CAST.addChild(castType)
+        CAST.addChild("lparen")
+        CAST.addChild(exprVal)
+        CAST.addChild("rparen")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)
+        self.assertEqual(castType, parent.getChild().data)
+        self.assertEqual(exprVal, parent.getChild().getChild().data)
+
 
 if __name__ == '__main__':
     unittest.main()

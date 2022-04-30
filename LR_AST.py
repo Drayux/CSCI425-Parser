@@ -39,7 +39,6 @@ def procedure_VALUE(node: ParseTree):
         replace_node_with_new_node(node, node.children[1])
 
 
-
 def procedure_IF(node: ParseTree):
     assert(len(node.children) > 3)
     assert(node.children[0].data == "if")
@@ -100,6 +99,12 @@ def procedure_BOOLS(node: ParseTree):
     replace_node_with_new_node(node, node.getChild())
 
 
+def procedure_CAST(node: ParseTree):
+    node.data = node.children[0].data  # Takes the casting
+    node.removeChild(node.getChild())  # removes rparen
+    node.removeChild(node.children[0])  # removes lparen
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -135,6 +140,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_FUNCALL(node)
     elif node.data == "BOOLS":
         procedure_BOOLS(node)
+    elif node.data == "CAST":
+        procedure_CAST(node)
 
 
 def LR_AST_EOP(node: ParseTree):
