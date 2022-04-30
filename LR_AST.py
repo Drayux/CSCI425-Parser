@@ -28,6 +28,12 @@ def procedure_leaf(node: ParseTree):
 
 def procedure_VALUE(node: ParseTree):
     if len(node.children) == 1:
+        childData = node.getChild().data
+        if childData == "plus" : node.getChild().data = "+"
+        if childData == "minus" : node.getChild().data = "-"
+        if childData == "mult" : node.getChild().data = "*"
+        if childData == "div" : node.getChild().data = "/"
+        if childData == "mod" : node.getChild().data = "%"
         replace_node_with_new_node(node, node.getChild())
     elif node.getChild().data == "rparen":
         replace_node_with_new_node(node, node.children[1])
@@ -66,6 +72,14 @@ def procedure_UNARY(node: ParseTree):
     node.data = operaterData
 
 
+def procedure_BINARY(node: ParseTree):
+    if len(node.children) == 3:
+        node.data = node.children[1].data
+        node.removeChild(node.children[1])
+    if len(node.children) == 1:
+        replace_node_with_new_node(node, node.getChild())
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -92,6 +106,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_WHILE(node)
     elif node.data == "UNARY":
         procedure_UNARY(node)
+    elif node.data == "SUM":
+        procedure_BINARY(node)
 
 
 def LR_AST_EOP(node: ParseTree):

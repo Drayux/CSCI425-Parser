@@ -94,7 +94,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_PLUS_TIMES_procedure(self):
         parentData = "SUM"
-        expected = "minus"
+        expected = "-"
         parent = ParseTree(parentData, None)
         parent.addChild("PRODUCT")
         parent.addChild("PLUS")
@@ -103,7 +103,7 @@ class MyTestCase(unittest.TestCase):
         LR_AST_EOP(parent)
         self.assertEqual(parentData, parent.data)
         self.assertEqual(expected, parent.children[1].data)
-        expected = "div"
+        expected = "/"
         parent.children[1].data = "TIMES"
         parent.children[1].addChild("div")
         LR_AST_EOP(parent)
@@ -153,6 +153,32 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual("-", parent.getChild().data)  # first child should be "-"
         self.assertEqual(childchild2Data, parent.getChild().getChild().data) # after "-" should be the val/var
+
+    def test_SUM_procedure(self):
+        # AEXPR -> SUM -> firsty + secondy : AEXPR -> + -> firsty secondy
+        parentData = "AEXPR"
+        parent = ParseTree(parentData, None)
+        parent.addChild("SUM")
+        SUM = parent.getChild()
+        SUM.addChild("id:firsty")
+        SUM.addChild("+")
+        SUM.addChild("id:secondy")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("+", parent.getChild().data)
+        self.assertEqual("id:firsty", parent.getChild().children[0].data)
+        self.assertEqual("id:secondy", parent.getChild().children[1].data)
+        # AEXPR -> SUM -> intval:321 : AEXPR -> intval:321
+        parent = ParseTree(parentData, None)
+        parent.addChild("SUM")
+        SUM = parent.getChild()
+        SUM.addChild("intval:321")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("intval:321", parent.getChild().data)
+        self.assertEqual(0, len(parent.getChild().children))
+
+
 
 
 
