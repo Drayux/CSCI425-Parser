@@ -31,6 +31,28 @@ def procedure_VALUE(node: ParseTree):
         replace_node_with_new_node(node, node.getChild())
 
 
+
+def procedure_IF(node: ParseTree):
+    assert(len(node.children) > 3)
+    assert(node.children[0].data == "if")
+    assert(node.children[1].data == "lparen")
+    assert(node.children[3].data == "rparen")
+
+    node.removeChild(node.children[3])  # Remove rparen
+    node.removeChild(node.children[1])  # Remove lparen
+    i = len(node.children) - 1
+    while i > 0:  # Skip if
+        n = node.children[i]
+        # Move the node down as a child of the if
+        node.removeChild(n)
+        node.children[0].addChild(n)
+        i -= 1
+
+
+def procedure_WHILE(node: ParseTree):
+    pass
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -51,6 +73,10 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     elif node.data == "PLUS" or \
             node.data == "TIMES":
         procedure_VALUE(node)
+    elif node.data == "IF":
+        procedure_IF(node)
+    elif node.data == "WHILE":
+        procedure_WHILE(node)
 
 
 def LR_AST_EOP(node: ParseTree):

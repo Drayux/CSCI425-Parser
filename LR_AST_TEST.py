@@ -94,8 +94,17 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(parentData, parent.data)
         self.assertEqual(expected, parent.children[1].data)
 
-
-
+    def test_basic_if(self):
+        t = ParseTree("IF", None)
+        t.addChild("if")
+        t.addChild("lparen")
+        t.addChild("BEXPR")
+        t.addChild("rparen")
+        t.addChild("STATEMENT")
+        LR_AST_EOP(t)
+        self.assertEqual(t.children[0].data, "IF")
+        self.assertEqual(t.children[1].data, "BEXPR")
+        self.assertEqual(t.children[2].data, "STATEMENT")
 
 
 if __name__ == '__main__':
