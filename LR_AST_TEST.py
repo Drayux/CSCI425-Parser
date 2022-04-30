@@ -110,18 +110,29 @@ class ASTTestCase(unittest.TestCase):
         self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.children[1].data)
 
-    @unittest.skip("IF test development in progress")
     def test_basic_if(self):
+        # I developed this test to look like the right of expr-3.pdf
+        parent = ParseTree("STATEMENT", None)
         t = ParseTree("IF", None)
         t.addChild("if")
         t.addChild("lparen")
         t.addChild("BEXPR")
+        BEXPR = t.getChild()
+        BEXPR.addChild("int")
+        BEXPR.getChild().addChild("id:tampa")
+        BEXPR.addChild("==")
+        BEXPR.addChild("intval:1")
         t.addChild("rparen")
         t.addChild("STATEMENT")
+        parent.addChild(t)
         LR_AST_EOP(t)
-        self.assertEqual(t.children[0].data, "IF")
-        self.assertEqual(t.children[1].data, "BEXPR")
-        self.assertEqual(t.children[2].data, "STATEMENT")
+        LR_AST_EOP(parent)
+        self.assertEqual("IF", t.data)
+        self.assertEqual("==", t.children[0].data)
+        self.assertEqual("int", t.children[0].children[0].data)
+        self.assertEqual("id:tampa", t.children[0].children[0].getChild().data)
+        self.assertEqual("intval:1", t.children[0].children[1].data)
+        self.assertEqual("STATEMENT", t.children[1].data)
 
     def test_UNARY_procedure(self):
         # VALUE -> UNARY -> not id:gogogo : VALUE -> ! -> id:gogogo

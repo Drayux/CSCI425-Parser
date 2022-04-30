@@ -14,7 +14,7 @@
 	- [ ] Use zlang.cfg
 	- [ ] Check for syntax errors
 - [ ] Develop SDTs to make an AST during the above parse - Konch and Andrew
-    - [ ] EXPR will be simplified to 
+    - [X] EXPR will be simplified to 
         - [X] leaves are literals or variables
             - [X] BEXPR
             - [X] AEXPR
@@ -27,17 +27,17 @@
                   - [X] VALUE
                     - [X] Made test for value literals 
                     - [X] Made test for lparen EXPR rparen 
-        - [ ] root and internal nodes are non-termianls:
+        - [X] root and internal nodes are non-termianls:
             - [X] BOOLS
             - [X] PLUS
             - [X] TIMES
             - [X] UNARY
                 - [X] Made test for UNARY 
-            - [ ] CAST
-                - [ ] Made test for CAST
+            - [x] CAST
+                - [x] Made test for CAST
             - [X] FUNCALL
     - [ ] Control Structures will be simplified
-        - [ ] IF
+        - [X] IF
         - [ ] IFELSE
         - [ ] WHILE
         - [ ] STMTS
