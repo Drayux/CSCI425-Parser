@@ -33,7 +33,20 @@ def procedure_VALUE(node: ParseTree):
 
 
 def procedure_IF(node: ParseTree):
-    pass
+    assert(len(node.children) > 3)
+    assert(node.children[0].data == "if")
+    assert(node.children[1].data == "lparen")
+    assert(node.children[3].data == "rparen")
+
+    node.removeChild(node.children[3])  # Remove rparen
+    node.removeChild(node.children[1])  # Remove lparen
+    i = len(node.children) - 1
+    while i > 0:  # Skip if
+        n = node.children[i]
+        # Move the node down as a child of the if
+        node.removeChild(n)
+        node.children[0].addChild(n)
+        i -= 1
 
 
 def procedure_WHILE(node: ParseTree):
