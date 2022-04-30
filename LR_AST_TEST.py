@@ -203,6 +203,25 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual("id:PizzaTime", parent.getChild().data)
         self.assertEqual(0, len(parent.getChild().children))
 
+    def test_FUNCALL(self):
+        parentData = "EXPR"
+        functionId = "id:functionName"
+        parent = ParseTree(parentData, None)
+        parent.addChild("FUNCALL")
+        FUNCALL = parent.getChild()
+        FUNCALL.addChild(functionId)
+        FUNCALL.addChild("lparen")
+        FUNCALL.addChild("ARGLIST")
+        FUNCALL.addChild("rparen")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual(2, len(parent.getChild().children))
+        self.assertEqual(functionId, parent.getChild().children[0].data)
+        self.assertEqual("ARGLIST", parent.getChild().getChild().data)
+
+
+
+
 
 
 if __name__ == '__main__':

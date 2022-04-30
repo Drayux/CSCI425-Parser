@@ -80,6 +80,11 @@ def procedure_BINARY(node: ParseTree):
         replace_node_with_new_node(node, node.getChild())
 
 
+def procedure_FUNCALL(node: ParseTree):
+    node.removeChild(node.getChild())  # Removes rparen
+    node.removeChild(node.children[1])  # Removes lparen
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -109,6 +114,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     elif node.data == "SUM" or \
             node.data == "PRODUCT":
         procedure_BINARY(node)
+    elif node.data == "FUNCALL":
+        procedure_FUNCALL(node)
 
 
 def LR_AST_EOP(node: ParseTree):
