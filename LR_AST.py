@@ -85,6 +85,21 @@ def procedure_FUNCALL(node: ParseTree):
     node.removeChild(node.children[1])  # Removes lparen
 
 
+def procedure_BOOLS(node: ParseTree):
+    childData = node.getChild().data
+    if childData == "lt":
+        node.getChild().data = "<"
+    elif childData == "leq":
+        node.getChild().data = "<="
+    elif childData == "eq":
+        node.getChild().data = "=="
+    elif childData == "geq":
+        node.getChild().data = ">="
+    elif childData == "gt":
+        node.getChild().data = ">"
+    replace_node_with_new_node(node, node.getChild())
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -113,10 +128,13 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_UNARY(node)
     elif node.data == "SUM" or \
             node.data == "PRODUCT" or \
-            node.data == "AEXPR":
+            node.data == "AEXPR" or \
+            node.data == "BEXPR":
         procedure_BINARY(node)
     elif node.data == "FUNCALL":
         procedure_FUNCALL(node)
+    elif node.data == "BOOLS":
+        procedure_BOOLS(node)
 
 
 def LR_AST_EOP(node: ParseTree):

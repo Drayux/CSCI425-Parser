@@ -1,4 +1,6 @@
 import unittest
+
+import LR_AST
 from LR_AST import LR_AST_EOP
 from ParseTree import ParseTree
 
@@ -234,9 +236,50 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual("3", parent.getChild().children[0].data)
         self.assertEqual("4", parent.getChild().children[1].data)
 
-
-
-
+    def test_BEXPR_BOOLS_procedure(self):
+        BOOLS = ParseTree("BOOLS", None)
+        BOOLS.addChild("lt")
+        LR_AST.LR_AST_SDT_Procedure(BOOLS)
+        self.assertEqual("<", BOOLS.data)
+        BOOLS = ParseTree("BOOLS", None)
+        BOOLS.addChild("leq")
+        LR_AST.LR_AST_SDT_Procedure(BOOLS)
+        self.assertEqual("<=", BOOLS.data)
+        BOOLS = ParseTree("BOOLS", None)
+        BOOLS.addChild("eq")
+        LR_AST.LR_AST_SDT_Procedure(BOOLS)
+        self.assertEqual("==", BOOLS.data)
+        BOOLS = ParseTree("BOOLS", None)
+        BOOLS.addChild("geq")
+        LR_AST.LR_AST_SDT_Procedure(BOOLS)
+        self.assertEqual(">=", BOOLS.data)
+        BOOLS = ParseTree("BOOLS", None)
+        BOOLS.addChild("gt")
+        LR_AST.LR_AST_SDT_Procedure(BOOLS)
+        self.assertEqual(">", BOOLS.data)
+        parentData = "EXPR"
+        firstExpr = "id:varName"
+        secondExpr = "intval:10"
+        boolExpr = "=="
+        parent = ParseTree(parentData, None)
+        parent.addChild("BEXPR")
+        BEXPR = parent.getChild()
+        BEXPR.addChild("AEXPR")
+        BEXPR.getChild().addChild(firstExpr)
+        BEXPR.addChild("BOOLS")
+        BEXPR.getChild().addChild("eq")
+        BEXPR.addChild("AEXPR")
+        BEXPR.getChild().addChild(secondExpr)
+        LR_AST_EOP(BEXPR)
+        self.assertEqual("BEXPR", BEXPR.data)
+        self.assertEqual(firstExpr, BEXPR.children[0].data)
+        self.assertEqual(boolExpr, BEXPR.children[1].data)
+        self.assertEqual(secondExpr, BEXPR.children[2].data)
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("==", parent.getChild().data)
+        self.assertEqual(firstExpr, parent.getChild().children[0].data)
+        self.assertEqual(secondExpr, parent.getChild().children[1].data)
 
 if __name__ == '__main__':
     unittest.main()

@@ -15,8 +15,8 @@
 	- [ ] Check for syntax errors
 - [ ] Develop SDTs to make an AST during the above parse - Konch and Andrew
     - [ ] EXPR will be simplified to 
-        - [ ] leaves are literals or variables
-            - [ ] BEXPR
+        - [X] leaves are literals or variables
+            - [X] BEXPR
             - [X] AEXPR
               - [X] PRODUCT
               - [X] SUM
@@ -28,7 +28,7 @@
                     - [X] Made test for value literals 
                     - [X] Made test for lparen EXPR rparen 
         - [ ] root and internal nodes are non-termianls:
-            - [ ] BOOLS
+            - [X] BOOLS
             - [X] PLUS
             - [X] TIMES
             - [X] UNARY
