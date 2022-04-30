@@ -16,29 +16,20 @@ def replace_node_with_new_node(node: ParseTree, new_node: ParseTree):
     return
 
 
-def semantic_Check(node: ParseTree):
-    if node.data == "range":
-        lowerCase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-                     "u", "v", "w", "x", "y", "z"]
-        upperCase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-                     "U", "V", "W", "X", "Y", "Z"]
-        numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-        lefty = node.children[0].data
-        righty = node.children[1].data
-        if all(x in lowerCase for x in [lefty, righty]) or \
-                all(x in upperCase for x in [lefty, righty]) or \
-                all(x in numbers for x in [lefty, righty]):
-            pass
-        else:
-            print("SEMANTIC ERROR: the two values are of different cases or types")
-            sys.exit(3)
-        if lefty > righty:
-            print("SEMANTIC ERROR: Left value is greater than right value in range")
-            sys.exit(3)
+def procedure_FUNTYPE(node: ParseTree):
+    childData = "type:" + node.children[0].data
+    newNode = ParseTree(childData, None)
+    replace_node_with_new_node(node, newNode)
 
 
-def procedure_EMIT(node: ParseTree):
-    replace_node_with_new_node(node, node.children[0])
+def procedure_leaf(node: ParseTree):
+    node.data = node.data + ":" + node.aux
+
+
+def procedure_VALUE(node: ParseTree):
+    if len(node.children) == 1:
+        replace_node_with_new_node(node, node.getChild())
+
 
 
 def procedure_IF(node: ParseTree):
@@ -55,8 +46,18 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     :param node:
     :return: None / Transformation
     """
-    if node.data == "EMIT":
-        procedure_EMIT(node)
+
+    if node.data == "FUNTYPE":
+        procedure_FUNTYPE(node)
+    elif node.data == "GLOBTYPE":
+        procedure_FUNTYPE(node)
+    elif node.data == "id" or \
+            node.data == "intval" or \
+            node.data == "floatval" or \
+            node.data == "stringval":
+        procedure_leaf(node)
+    elif node.data == "VALUE":
+        procedure_VALUE(node)
     elif node.data == "IF":
         procedure_IF(node)
     elif node.data == "WHILE":

@@ -14,22 +14,31 @@
 	- [ ] Use zlang.cfg
 	- [ ] Check for syntax errors
 - [ ] Develop SDTs to make an AST during the above parse - Konch and Andrew
-	- [ ] EXPR will be simplified to 
-		- [ ] leaves are literals or variables
-		- [ ] root and internal nodes are non-termianls:
-			- [ ] BOOLS
-			- [ ] PLUS
-			- [ ] MULT
-			- [ ] UNARY
-			- [ ] CAST
-			- [ ] FUNCALL
-	- [ ] Control Structures will be simplified
-		- [ ] IF
-		- [ ] IFELSE
-		- [ ] WHILE
-		- [ ] STMTS
-		- [ ] BRACESTMTS
-	- [ ] Simple Tree representation of AST to disk
+    - [ ] EXPR will be simplified to 
+        - [ ] leaves are literals or variables
+            - [X] FUNTYPE
+              - [X] Made test
+            - [X] GLOBTYPE
+                - [X] Made test
+            - [ ] VALUE
+              - [X] Made test for value literals 
+              - [ ] Made test for UNARY 
+              - [ ] Made test for CAST
+              - [ ] Made test for lparen EXPR rparen 
+        - [ ] root and internal nodes are non-termianls:
+            - [ ] BOOLS
+            - [ ] PLUS
+            - [ ] MULT
+            - [ ] UNARY
+            - [ ] CAST
+            - [ ] FUNCALL
+    - [ ] Control Structures will be simplified
+        - [ ] IF
+        - [ ] IFELSE
+        - [ ] WHILE
+        - [ ] STMTS
+        - [ ] BRACESTMTS
+    - [ ] Simple Tree representation of AST to disk
 - [ ] Semantic checks on AST on variable, expression and function - Chris
 	- [ ] Emit will write symbol tables to disk 
 	- [ ] Warnings and errors will be emitted 

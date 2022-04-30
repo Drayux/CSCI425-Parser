@@ -1,6 +1,7 @@
 class ParseTree:
 	def __init__(self, data, parent):
 		self.data = data
+		self.aux = ""
 		self.parent = parent
 		self.children = []
 
