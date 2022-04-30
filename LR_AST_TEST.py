@@ -219,6 +219,20 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(functionId, parent.getChild().children[0].data)
         self.assertEqual("ARGLIST", parent.getChild().getChild().data)
 
+    def test_AEXPR_procedure(self):
+        parentData = "EXPR"
+        parent = ParseTree(parentData, None)
+        parent.addChild("AEXPR")
+        AEXPR = parent.getChild()
+        AEXPR.addChild("+")
+        AEXPR.getChild().addChild("3")
+        AEXPR.getChild().addChild("4")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual(1, len(parent.children))
+        self.assertEqual("+", parent.getChild().data)
+        self.assertEqual("3", parent.getChild().children[0].data)
+        self.assertEqual("4", parent.getChild().children[1].data)
 
 
 

@@ -112,7 +112,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     elif node.data == "UNARY":
         procedure_UNARY(node)
     elif node.data == "SUM" or \
-            node.data == "PRODUCT":
+            node.data == "PRODUCT" or \
+            node.data == "AEXPR":
         procedure_BINARY(node)
     elif node.data == "FUNCALL":
         procedure_FUNCALL(node)

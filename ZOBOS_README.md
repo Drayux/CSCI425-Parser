@@ -16,18 +16,17 @@
 - [ ] Develop SDTs to make an AST during the above parse - Konch and Andrew
     - [ ] EXPR will be simplified to 
         - [ ] leaves are literals or variables
-        - [ ] FUNCALL
-        - [ ] BEXPR
-        - [ ] AEXPR
-          - [X] PRODUCT
-          - [X] SUM
-              - [X] FUNTYPE
-                - [X] Made test
-              - [X] GLOBTYPE
-                  - [X] Made test
-              - [X] VALUE
-                - [X] Made test for value literals 
-                - [X] Made test for lparen EXPR rparen 
+            - [ ] BEXPR
+            - [X] AEXPR
+              - [X] PRODUCT
+              - [X] SUM
+                  - [X] FUNTYPE
+                    - [X] Made test
+                  - [X] GLOBTYPE
+                      - [X] Made test
+                  - [X] VALUE
+                    - [X] Made test for value literals 
+                    - [X] Made test for lparen EXPR rparen 
         - [ ] root and internal nodes are non-termianls:
             - [ ] BOOLS
             - [X] PLUS
@@ -36,7 +35,7 @@
                 - [X] Made test for UNARY 
             - [ ] CAST
                 - [ ] Made test for CAST
-            - [ ] FUNCALL
+            - [X] FUNCALL
     - [ ] Control Structures will be simplified
         - [ ] IF
         - [ ] IFELSE
