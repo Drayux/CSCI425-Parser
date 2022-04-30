@@ -17,7 +17,8 @@
     - [ ] EXPR will be simplified to 
         - [ ] leaves are literals or variables
         - [ ] AEXPR
-            - [ ] PRODUCT
+            - [ ] 
+            - [X] PRODUCT
             - [X] SUM
                 - [X] FUNTYPE
                   - [X] Made test

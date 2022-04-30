@@ -179,6 +179,29 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(0, len(parent.getChild().children))
 
 
+    def test_PRODUCT_procedure(self):
+        # AEXPR -> SUM -> firsty + secondy : AEXPR -> + -> firsty secondy
+        parentData = "AEXPR"
+        parent = ParseTree(parentData, None)
+        parent.addChild("PRODUCT")
+        SUM = parent.getChild()
+        SUM.addChild("id:firsty")
+        SUM.addChild("*")
+        SUM.addChild("id:secondy")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("*", parent.getChild().data)
+        self.assertEqual("id:firsty", parent.getChild().children[0].data)
+        self.assertEqual("id:secondy", parent.getChild().children[1].data)
+        # AEXPR -> SUM -> intval:321 : AEXPR -> intval:321
+        parent = ParseTree(parentData, None)
+        parent.addChild("PRODUCT")
+        SUM = parent.getChild()
+        SUM.addChild("id:PizzaTime")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("id:PizzaTime", parent.getChild().data)
+        self.assertEqual(0, len(parent.getChild().children))
 
 
 
