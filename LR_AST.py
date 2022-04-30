@@ -53,6 +53,17 @@ def procedure_WHILE(node: ParseTree):
     pass
 
 
+def procedure_UNARY(node: ParseTree):
+    operater = node.children[0]
+    if operater.data == "not":
+        operater.data = "!"
+    if operater.data == "compl":
+        operater.data = "~"
+    operaterData = operater.data
+    node.removeChild(operater)
+    node.data = operaterData
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -77,6 +88,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_IF(node)
     elif node.data == "WHILE":
         procedure_WHILE(node)
+    elif node.data == "UNARY":
+        procedure_UNARY(node)
 
 
 def LR_AST_EOP(node: ParseTree):

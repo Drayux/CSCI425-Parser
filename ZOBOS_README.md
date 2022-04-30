@@ -22,15 +22,15 @@
                 - [X] Made test
             - [ ] VALUE
               - [X] Made test for value literals 
-              - [ ] Made test for UNARY 
-              - [ ] Made test for CAST
               - [ ] Made test for lparen EXPR rparen 
         - [ ] root and internal nodes are non-termianls:
             - [ ] BOOLS
             - [ ] PLUS
-            - [ ] MULT
-            - [ ] UNARY
+            - [ ] PRODUCT
+            - [X] UNARY
+                - [X] Made test for UNARY 
             - [ ] CAST
+                - [ ] Made test for CAST
             - [ ] FUNCALL
     - [ ] Control Structures will be simplified
         - [ ] IF

@@ -12,9 +12,8 @@ class MyTestCase(unittest.TestCase):
         parent.children[0].addChild("int")
         parent.addChild("id")
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.children[0].data)
-
 
     def test_GLOBTYPE_leaf_procedure(self):
         parentData = "GCTDECLLIST"
@@ -24,18 +23,18 @@ class MyTestCase(unittest.TestCase):
         parent.children[0].addChild("const bool")
         parent.addChild("DECLIDS")
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.children[0].data)
 
     def test_leaf_procedure(self):
         parentData = "DECLID"
         variableName = "eldenRing"
-        expected = "id:"+variableName
+        expected = "id:" + variableName
         parent = ParseTree(parentData, None)
         parent.addChild("id")
         parent.getChild().aux = variableName
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.getChild().data)
         parentData = "VALUE"
         valueName = "floatval"
@@ -46,11 +45,10 @@ class MyTestCase(unittest.TestCase):
         parent.addChild(valueName)
         parent.getChild().aux = valueValue
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.getChild().data)
 
-
-    def test_PRODUCT_VALUE_procedure(self):
+    def test_VALUE_procedure(self):
         parentData = "PRODUCT"
         valueName = "floatval"
         valueValue = "2.2"
@@ -59,21 +57,21 @@ class MyTestCase(unittest.TestCase):
         parent.addChild(parentData)
         parent.addChild("TIMES")
         parent.addChild("VALUE")
-        parent.getChild().addChild(valueName+":"+valueValue)
+        parent.getChild().addChild(valueName + ":" + valueValue)
         parent.getChild().getChild().aux = valueValue
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.getChild().data)
         valueName = "stringval"
         valueValue = "Hello There"
         expected = "stringval:Hello There"
         parent.removeChild(parent.getChild())
         parent.addChild("VALUE")
-        parent.getChild().addChild(valueName+":"+valueValue)
+        parent.getChild().addChild(valueName + ":" + valueValue)
         parent.getChild().getChild().aux = valueValue
         parent.getChild().aux = valueValue
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.getChild().data)
 
     def test_PLUS_TIMES_procedure(self):
@@ -91,7 +89,7 @@ class MyTestCase(unittest.TestCase):
         parent.children[1].data = "TIMES"
         parent.children[1].addChild("div")
         LR_AST_EOP(parent)
-        self.assertEqual(parentData, parent.data)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.children[1].data)
 
     def test_basic_if(self):
@@ -105,6 +103,38 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(t.children[0].data, "IF")
         self.assertEqual(t.children[1].data, "BEXPR")
         self.assertEqual(t.children[2].data, "STATEMENT")
+
+    def test_UNARY_procedure(self):
+        # VALUE -> UNARY -> not id:gogogo : VALUE -> ! -> id:gogogo
+        parentData = "VALUE"
+        childData = "UNARY"
+        childChildData = "not"
+        childchild2Data = "id:gogogo"
+        parent = ParseTree(parentData, None)
+        parent.addChild(childData)
+        UNARY = parent.getChild()
+        UNARY.addChild(childChildData)
+        UNARY.addChild("VALUE")
+        UNARY.getChild().addChild(childchild2Data)
+        LR_AST_EOP(UNARY)
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("!", parent.getChild().data)  # first child should be "!"
+        self.assertEqual(childchild2Data, parent.getChild().getChild().data) # after "!" should be the val/var
+        # VALUE -> UNARY -> minus id:gogogo : VALUE -> - -> id:gogogo
+        childChildData = "-"
+        parent.removeChild(parent.getChild())
+        parent.addChild(childData)
+        UNARY = parent.getChild()
+        UNARY.addChild(childChildData)
+        UNARY.addChild("VALUE")
+        UNARY.getChild().addChild(childchild2Data)
+        LR_AST_EOP(UNARY)
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("-", parent.getChild().data)  # first child should be "-"
+        self.assertEqual(childchild2Data, parent.getChild().getChild().data) # after "-" should be the val/var
+
 
 
 if __name__ == '__main__':
