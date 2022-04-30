@@ -18,8 +18,13 @@
         - [ ] leaves are literals or variables
             - [X] FUNTYPE
               - [X] Made test
-          - [ ] GLOBTYPE
-              - [X] Made test
+            - [X] GLOBTYPE
+                - [X] Made test
+            - [ ] VALUE
+              - [X] Made test for value literals 
+              - [ ] Made test for UNARY 
+              - [ ] Made test for CAST
+              - [ ] Made test for lparen EXPR rparen 
         - [ ] root and internal nodes are non-termianls:
             - [ ] BOOLS
             - [ ] PLUS
