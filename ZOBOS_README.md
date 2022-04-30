@@ -20,13 +20,13 @@
               - [X] Made test
             - [X] GLOBTYPE
                 - [X] Made test
-            - [ ] VALUE
+            - [X] VALUE
               - [X] Made test for value literals 
-              - [ ] Made test for lparen EXPR rparen 
+              - [X] Made test for lparen EXPR rparen 
         - [ ] root and internal nodes are non-termianls:
             - [ ] BOOLS
-            - [ ] PLUS
-            - [ ] PRODUCT
+            - [X] PLUS
+            - [X] TIMES
             - [X] UNARY
                 - [X] Made test for UNARY 
             - [ ] CAST

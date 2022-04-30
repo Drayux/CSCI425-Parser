@@ -29,6 +29,8 @@ def procedure_leaf(node: ParseTree):
 def procedure_VALUE(node: ParseTree):
     if len(node.children) == 1:
         replace_node_with_new_node(node, node.getChild())
+    elif node.getChild().data == "rparen":
+        replace_node_with_new_node(node, node.children[1])
 
 
 

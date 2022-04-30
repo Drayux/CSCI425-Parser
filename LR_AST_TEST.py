@@ -49,6 +49,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, parent.getChild().data)
 
     def test_VALUE_procedure(self):
+        # PRODUCT -> VALUE -> "floatval:2.2" : PRODUCT -> "floatval:2.2"
         parentData = "PRODUCT"
         valueName = "floatval"
         valueValue = "2.2"
@@ -56,6 +57,7 @@ class MyTestCase(unittest.TestCase):
         parent = ParseTree(parentData, None)
         parent.addChild(parentData)
         parent.addChild("TIMES")
+        parent.getChild().addChild("mult")
         parent.addChild("VALUE")
         parent.getChild().addChild(valueName + ":" + valueValue)
         parent.getChild().getChild().aux = valueValue
@@ -73,6 +75,22 @@ class MyTestCase(unittest.TestCase):
         LR_AST_EOP(parent)
         self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.getChild().data)
+        # PRODUCT -> VALUE -> lparen EXPR rparen : PRODUCT -> EXPR
+        parent.removeChild(parent.getChild())
+        parent.addChild("VALUE")
+        VALUE = parent.getChild()
+        VALUE.addChild("lparen")
+        VALUE.addChild("+")
+        VALUE.getChild().addChild("3")
+        VALUE.getChild().addChild("4")
+        VALUE.addChild("rparen")
+        LR_AST_EOP(parent)
+        self.assertEqual(parentData, parent.data)  # Parent should not have changed
+        self.assertEqual("+", parent.getChild().data)  # the only child should be the EXPR
+        self.assertEqual("3", parent.getChild().children[0].data)  # The EXPR should have saved its children
+        self.assertEqual("4", parent.getChild().children[1].data)  # Same here
+
+
 
     def test_PLUS_TIMES_procedure(self):
         parentData = "SUM"
@@ -92,6 +110,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(parentData, parent.data)  # Parent should not have changed
         self.assertEqual(expected, parent.children[1].data)
 
+    @unittest.skip("IF test in progress")
     def test_basic_if(self):
         t = ParseTree("IF", None)
         t.addChild("if")
