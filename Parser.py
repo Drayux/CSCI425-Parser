@@ -58,16 +58,18 @@ class LLParser:
 				if symbol == token:
 					# Remove the terminal from the queue
 					############################################################
-					# NOTE: This is specific to the regex grammar
+					# NOTE: I have changed this from wreck. Parse trees now
+					#		have an aux parameter to store identifiers
 					#		Be careful using other grammars with a 'char' token
-					if token == 'char': lasttok = stream.front[1]
+					aux = stream.front[1]
 					############################################################
-					else: lasttok = token
+					lasttok = token
 					try: token = stream.next()[0]
 					except StopIteration: token = self.grammar.prodend
 
 					line += 1
 					curNode.addChild(lasttok)
+					curNode.getChild().aux = aux
 					continue
 
 				# Terminals do not line up
