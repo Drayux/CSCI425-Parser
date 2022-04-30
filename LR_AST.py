@@ -31,7 +31,6 @@ def procedure_VALUE(node: ParseTree):
         replace_node_with_new_node(node, node.getChild())
 
 
-
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -48,6 +47,9 @@ def LR_AST_SDT_Procedure(node: ParseTree):
             node.data == "stringval":
         procedure_leaf(node)
     elif node.data == "VALUE":
+        procedure_VALUE(node)
+    elif node.data == "PLUS" or \
+            node.data == "TIMES":
         procedure_VALUE(node)
 
 

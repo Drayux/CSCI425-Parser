@@ -82,14 +82,15 @@ class MyTestCase(unittest.TestCase):
         parent = ParseTree(parentData, None)
         parent.addChild("PRODUCT")
         parent.addChild("PLUS")
-        parent.getChild().aux = "minus"
+        parent.getChild().addChild("minus")
         parent.addChild("PRODUCT")
         LR_AST_EOP(parent)
         self.assertEqual(parentData, parent.data)
         self.assertEqual(expected, parent.children[1].data)
         expected = "div"
         parent.children[1].data = "TIMES"
-        parent.children[1].aux = "div"
+        parent.children[1].addChild("div")
+        LR_AST_EOP(parent)
         self.assertEqual(parentData, parent.data)
         self.assertEqual(expected, parent.children[1].data)
 
