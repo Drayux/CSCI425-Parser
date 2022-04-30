@@ -41,6 +41,14 @@ def procedure_EMIT(node: ParseTree):
     replace_node_with_new_node(node, node.children[0])
 
 
+def procedure_IF(node: ParseTree):
+    pass
+
+
+def procedure_WHILE(node: ParseTree):
+    pass
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -49,6 +57,10 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     """
     if node.data == "EMIT":
         procedure_EMIT(node)
+    elif node.data == "IF":
+        procedure_IF(node)
+    elif node.data == "WHILE":
+        procedure_WHILE(node)
 
 
 def LR_AST_EOP(node: ParseTree):
