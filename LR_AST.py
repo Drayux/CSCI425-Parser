@@ -37,9 +37,10 @@ def semantic_Check(node: ParseTree):
             sys.exit(3)
 
 
-def procedure_EMIT(node: ParseTree):
-    replace_node_with_new_node(node, node.children[0])
-
+def procedure_FUNTYPE(node: ParseTree):
+    childData = "type:"+node.children[0].data
+    newNode = ParseTree(childData, None)
+    replace_node_with_new_node(node, newNode)
 
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
@@ -47,8 +48,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     :param node:
     :return: None / Transformation
     """
-    if node.data == "EMIT":
-        procedure_EMIT(node)
+    if node.data == "FUNTYPE":
+        procedure_FUNTYPE(node)
 
 
 def LR_AST_EOP(node: ParseTree):

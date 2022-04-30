@@ -1,6 +1,6 @@
 import sys
 
-import LL_AST
+import LL_AST as AST
 from Grammar import Grammar
 from ParseExceptions import ParseError
 from ParseTable import LLParseTable as LLTable
