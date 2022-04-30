@@ -42,6 +42,9 @@ def procedure_FUNTYPE(node: ParseTree):
     newNode = ParseTree(childData, None)
     replace_node_with_new_node(node, newNode)
 
+def procedure_id(node: ParseTree):
+    node.data = node.data + ":" + node.aux
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -50,6 +53,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
     """
     if node.data == "FUNTYPE":
         procedure_FUNTYPE(node)
+    elif node.data == "id":
+        procedure_id(node)
 
 
 def LR_AST_EOP(node: ParseTree):
