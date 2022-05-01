@@ -58,7 +58,13 @@ def procedure_IF(node: ParseTree):
 
 
 def procedure_WHILE(node: ParseTree):
-    pass
+    assert(len(node.children) > 4)
+    assert(node.children[0].data == "while")
+    assert(node.children[1].data == "lparen")
+    assert(node.children[3].data == "rparen")
+    node.removeChild(node.children[3])  # Remove rparen
+    node.removeChild(node.children[1])  # Remove lparen
+    node.removeChild(node.children[0])  # Remove while
 
 
 def procedure_UNARY(node: ParseTree):

@@ -305,6 +305,25 @@ class ASTTestCase(unittest.TestCase):
         self.assertEqual(castType, parent.getChild().data)
         self.assertEqual(exprVal, parent.getChild().getChild().data)
 
+    def test_while_procedure(self):
+        # From litteralrabbits
+        t = ParseTree("STATEMENT", None)
+        t.addChild("WHILE")
+        t.getChild().addChild("while")
+        t.getChild().addChild("lparen")
+        t.getChild().addChild("BEXPR")
+        t.getChild().addChild("rparen")
+        t.getChild().addChild("STATEMENT")
+        t.getChild().children[2].addChild("AEXPR")
+        t.getChild().children[2].addChild("BOOLS")
+        t.getChild().children[2].children[1].addChild("lt")
+        t.getChild().children[2].addChild("AEXPR")
+        LR_AST_EOP(t)
+        self.assertEqual("STATEMENT", t.data)
+        self.assertEqual("WHILE", t.getChild().data)
+        self.assertIn(t.getChild().children[0].data, [ "lt", "BEXPR"] )  # Depends on if BEXPR gets simplified via SDT or not
+        self.assertEqual("STATEMENT", t.getChild().children[1].data)
+
 
 if __name__ == '__main__':
     unittest.main()
