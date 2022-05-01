@@ -112,6 +112,20 @@ def procedure_CAST(node: ParseTree):
     node.removeChild(node.children[0])  # removes lparen
 
 
+def procedure_STMTS(node: ParseTree):
+    # left recursive STMTS STATEMENT
+    assert(len(node.children) > 0)
+    if node.getChild().data == "lambda":
+        assert(len(node.children) == 1)
+        node.removeChild(node.getChild())
+    elif node.getChild().data == "STMTS":
+        assert(len(node.children) == 2)
+        # TODO how to fix this...
+        procedure_STMTS(node.children[0])
+    else:
+        assert(False, "Unknown STMTS left child!")
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -149,6 +163,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_BOOLS(node)
     elif node.data == "CAST":
         procedure_CAST(node)
+    elif node.data == "STMTS":
+        procedure_STMTS(node)
 
 
 def LR_AST_EOP(node: ParseTree):
