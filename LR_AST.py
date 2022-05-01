@@ -121,8 +121,10 @@ def procedure_STMTS(node: ParseTree):
             node.removeChild(node.children[0])
             return
         firstChild = node.children[0]
+        i = 0
         for child in firstChild.children:
-            node.children.insert(0, child)
+            node.children.insert(i, child)
+            i += 1
         node.removeChild(firstChild)
 
 

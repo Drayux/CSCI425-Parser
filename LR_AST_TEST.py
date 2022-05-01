@@ -332,8 +332,10 @@ class ASTTestCase(unittest.TestCase):
         halflife = "lambda"
         STATEMENT1 = "STATEMENT1"
         STATEMENT2 = "STATEMENT2"
+        STATEMENT3 = "STATEMENT3"
         grandParent = ParseTree(grandParentData, None)
         top_STMTS = ParseTree(parentData, None)
+        upper_mid_STMTS = ParseTree(parentData, None)
         mid_STMTS = ParseTree(parentData, None)
         bot_STMTS = ParseTree(parentData, None)
         # Building the tree from the bottom, have bot_STMT run SDT on lambda
@@ -352,17 +354,26 @@ class ASTTestCase(unittest.TestCase):
         self.assertEqual(halflife, mid_STMTS.children[0].data)
         self.assertEqual(STATEMENT1, mid_STMTS.children[1].data)
         self.assertEqual(2, len(mid_STMTS.children))
-        # We now load the top_STMT, and after EOP of top, mid will kill lambda
+        # We add a third layer, upper_mid
         # We expect mid_STMT to have only STATEMENT1 child
-        top_STMTS.addChild(mid_STMTS)
-        top_STMTS.addChild(STATEMENT2)
+        upper_mid_STMTS.addChild(mid_STMTS)
+        upper_mid_STMTS.addChild(STATEMENT2)
+        LR_AST_EOP(upper_mid_STMTS)
+        self.assertEqual(parentData, upper_mid_STMTS.data)
+        self.assertEqual(parentData, upper_mid_STMTS.children[0].data)
+        self.assertEqual(STATEMENT1, upper_mid_STMTS.children[0].getChild().data)
+        self.assertEqual(STATEMENT2, upper_mid_STMTS.getChild().data)
+        # We now load the top_STMT, and after EOP of top, mid will kill lambda
+        top_STMTS.addChild(upper_mid_STMTS)
+        top_STMTS.addChild(STATEMENT3)
         top_STMTS.getChild().addChild("id:ALYX")
         LR_AST_EOP(top_STMTS)
         self.assertEqual(parentData, top_STMTS.data)
         self.assertEqual(parentData, top_STMTS.children[0].data)
-        self.assertEqual(1, len(top_STMTS.children[0].children))
-        self.assertEqual(STATEMENT1, top_STMTS.children[0].getChild().data)
-        self.assertEqual(STATEMENT2, top_STMTS.getChild().data)
+        self.assertEqual(2, len(top_STMTS.children[0].children))
+        self.assertEqual(STATEMENT1, top_STMTS.children[0].children[0].data)
+        self.assertEqual(STATEMENT2, top_STMTS.children[0].children[1].data)
+        self.assertEqual(STATEMENT3, top_STMTS.getChild().data)
         # Now for grandad. Once top runs through the SDT, it should opnly have statement children
         grandParent.addChild(top_STMTS)
         LR_AST_EOP(grandParent)
