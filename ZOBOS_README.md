@@ -39,7 +39,7 @@
     - [ ] Control Structures will be simplified
         - [X] IF
         - [ ] IFELSE
-        - [ ] WHILE
+        - [X] WHILE
         - [ ] STMTS
         - [ ] BRACESTMTS
     - [ ] Simple Tree representation of AST to disk
