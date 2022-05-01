@@ -380,8 +380,10 @@ class ASTTestCase(unittest.TestCase):
         top_STMTS = grandParent.getChild()
         self.assertEqual(grandParentData, grandParent.data)
         self.assertEqual(parentData, top_STMTS.data)
+        self.assertEqual(3, len(top_STMTS.children))
         self.assertEqual(STATEMENT1, top_STMTS.children[0].data)
         self.assertEqual(STATEMENT2, top_STMTS.children[1].data)
+        self.assertEqual(STATEMENT3, top_STMTS.getChild().data)
 
 
 if __name__ == '__main__':

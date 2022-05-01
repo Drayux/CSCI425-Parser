@@ -40,7 +40,7 @@
         - [X] IF
         - [ ] IFELSE
         - [X] WHILE
-        - [ ] STMTS
+        - [X] STMTS
         - [ ] BRACESTMTS
     - [ ] Simple Tree representation of AST to disk
 - [ ] Semantic checks on AST on variable, expression and function - Chris
