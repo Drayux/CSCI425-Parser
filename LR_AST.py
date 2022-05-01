@@ -29,21 +29,21 @@ def procedure_leaf(node: ParseTree):
 def procedure_VALUE(node: ParseTree):
     if len(node.children) == 1:
         childData = node.getChild().data
-        if childData == "plus" : node.getChild().data = "+"
-        if childData == "minus" : node.getChild().data = "-"
-        if childData == "mult" : node.getChild().data = "*"
-        if childData == "div" : node.getChild().data = "/"
-        if childData == "mod" : node.getChild().data = "%"
+        if childData == "plus": node.getChild().data = "+"
+        if childData == "minus": node.getChild().data = "-"
+        if childData == "mult": node.getChild().data = "*"
+        if childData == "div": node.getChild().data = "/"
+        if childData == "mod": node.getChild().data = "%"
         replace_node_with_new_node(node, node.getChild())
     elif node.getChild().data == "rparen":
         replace_node_with_new_node(node, node.children[1])
 
 
 def procedure_IF(node: ParseTree):
-    assert(len(node.children) > 3)
-    assert(node.children[0].data == "if")
-    assert(node.children[1].data == "lparen")
-    assert(node.children[3].data == "rparen")
+    assert (len(node.children) > 3)
+    assert (node.children[0].data == "if")
+    assert (node.children[1].data == "lparen")
+    assert (node.children[3].data == "rparen")
 
     node.removeChild(node.children[3])  # Remove rparen
     node.removeChild(node.children[1])  # Remove lparen
@@ -58,10 +58,10 @@ def procedure_IF(node: ParseTree):
 
 
 def procedure_WHILE(node: ParseTree):
-    assert(len(node.children) > 4)
-    assert(node.children[0].data == "while")
-    assert(node.children[1].data == "lparen")
-    assert(node.children[3].data == "rparen")
+    assert (len(node.children) > 4)
+    assert (node.children[0].data == "while")
+    assert (node.children[1].data == "lparen")
+    assert (node.children[3].data == "rparen")
     node.removeChild(node.children[3])  # Remove rparen
     node.removeChild(node.children[1])  # Remove lparen
     node.removeChild(node.children[0])  # Remove while
@@ -113,17 +113,18 @@ def procedure_CAST(node: ParseTree):
 
 
 def procedure_STMTS(node: ParseTree):
-    # left recursive STMTS STATEMENT
-    assert(len(node.children) > 0)
-    if node.getChild().data == "lambda":
-        assert(len(node.children) == 1)
-        node.removeChild(node.getChild())
-    elif node.getChild().data == "STMTS":
-        assert(len(node.children) == 2)
-        # TODO how to fix this...
-        procedure_STMTS(node.children[0])
+    if len(node.children) == 1:
+        if node.getChild().data == "lambda":
+            replace_node_with_new_node(node, node.getChild())
     else:
-        assert(False, "Unknown STMTS left child!")
+        if node.children[0].data == "lambda":
+            node.removeChild(node.children[0])
+            return
+        firstChild = node.children[0]
+        for child in firstChild.children:
+            node.children.insert(0, child)
+        node.removeChild(firstChild)
+
 
 
 def LR_AST_SDT_Procedure(node: ParseTree):
