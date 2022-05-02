@@ -324,7 +324,7 @@ class ASTTestCase(unittest.TestCase):
         self.assertIn(t.getChild().children[0].data, [ "lt", "BEXPR"] )  # Depends on if BEXPR gets simplified via SDT or not
         self.assertEqual("STATEMENT", t.getChild().children[1].data)
 
-    def test_STMTS_procedire(self):
+    def test_STMTS_procedure(self):
         # I am basing this off expr-1
         # We will test three levels of STMT calls
         grandParentData = "BRACESTMTS"
@@ -384,6 +384,25 @@ class ASTTestCase(unittest.TestCase):
         self.assertEqual(STATEMENT1, top_STMTS.children[0].data)
         self.assertEqual(STATEMENT2, top_STMTS.children[1].data)
         self.assertEqual(STATEMENT3, top_STMTS.getChild().data)
+
+    def test_IFELSE_procedure(self):
+        t = ParseTree("STATEMENT", None)
+        t.addChild("IFELSE")
+        t.getChild().addChild("if")
+        t.getChild().addChild("lparen")
+        t.getChild().addChild("BEXPR")
+        t.getChild().children[2].addChild("AEXPR")
+        t.getChild().children[2].addChild("BOOLS")
+        t.getChild().children[2].addChild("AEXPR")
+        t.getChild().addChild("rparen")
+        t.getChild().addChild("BRACESTMTS")
+        t.getChild().addChild("else")
+        t.getChild().addChild("STATEMENT")
+        LR_AST_EOP(t)
+        self.assertEqual(len(t.getChild().children), 3)
+        self.assertEqual(t.getChild().children[0].data, "BEXPR")
+        self.assertEqual(t.getChild().children[1].data, "BRACESTMTS")
+        self.assertEqual(t.getChild().children[2].data, "STATEMENT")
 
 
 if __name__ == '__main__':

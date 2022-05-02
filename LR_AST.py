@@ -57,6 +57,18 @@ def procedure_IF(node: ParseTree):
     #     i -= 1
 
 
+def procedure_IFELSE(node: ParseTree):
+    assert (len(node.children) > 6)
+    assert (node.children[0].data == "if")
+    assert (node.children[1].data == "lparen")
+    assert (node.children[3].data == "rparen")
+    assert (node.children[5].data == "else")
+    node.removeChild(node.children[5])  # Remove else
+    node.removeChild(node.children[3])  # Remove rparen
+    node.removeChild(node.children[1])  # Remove lparen
+    node.removeChild(node.children[0])  # Remove if
+
+
 def procedure_WHILE(node: ParseTree):
     assert (len(node.children) > 4)
     assert (node.children[0].data == "while")
@@ -151,6 +163,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_VALUE(node)
     elif node.data == "IF":
         procedure_IF(node)
+    elif node.data == "IFELSE":
+        procedure_IFELSE(node)
     elif node.data == "WHILE":
         procedure_WHILE(node)
     elif node.data == "UNARY":
