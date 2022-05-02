@@ -38,7 +38,7 @@
             - [X] FUNCALL
     - [ ] Control Structures will be simplified
         - [X] IF
-        - [ ] IFELSE
+        - [X] IFELSE
         - [X] WHILE
         - [X] STMTS
         - [ ] BRACESTMTS
