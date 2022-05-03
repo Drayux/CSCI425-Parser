@@ -149,7 +149,9 @@ class LRParser:
 		if len(arr) > 0: return arr.pop(0)
 		try:
 			ret = stream.next()
-			return ParseTree(ret[0], None)
+			tree = ParseTree(ret[0], None)
+			tree.aux = ret[1]
+			return tree
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
 		# ----------------------------------------------
 

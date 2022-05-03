@@ -9,10 +9,10 @@
 ## WORK TODOS
 
 - [ ] Parse a token stream with LR - Liam
-	- [X] Use LR knitting
-	- [X] Use SLR table 
-	- [X] Use zlang.cfg
-	- [ ] Check for syntax errors
+    - [X] Use LR knitting
+    - [X] Use SLR table 
+    - [X] Use zlang.cfg
+    - [ ] Check for syntax errors
 - [X] Develop SDTs to make an AST during the above parse - Konch and Andrew
     - [X] EXPR will be simplified to 
         - [X] leaves are literals or variables
@@ -44,7 +44,24 @@
         - [X] BRACESTMTS
     - [X] Simple Tree representation of AST to disk
 - [ ] Semantic checks on AST on variable, expression and function - Chris
-	- [ ] Emit will write symbol tables to disk 
-	- [ ] Warnings and errors will be emitted 
+    - [ ] Emit will write symbol tables to disk 
+    - [ ] Warnings and errors will be emitted 
 - [ ] ZOBOS will exit(0) if no errors, exit(1) on error
-
+- [ ] Symtable
+  - [ ] Location
+  - [ ] Identifier
+  - [ ] Type
+  - [ ] `const` Flag
+  - [ ] `used` or `used` flag
+  - [ ] `Initialized` or `Uninitialized` Flag
+  - [ ] Funtion Semantics
+    - [ ] Function prototype encountered, `const` flag to false, but already init
+    - [ ] Function definition is encountered, the symbol has its `const` and `initialized` flag to true
+  - [ ] Emit
+    - [ ] Global scope is scope 0
+    - [ ] on Emit, print the following to the third command line argument, comma seperated
+      - [ ] On one line
+      - [ ] Scope
+      - [ ] Type
+        - if its a function, type is followed by //, so `int//`
+      - [ ] id
