@@ -9,11 +9,11 @@
 ## WORK TODOS
 
 - [ ] Parse a token stream with LR - Liam
-	- [ ] Use LR knitting
-	- [ ] Use SLR table 
-	- [ ] Use zlang.cfg
+	- [X] Use LR knitting
+	- [X] Use SLR table 
+	- [X] Use zlang.cfg
 	- [ ] Check for syntax errors
-- [ ] Develop SDTs to make an AST during the above parse - Konch and Andrew
+- [X] Develop SDTs to make an AST during the above parse - Konch and Andrew
     - [X] EXPR will be simplified to 
         - [X] leaves are literals or variables
             - [X] BEXPR
@@ -42,7 +42,7 @@
         - [X] WHILE
         - [X] STMTS
         - [X] BRACESTMTS
-    - [ ] Simple Tree representation of AST to disk
+    - [X] Simple Tree representation of AST to disk
 - [ ] Semantic checks on AST on variable, expression and function - Chris
 	- [ ] Emit will write symbol tables to disk 
 	- [ ] Warnings and errors will be emitted 
