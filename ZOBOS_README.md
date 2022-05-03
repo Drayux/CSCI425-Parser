@@ -36,12 +36,12 @@
             - [x] CAST
                 - [x] Made test for CAST
             - [X] FUNCALL
-    - [ ] Control Structures will be simplified
+    - [X] Control Structures will be simplified
         - [X] IF
         - [X] IFELSE
         - [X] WHILE
         - [X] STMTS
-        - [ ] BRACESTMTS
+        - [X] BRACESTMTS
     - [ ] Simple Tree representation of AST to disk
 - [ ] Semantic checks on AST on variable, expression and function - Chris
 	- [ ] Emit will write symbol tables to disk 
