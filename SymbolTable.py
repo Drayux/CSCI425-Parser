@@ -11,14 +11,14 @@ def remove_prefix(node, prefix):
     if node.data.startswith(prefix):
         if len(node.data) > len(prefix):
             return node.data[len(prefix):]
-        print("Node: {node.data} has no data after prefix: {prefix}")
+        print(f"Node: {node.data} has no data after prefix: {prefix}")
         return ""
-    print("Unexpected Prefix on Node: {data}, expected prefix: {prefix}")
+    print(f"Unexpected Prefix on Node: {node.data}, expected prefix: {prefix}")
     return ""
 
 def verify_node(node, expected_data):
     if node.data != expected_data:
-        print("Expected node: {expected_data}, found node: {node.data}")
+        print(f"Expected node: {expected_data}, found node: {node.data}")
     return node
 
 class SymbolAttributes():
@@ -57,7 +57,15 @@ class SymbolTable():
         for (i, table) in enumerate(self.tableStack):
             val = table.SearchSymbol(name)
             if val != None:
-                return table
+                return table.table[name]
+
+    def ReportError(self, id, r, c):
+        if id in ["UNINIT", "REIDENT"]:
+            sys.stdout.write(f":WARN: {r} {c} :{id}:\n")
+        elif id in ["CALL"]:
+            sys.stdout.write(f":ERROR: {r} {c} :{id}:\n")
+        elif id in ["SYNTAX"]:
+            sys.stdout.write(f":SYNTAX: {r} {c} :{id}:\n")
 
     def DeclaredLocally(self, name):
         pass
@@ -152,6 +160,28 @@ class SymbolTable():
                 f_typ = f_typ + "/" + p_typ     
             self.EnterSymbol(f_id, SymbolAttributes(f_typ, True))
         #########################
+        # Funcall Nodes
+        #########################
+        if node.data == "FUNCALL":
+            # collect ast data
+            f_id = remove_prefix(node.children[0], "id:")
+            args_node = verify_node(node.children[1], "ARGLIST")
+            arg_count = len(args_node.children)
+            # evaluate args
+            for arg in args_node.children:
+                self.populate_from_ast(arg)
+            # check that fn id maps to fn 
+            entry = self.RetrieveSymbol(f_id)
+            if not entry:
+                self.ReportError("CALL", 0, 0)  # TODO: support row/column
+                return
+            (_, attr) = entry
+            # check that number of passed args matches expected
+            pars = attr.type.split("//")[1]
+            par_count = len(pars.split("/")) 
+            if arg_count != par_count:
+                self.ReportError("CALL", 0, 0)  # TODO: support row/column
+        #########################
         # Scope Nodes
         #########################
         if node.data == "scope:open":
@@ -176,8 +206,8 @@ def testST():
     assert (len(st.tableStack) == 1)
     st.OpenScope();
     assert (len(st.tableStack) == 2)
-    st.EnterSymbol("tmp", SymbolAttributes("int", False))
-    (_, attr) = st.tableStack[0].table["tmp"]
+    st.EnterSymbol("tmp", SymbolAttributes("int", False)) 
+    (_, attr) = st.RetrieveSymbol("tmp")
     assert (attr.type == "int")
     print("Symbol Table Tests Pass!")
 
@@ -238,7 +268,44 @@ def testPopulateFn():
     assert (attr.type == "int//int")
     print("Populate from AST with Fn Tests Pass!")
 
+def testErrorCall():
+    # Root Node
+    root = ParseTree("Module", None)
+    # Funsig Node (undefined func)
+    fnsg = ParseTree("FUNSIG", root)
+    fnsg.addChild(ParseTree("type:int", fnsg))
+    fnsg.addChild(ParseTree("id:main", fnsg))
+    # Parameter List Node
+    plst = ParseTree("PARAMLIST", fnsg)
+    # Parameter Node
+    parm = ParseTree("PARAM", plst)
+    parm.addChild(ParseTree("type:int", parm))
+    parm.addChild(ParseTree("id:x", parm))
+    plst.addChild(parm)
+    fnsg.addChild(plst)
+    root.addChild(fnsg)
+    # Function Call Node
+    fnc1 = ParseTree("FUNCALL", root)
+    fnc1.addChild(ParseTree("id:a", fnc1))
+    fnc1.addChild(ParseTree("ARGLIST", fnc1))
+    root.addChild(fnc1)
+    # Function Call Node
+    fnc2 = ParseTree("FUNCALL", root)
+    fnc2.addChild(ParseTree("id:main", fnc2))
+    # Arg List Node
+    args = ParseTree("ARGLIST", fnc2)
+    args.addChild(ParseTree("id:a", args))
+    args.addChild(ParseTree("id:b", args))
+    fnc2.addChild(args)
+    root.addChild(fnc2)
+    st = SymbolTable()
+    print("Expecting 2 Call Errors:")
+    st.populate_from_ast(root)
+    print("Call Error Tests Pass!")
+
+
 if __name__ == "__main__":
     testST()
     testPopulate()
     testPopulateFn()
+    testErrorCall()
