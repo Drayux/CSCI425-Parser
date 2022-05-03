@@ -7,6 +7,7 @@ from ParseTable import LLParseTable as LLTable
 from ParseTable import LRParseTable as LRTable
 from ParseTable import ActionType
 from ParseTree import ParseTree
+from SymbolTable import SymbolAttributes, SymbolTable
 from TokenStream import TokenStream
 from LR_AST import LR_AST_EOP
 
@@ -119,13 +120,15 @@ class LLParser:
 
 # LR(0) Parser
 class LRParser:
-	def __init__(self, grammar, tablepath):
+	def __init__(self, grammar, tablepath, symbolTableEmit = None):
 		# Grammar can be passed as string to definition or grammar obj itself
 		if type(grammar) is not Grammar: grammar = Grammar(grammar)
 
 		self.grammar = grammar					# Grammar definition
 		self.table = LRTable(tablepath)
 		# self.table = LRTable(grammar)			# Generate the parse table (TODO), currently just read from file
+		self.symbolTableEmit = symbolTableEmit
+		self.symbolTable = SymbolTable()
 
 	def next(self, arr, stream = None):
 		if type(arr) is not list:
@@ -213,8 +216,28 @@ class LRParser:
 				# print(tree)
 				# print("================================")
 
+				########################################################################
+				########################################################################
+				# TODO:
+				# Move SDT EOP and symtable stuff out of here, since we don't have any
+				#   terminals at this point (need terminals for sym table)
+
 				# Andrew: run sdt here..? should be fine
 				LR_AST_EOP(tree)
+
+				# Handle symbol table stuff. very scuffed!
+				#print("DATA: {}".format(tree.data))
+				if "emit" in tree.data.lower():
+					self.symbolTableEmit(self.symbolTable)
+				elif "lbrace" in tree.data.lower() or "scope:open" in tree.data.lower():
+					self.symbolTable.OpenScope()
+				elif "rbrace" in tree.data.lower() or "scope:close" in tree.data.lower():
+					self.symbolTable.CloseScope()
+				elif "id:" in tree.data.lower():
+					self.symbolTable.EnterSymbol("test", SymbolAttributes("unknown_type"))
+
+				########################################################################
+				########################################################################
 
 				queue.insert(0, symbol)		# Put the symbol back into the queue
 				symbol = tree
@@ -236,11 +259,20 @@ class LRParser:
 		return str(self.table)
 
 
+def EmitSymbolTable(symbolTable: SymbolTable):
+	if len(sys.argv) < 3:
+		print("MISSING SYMBOL TABLE OUTPUT FILE CMDLINE ARG!")
+		return
+	with open(sys.argv[3], "w+") as f:
+		symbolTable.EmitTable(f)
+
 # TABLE TESTING
 if __name__ == "__main__":
+	#source = "config/zobos/allgood-1.tok"
+	source = "config/zobos/symtable-1.tok"
 	grammar = Grammar("config/zlang.cfg", False)
-	parser = LRParser(grammar, "config/zlang.lr")
-	stream = TokenStream("config/zobos/allgood-1.tok", True)
+	parser = LRParser(grammar, "config/zlang.lr", EmitSymbolTable)
+	stream = TokenStream(source, True)
 
 	print("GRAMMAR:")
 	print(grammar)
