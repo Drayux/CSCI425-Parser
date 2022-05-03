@@ -125,8 +125,7 @@ class LRParser:
 		if type(grammar) is not Grammar: grammar = Grammar(grammar)
 
 		self.grammar = grammar					# Grammar definition
-		self.table = LRTable(tablepath)
-		# self.table = LRTable(grammar)			# Generate the parse table (TODO), currently just read from file
+		self.table = LRTable(tablepath)			# Generate the parse table (TODO), currently just read from file
 		self.symbolTableEmit = symbolTableEmit
 		self.symbolTable = SymbolTable()
 
@@ -151,6 +150,8 @@ class LRParser:
 			ret = stream.next()
 			tree = ParseTree(ret[0], None)
 			tree.aux = ret[1]
+			tree.line = ret[2]
+			tree.col = ret[3]
 			return tree
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
 		# ----------------------------------------------
@@ -249,7 +250,9 @@ class LRParser:
 				continue
 
 			# -- NO ACTION --
-			raise ParseError("SYNTAX ERROR (No S/R action)")
+			# raise ParseError(f"SYNTAX ERROR ({symbol.line}, {symbol.col})")
+			print(f"OUTPUT :SYNTAX: {symbol.line} {symbol.col} :SYNTAX:")
+			exit(1)
 
 		# Debug testing
 		# result = self.table.getAction(10, '$')
@@ -271,7 +274,7 @@ def EmitSymbolTable(symbolTable: SymbolTable):
 # TABLE TESTING
 if __name__ == "__main__":
 	#source = "config/zobos/allgood-1.tok"
-	source = "config/zobos/symtable-1.tok"
+	source = "config/zobos/badtoken.tok"
 	grammar = Grammar("config/zlang.cfg", False)
 	parser = LRParser(grammar, "config/zlang.lr", EmitSymbolTable)
 	stream = TokenStream(source, True)
