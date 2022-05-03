@@ -140,6 +140,15 @@ def procedure_STMTS(node: ParseTree):
         node.removeChild(firstChild)
 
 
+def procedure_BRACESTMTS(node: ParseTree):
+    assert (len(node.children) == 3)
+    assert (node.children[0].data == "lbrace")
+    assert (node.children[1].data == "STMTS")
+    assert (node.children[2].data == "rbrace")
+    # Replace braces with scope tokens.
+    node.children[0] = ParseTree("scope:open", None)
+    node.children[2] = ParseTree("scope:close", None)
+
 
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
@@ -182,6 +191,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_CAST(node)
     elif node.data == "STMTS":
         procedure_STMTS(node)
+    elif node.data == "BRACESTMTS":
+        procedure_BRACESTMTS(node)
 
 
 def LR_AST_EOP(node: ParseTree):

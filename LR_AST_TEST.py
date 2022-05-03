@@ -404,6 +404,23 @@ class ASTTestCase(unittest.TestCase):
         self.assertEqual(t.getChild().children[1].data, "BRACESTMTS")
         self.assertEqual(t.getChild().children[2].data, "STATEMENT")
 
+    def test_STMTS_procedure(self):
+        t = ParseTree("FUNCTION", None)
+        t.addChild("FUNSIG")
+        t.addChild("=")
+        t.addChild("BRACESTMTS")
+        t.children[2].addChild("lbrace")
+        t.children[2].addChild("STMTS")
+        t.children[2].children[1].addChild("STATEMENT")
+        t.children[2].addChild("rbrace")
+        LR_AST_EOP(t)
+        self.assertEqual(len(t.getChild().children), 3)
+        self.assertEqual(t.getChild().data, "BRACESTMTS")
+        self.assertEqual(t.getChild().children[0].data, "scope:open")
+        self.assertEqual(t.getChild().children[1].data, "STMTS")
+        self.assertEqual(t.getChild().children[2].data, "scope:close")
+        self.assertEqual(t.getChild().children[1].getChild().data, "STATEMENT")
+
 
 if __name__ == '__main__':
     unittest.main()
