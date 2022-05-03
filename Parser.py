@@ -126,23 +126,28 @@ class LRParser:
 		self.table = LRTable(tablepath)
 		# self.table = LRTable(grammar)			# Generate the parse table (TODO), currently just read from file
 
-	def next(self, queue, stream = None):
-		if type(queue) is not list:
+	def next(self, arr, stream = None):
+		if type(arr) is not list:
 			raise TypeError("Invalid usage of LRParser.next()")
 
+ 		# - Called to get the next item in the stack -
 		if stream is None:
-			try: return queue[-1]
+			try: return arr[-1]
 			except IndexError: return None
+		# --------------------------------------------
 
 		if type(stream) is not TokenStream:
 			raise TypeError("Invalid usage of LRParser.next()")
 
-		if len(queue) > 0: return queue.pop(0)
+		# Otherwise, called to get next item in dequeue
+		# Will always pop for consistency with the TokenStream API
+		# Always returns a ParseTree type
+		if len(arr) > 0: return arr.pop(0)
 		try:
 			ret = stream.next()
-			print(ret)
 			return ParseTree(ret[0], None)
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
+		# ----------------------------------------------
 
 	def parse(self, stream: TokenStream):
 		stack = [ (0, None) ]		# Stack of state numbers
@@ -151,14 +156,19 @@ class LRParser:
 		# Every stack element refers to an index in this array for storing intermediate trees
 		# trees = [ None for x in range(len(self.table.row)) ]
 
-		# -- PARSING LOOP --
-		# Get the table value
-		state = stack[0]
 		symbol = self.next(queue, stream)
-
+		# -- PARSING LOOP --
 		while True:
+			# Update the state
 			state = self.next(stack)
+
+			# DEBUG INFO
+			print("\nSTATE:", state[0])
+			print("SYMBOL:", symbol.data)
+
+			# Get the table value
 			action = self.table.getAction(state[0], symbol.data)
+			print("ACTION:", action)
 
 			# try: action = self.table.getAction(state[0], symbol.data)
 			# except StopIteration:
@@ -180,6 +190,7 @@ class LRParser:
 				# Get the production rule
 				rule = self.grammar.ruleList()[action.value]
 				length = len(rule[1])
+				print("RULE:", rule)
 
 				# Create the new rule tree
 				tree = ParseTree(rule[0], None)
@@ -194,14 +205,19 @@ class LRParser:
 				for s in states:
 					tree.addChild(s)
 
+				print("================================")
+				print(tree)
+				print("================================")
+
 				queue.insert(0, tree)
+				symbol = self.next(queue, stream)
 
 				# Exit the parse if we've reduced the start symbol
 				if rule[0] == self.grammar.start: return tree
 				continue
 
 			# -- NO ACTION --
-			raise ParseError("SYNTAX ERROR (2)")
+			raise ParseError("SYNTAX ERROR (No S/R action)")
 
 		# Debug testing
 		# result = self.table.getAction(10, '$')
@@ -217,16 +233,16 @@ class LRParser:
 if __name__ == "__main__":
 	grammar = Grammar("config/zlang.cfg", False)
 	parser = LRParser(grammar, "config/zlang.lr")
-	# stream = TokenStream("assignments/LGA-22/fischer-4-1t_src.tok", True)
+	stream = TokenStream("config/zobos/allgood-1.tok", True)
 
-	print("GRAMMAR:")
-	print(grammar)
+	# print("GRAMMAR:")
+	# print(grammar)
 
-	print("LR TABLE:")
-	print(parser)
+	# print("LR TABLE:")
+	# print(parser)
 
-	# tree = parser.parse(stream)
-	# print(tree)
+	tree = parser.parse(stream)
+	print(tree)
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")
