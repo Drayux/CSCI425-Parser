@@ -69,7 +69,7 @@ class SymbolTable():
                 typ = attr.type
                 if attr.cons:
                     typ = "const " + typ
-                output.write(str(i) + "," + attr.type + "," + name + "\n")
+                output.write(str(i) + "," + typ + "," + name + "\n")
 
     def populate_from_ast(self, node):
         #####################
