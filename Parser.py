@@ -162,13 +162,13 @@ class LRParser:
 			# Update the state
 			state = self.next(stack)
 
-			# DEBUG INFO
-			print("\nSTATE:", state[0])
-			print("SYMBOL:", symbol.data)
+			# DEBUG OUTPUT
+			# print("\nSTATE:", state[0])
+			# print("SYMBOL:", symbol.data)
 
 			# Get the table value
 			action = self.table.getAction(state[0], symbol.data)
-			print("ACTION:", action)
+			# print("ACTION:", action)		# DEBUG OUTPUT
 
 			# try: action = self.table.getAction(state[0], symbol.data)
 			# except StopIteration:
@@ -188,9 +188,9 @@ class LRParser:
 			# -- REDUCE ACTION --
 			if action.type == ActionType.REDUCE:
 				# Get the production rule
-				rule = self.grammar.ruleList()[action.value]
+				rule = self.grammar.ruleList()[action.value - 1]	# -1 offset is to adjust to 1-index of zlang.lr
 				length = len(rule[1])
-				print("RULE:", rule)
+				# print("RULE:", rule)		# DEBUG OUTPUT
 
 				# Create the new rule tree
 				tree = ParseTree(rule[0], None)
@@ -198,6 +198,8 @@ class LRParser:
 
 				# Pop as many elements as there were rules
 				for x in range(length):
+					# Ignore lambdas
+					if rule[1][x] == self.grammar.empty: continue
 					states.append(stack.pop()[1])
 
 				# Append freshly-popped states
@@ -205,12 +207,13 @@ class LRParser:
 				for s in states:
 					tree.addChild(s)
 
-				print("================================")
-				print(tree)
-				print("================================")
+				# More debug stuff!
+				# print("================================")
+				# print(tree)
+				# print("================================")
 
-				queue.insert(0, tree)
-				symbol = self.next(queue, stream)
+				queue.insert(0, symbol)		# Put the symbol back into the queue
+				symbol = tree
 
 				# Exit the parse if we've reduced the start symbol
 				if rule[0] == self.grammar.start: return tree
@@ -235,8 +238,8 @@ if __name__ == "__main__":
 	parser = LRParser(grammar, "config/zlang.lr")
 	stream = TokenStream("config/zobos/allgood-1.tok", True)
 
-	# print("GRAMMAR:")
-	# print(grammar)
+	print("GRAMMAR:")
+	print(grammar)
 
 	# print("LR TABLE:")
 	# print(parser)
