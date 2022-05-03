@@ -8,6 +8,7 @@ from ParseTable import LRParseTable as LRTable
 from ParseTable import ActionType
 from ParseTree import ParseTree
 from TokenStream import TokenStream
+from LR_AST import LR_AST_EOP
 
 # DEFINE LL AND LR PARSER CLASSES
 
@@ -212,6 +213,9 @@ class LRParser:
 				# print(tree)
 				# print("================================")
 
+				# Andrew: run sdt here..? should be fine
+				LR_AST_EOP(tree)
+
 				queue.insert(0, symbol)		# Put the symbol back into the queue
 				symbol = tree
 
@@ -245,7 +249,15 @@ if __name__ == "__main__":
 	# print(parser)
 
 	tree = parser.parse(stream)
-	print(tree)
+	#print(tree)
+
+	output = "ZOBOSDEBUG/ast"
+	from ParseTreeDebug import format_parse_tree
+	with open(output, "w+") as outf:
+		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
+		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
+		format_parse_tree(outf, tree)
+
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")

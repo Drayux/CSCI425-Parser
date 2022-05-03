@@ -125,8 +125,10 @@ def procedure_CAST(node: ParseTree):
 
 
 def procedure_STMTS(node: ParseTree):
+    if len(node.children) == 0:
+        return  # Let the parent reduce this node (delete it)
     if len(node.children) == 1:
-        if node.getChild().data == "lambda":
+        if node.getChild().data == "lambda" or node.getChild().data == "STMTS":
             replace_node_with_new_node(node, node.getChild())
     else:
         if node.children[0].data == "lambda":
