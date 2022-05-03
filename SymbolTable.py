@@ -123,6 +123,31 @@ class SymbolTable():
                 d_id = remove_prefix(eq_node.children[0], "id:")
                 self.EnterSymbol(d_id, SymbolAttributes(d_typ, False))  # TODO: support const
             return
+        #####################################
+        # Funsig Node (undefined functions)
+        #####################################
+        if node.data == "FUNSIG":
+            params = []
+            fnsig_node = verify_node(node, "FUNSIG")
+            r_typ = remove_prefix(fnsig_node.children[0], "type:")
+            f_id = remove_prefix(fnsig_node.children[1], "id:")
+            # Get fn parameters from PARAMLIST node
+            pl_node = verify_node(fnsig_node.children[2], "PARAMLIST")
+            for child in pl_node.children:
+                # Get individual fn parameter from a PARAM node
+                param_node = verify_node(child, "PARAM")
+                p_typ = remove_prefix(param_node.children[0], "type:")
+                p_id = remove_prefix(param_node.children[1], "id:")
+                params.append((p_typ, p_id))
+            # Add fn entry to SymbolTable
+            # NOTE: f_typ has format: return_type//param1_type/param2type/.../paramlast_type
+            f_typ = r_typ + "//"
+            if params:
+                (p_typ, _) = params[0]
+                f_typ = f_typ + p_typ 
+            for (p_typ, _) in params[1:]:
+                f_typ = f_typ + "/" + p_typ     
+            self.EnterSymbol(f_id, SymbolAttributes(f_typ, True))
         #########################
         # Scope Nodes
         #########################
@@ -167,6 +192,9 @@ def testPopulate():
     root.addChild(ParseTree("EMIT", root))
     st = SymbolTable();
     st.populate_from_ast(root)
+    (_, attr) = st.tableStack[0].table["m"] 
+    #print(f"type: {typ}")
+    assert (attr.type == "string")
     print("Populate from AST Tests Pass!")
 
 def testPopulateFn():
@@ -203,6 +231,8 @@ def testPopulateFn():
     root.addChild(func)
     st = SymbolTable()
     st.populate_from_ast(root)
+    (_, attr) = st.tableStack[0].table["main"]  
+    assert (attr.type == "int//int")
     print("Populate from AST with Fn Tests Pass!")
 
 if __name__ == "__main__":
