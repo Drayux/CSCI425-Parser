@@ -215,9 +215,9 @@ class LRParser:
 
 # TABLE TESTING
 if __name__ == "__main__":
-	grammar = Grammar("assignments/LGA-22/fischer-4-1.cfg")
-	parser = LRParser(grammar, "assignments/LGA-22/cytron-67.lr")
-	stream = TokenStream("assignments/LGA-22/fischer-4-1t_src.tok", True)
+	grammar = Grammar("config/zlang.cfg", False)
+	parser = LRParser(grammar, "config/zlang.lr")
+	# stream = TokenStream("assignments/LGA-22/fischer-4-1t_src.tok", True)
 
 	print("GRAMMAR:")
 	print(grammar)
@@ -225,8 +225,8 @@ if __name__ == "__main__":
 	print("LR TABLE:")
 	print(parser)
 
-	tree = parser.parse(stream)
-	print(tree)
+	# tree = parser.parse(stream)
+	# print(tree)
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")

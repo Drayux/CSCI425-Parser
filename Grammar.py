@@ -21,8 +21,9 @@ def find(s, i):
 
 # Grammar class
 # Contains set of grammar production rules and preliminary parse operations
+# If third parameter is true, grammar is LR (else LL assumed)
 class Grammar:
-	def __init__(self, path):
+	def __init__(self, path, LL = True):
 		self.rules = {}                                 # Dict of lists of nonterminals/symbols
 		self.empty = 'lambda'                           # Name of empty rule character (as seen in the config file)
 		self.prodend = '$'                              # Character representing the end of production
@@ -41,10 +42,17 @@ class Grammar:
 			print("CONFIG ERROR:", ce)
 			exit(1)
 
-		self.calcEmpty()
-		self.calcFirst()
-		self.calcFollow()
-		self.calcPredict()
+		# Grammar is LL and these are necessary
+		if LL:
+			self.calcEmpty()
+			self.calcFirst()
+			self.calcFollow()
+			self.calcPredict()
+
+		# Grammar is LR and this is necessary
+		else:
+			# TODO TABLE GENERATION
+			pass
 
 	def __str__(self):
 		# ret = "-- GRAMMAR --\n"
@@ -89,7 +97,10 @@ class Grammar:
 		for rule in config:
 			lineCount += 1                  # For accurate error messages
 			symbol = None
-			try: symbol = rule[1]
+			try:
+				symbol = rule[1]
+				if symbol[0] == '#':		# Comment
+					continue
 			except IndexError: continue     # Empty line
 
 			# Line contains a rulename
@@ -116,19 +127,19 @@ class Grammar:
 		rulename = None     # Key under which to place rules in the grammar dictionary
 		for lc, rule in enumerate(config):
 			# Empty line, skip
-			if len(rule) == 0: continue
+			if len(rule) == 0 or rule[0][0] == '#': continue
 			symbol = rule.pop(0)
 
 			# Rule with explicit name
 			if symbol in self.nonterminals:
 				# Check length (Needs to be at least 3, but we popped the first element)
-				if len(rule) < 2: raise ConfigError(f"Invalid rule ({path}: line {lc})")
+				if len(rule) < 2: raise ConfigError(f"Invalid rule ({path}: line {lc + 1})")
 				rule.pop(0)     # Next token will be an arrow
 				rulename = symbol
 
 			# Config file syntax checking
 			elif symbol != '|':
-				raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lc} ({path})")
+				raise ConfigError(f"Unexpected symbol '{symbol}' at start of line {lc + 1} ({path})")
 
 			# Iterate through the rest of the line
 			# Determine token type (operator, non-terminal, or symbol)
@@ -139,7 +150,7 @@ class Grammar:
 				# Alternation: Save the new rule
 				if token == '|':
 					if len(rewrite) == 0:
-						raise ConfigError(f"Zero-length rule in line {lc} ({path})")
+						raise ConfigError(f"Zero-length rule in line {lc + 1} ({path})")
 
 					self.rules[rulename].append(rewrite)
 					rewrite = []
@@ -148,7 +159,7 @@ class Grammar:
 				# End or production: Save rule as start goal
 				if token == self.prodend:
 					if self.start is not None and self.start != rulename:
-						raise ConfigError(f"Multiple start symbols '{rulename}' and '{self.start}' ({path}: line {lc})")
+						raise ConfigError(f"Multiple start symbols '{rulename}' and '{self.start}' ({path}: line {lc + 1})")
 					elif self.start is None: self.start = rulename
 
 					# Use the same pointer
@@ -158,7 +169,7 @@ class Grammar:
 				# Lambda rule: Can later be expanded to use special lamda char
 				if token == self.empty:
 					if len(rewrite) > 0:
-						raise ConfigError(f"Unexpected lambda in nonempty rewrite rule ({path}: line {lc})")
+						raise ConfigError(f"Unexpected lambda in nonempty rewrite rule ({path}: line {lc + 1})")
 
 					rewrite.append(self.empty)
 					break
@@ -170,7 +181,7 @@ class Grammar:
 				# If nothing, token was a terminal
 				if pointer is None:
 					if strict and (token != token.lower()):
-						raise ConfigError(f"Terminal '{token}' contains a capital letter ({path}: line {lc})")
+						raise ConfigError(f"Terminal '{token}' contains a capital letter ({path}: line {lc + 1})")
 
 					self.terminals.add(token)
 					pointer = find(self.terminals, token)
@@ -178,7 +189,7 @@ class Grammar:
 				rewrite.append(pointer)
 
 			if len(rewrite) == 0:
-				raise ConfigError(f"Zero-length rule in line {lc} ({path})")
+				raise ConfigError(f"Zero-length rule in line {lc + 1} ({path})")
 			self.rules[rulename].append(rewrite)
 
 		# Ensure that the start rule is configured correctly
