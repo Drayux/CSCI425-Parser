@@ -66,6 +66,9 @@ class SymbolTable():
         for (i, table) in enumerate(reversed(self.tableStack)):
             for key in table.table:
                 (name, attr) = table.table[key]
+                typ = attr.type
+                if attr.cons:
+                    typ = "const " + typ
                 output.write(str(i) + "," + attr.type + "," + name + "\n")
 
     def populate_from_ast(self, node):
