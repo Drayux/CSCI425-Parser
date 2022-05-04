@@ -1,8 +1,7 @@
 class TokenStream:
 	def __init__(self, input, isPath = False):
 		if isPath: self.generator = self.load(input)
-		else:
-			self.generator = self.scan((input))
+		else: self.generator = self.scan(input)
 		self.front = None
 
 	# Load a generated token stream from a file
@@ -11,9 +10,15 @@ class TokenStream:
 		with open(path, 'r') as inf:
 			for line in inf:
 				data = line.strip().split()
-				hasValue = True if len(data) > 1 else False
-				token = (data[0], None if not hasValue else data[1])
-				yield token
+
+				ret = [data[0], None, -1, -1]	# Token type
+				try:
+					ret[1] = data[1]			# Token value
+					ret[2] = data[2]			# Line of occurence
+					ret[3] = data[3]			# Col of occurence
+				except IndexError: pass
+
+				yield ret
 
 	# Subroutine of scan():
 	# Handles regex operator characters and escape sequences
@@ -48,6 +53,3 @@ class TokenStream:
 	def next(self):
 		self.front = next(self.generator)
 		return self.front
-
-
-

@@ -13,6 +13,7 @@
     - [X] Use SLR table 
     - [X] Use zlang.cfg
     - [ ] Check for syntax errors
+    - [ ] print out
 - [X] Develop SDTs to make an AST during the above parse - Konch and Andrew
     - [X] EXPR will be simplified to 
         - [X] leaves are literals or variables
@@ -43,6 +44,7 @@
         - [X] STMTS
         - [X] BRACESTMTS
     - [X] Simple Tree representation of AST to disk
+    - [ ] Handle higher order colapsing
 - [ ] Semantic checks on AST on variable, expression and function - Chris
     - [ ] Emit will write symbol tables to disk 
     - [ ] Warnings and errors will be emitted 
