@@ -1,7 +1,0 @@
-0,const float//,babylon
-0,const float,epsilon
-1,float,guess
-2,const string,done
-2,bool,gogogo
-2,float,x
-3,float,abs

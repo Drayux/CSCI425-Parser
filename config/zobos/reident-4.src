@@ -1,5 +1,0 @@
-float pacific( float salmon )
-returns salmon = 3
-{
-    salmon = pacific(3000.01+salmon);
-}

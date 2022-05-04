@@ -1,5 +1,0 @@
-DECLARE in scope=0 name=x  const=False line=1 type=int col=5
-USED identifier x marked as used.
-OUTPUT :WARN: 1 9 :UNINIT:
-REASON x declared at 1 5 is being used at 1 9 uninitialized.
-close scope 0 complete

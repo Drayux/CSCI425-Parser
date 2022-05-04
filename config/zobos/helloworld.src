@@ -1,6 +1,0 @@
-string word = "hello world";
-int speak()
-returns r = 0
-{
-    emit word, 0, 11;
-}

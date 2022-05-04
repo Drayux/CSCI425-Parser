@@ -1,7 +1,0 @@
-float r( float a )
-returns x = 0
-{ 
-    a = r(a);
-}
-
-float r( float a );

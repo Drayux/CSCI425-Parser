@@ -1,7 +1,0 @@
-int main()
-returns r=0
-{
-    int x = 1;
-    string m = "boo";
-    emit m, 0, x;
-}

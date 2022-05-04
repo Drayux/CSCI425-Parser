@@ -1,8 +1,0 @@
-int conv_and_expr_errors()
-returns r = 0
-{
-    int a, c, x;
-    const int b;
-    a = b = c = x = "3" + 2;
-}
-

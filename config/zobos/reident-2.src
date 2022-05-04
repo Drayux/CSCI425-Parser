@@ -1,5 +1,0 @@
-float r( float a, int b, float a )
-returns x = 0
-{ 
-    x = r(a, b, x);
-}

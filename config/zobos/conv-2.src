@@ -1,7 +1,0 @@
-int x = 4;
-float silly(int p)
-returns r=0
-{ 
-    x = silly(p+x);
-}
-
