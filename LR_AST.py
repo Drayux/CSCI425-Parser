@@ -152,6 +152,99 @@ def procedure_BRACESTMTS(node: ParseTree):
     node.children[2] = ParseTree("scope:close", None)
 
 
+def procedure_ASSIGN(node: ParseTree):
+    assert (len(node.children) == 3)
+    assert ("id" in node.children[0].data)
+    assert (node.children[1].data == "assign")
+    assert (node.children[2].data in [ "EXPR", "ASSIGN" ])
+    node.data = "="  # ASSIGN -> =
+    node.removeChild(node.children[1])  # Remove assign token
+
+
+def procedure_STATEMENT(node: ParseTree):
+    assert (len(node.children) in [ 1, 2 ])
+    if len(node.children) == 2:
+        assert (node.children[1].data == "sc")
+        node.removeChild(node.children[1])  # Remove sc token
+    assert (node.getChild().data in [ "BRACESTMTS", "DECLLIST", "ASSIGN", "=", "IF", "IFELSE", "WHILE", "EMIT" ])
+
+
+def procedure_MODULE(node: ParseTree):
+    assert (len(node.children) == 2)
+    assert (node.children[0].data == "MODPARTS")
+    assert (node.children[1].data == "$")
+    node.removeChild(node.children[1])  # Remove $
+    # Working bottom up, so we know MODPARTS is composed of <node> or <node> <MODPARTS>
+    # Now flatten the structure by adopting all children
+    nodeHead = node.getChild()
+    #print("HEAD: {}".format(nodeHead.data))
+    while len(nodeHead.children) > 1:
+        #print("ADOPTING: {}".format(nodeHead.children[0].data))
+        node.addChild(nodeHead.children[0])  # Adopt the intermediate child
+        nodeHead = nodeHead.children[1]
+        #print("UPDATED HEAD: {}".format(nodeHead.data))
+    node.addChild(nodeHead.getChild())  # Adopt the leaf child
+    node.removeChild(node.children[0])  # Remove the MODPARTS child
+
+
+def procedure_MODPARTS(node: ParseTree):
+    assert (len(node.children) in [ 1, 2, 3 ])
+    assert (node.children[0].data in [ "GCTDECLLIST", "GFTDECLLIST", "FUNSIG", "FUNCTION", "EMIT" ])
+    if len(node.children) > 1:
+        if node.children[0].data == "FUNCTION":
+            assert (node.children[1].data == "MODPARTS")
+        else:
+            assert (node.children[1].data == "sc")
+            node.removeChild(node.children[1])  # Remove sc
+    # Cleaned up the structure, now we have <node> or <node> <MODPARTS>
+    # NOTE: don't flatten structure here, it will get messy! instead, flatten in MODULE procedure.
+    #if len(node.children) == 1:
+    #    replace_node_with_new_node(node, node.getChild())
+    #else:
+
+
+def procedure_PARAMLIST(node: ParseTree):
+    # Flatten structure into single PARAMLIST with n PARAM children
+    if len(node.children) == 1:
+        assert (node.getChild().data == "NOPARAMS")
+        assert (len(node.getChild.children) == 0)
+        # Remove self?
+    elif len(node.children) == 2:
+        assert ("type" in node.children[0].data or node.children[0].data == "FUNTYPE")
+        assert ("id" in node.children[1].data)
+        # Make a wrapper PARAM node
+        paramNode = ParseTree("PARAM", None)
+        paramNode.addChild(node.children[0])
+        paramNode.addChild(node.children[1])
+        #replace_node_with_new_node(node.children[0], paramNode)
+        # Manual fixup
+        node.children[0] = paramNode
+        node.children[0].parent = node
+        node.removeChild(node.children[1])  # Remove the leftover
+    elif len(node.children) > 2:
+        assert ("type" in node.children[0].data or node.children[0].data == "FUNTYPE")
+        assert ("id" in node.children[1].data)
+        assert (node.children[2].data == "comma")
+        assert (node.children[3].data in [ "PARAM", "PARAMLIST" ])
+        if node.children[3].data == "PARAMLIST":
+            # Iterate the children of the PARAMLIST and adopt
+            for i in range(len(node.children[3].children)):
+                assert (node.children[3].children[i].data == "PARAM")
+                # Adopt
+                node.addChild(node.children[3].children[i])
+            node.removeChild(node.children[3])  # Remove the dead parent we stole children from, lol
+        node.removeChild(node.children[2])  # Remove comma
+        # Wrap our params with a PARAM
+        paramNode = ParseTree("PARAM", None)
+        paramNode.addChild(node.children[0])
+        paramNode.addChild(node.children[1])
+        #replace_node_with_new_node(node.children[0], paramNode)  # Replace the left, not the base node.
+        # Manual fixup
+        node.children[0] = paramNode
+        node.children[0].parent = node
+        node.removeChild(node.children[1])  # Remove the leftover
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -195,6 +288,19 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_STMTS(node)
     elif node.data == "BRACESTMTS":
         procedure_BRACESTMTS(node)
+
+    # Non-control SDTs
+    elif node.data == "ASSIGN":
+        procedure_ASSIGN(node)
+    elif node.data == "STATEMENT":
+        procedure_STATEMENT(node)
+    elif node.data == "MODULE":
+        procedure_MODULE(node)
+    elif node.data == "MODPARTS":
+        procedure_MODPARTS(node)
+    elif node.data == "PARAMLIST":
+        procedure_PARAMLIST(node)
+        
 
 
 def LR_AST_EOP(node: ParseTree):
