@@ -8,7 +8,6 @@ import sys
 # Project imports
 from Grammar import Grammar
 from Parser import LRParser as Parser
-from SymbolTable import SymbolAttributes, SymbolTable
 from TokenStream import TokenStream
 
 
@@ -23,11 +22,12 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	global TABLEPATH
 
 	grammar = Grammar(GRAMMARPATH, False)
-	parser = Parser(grammar, TABLEPATH)
+	parser = Parser(grammar, TABLEPATH, tablePath)
 	stream = TokenStream(streamPath, True)
 
 	# Primary ZOBOS logic
-	print("TODO ZOBOS MAIN LOGIC (line 30)")
+	tree = parser.parse(stream)		# Parse the token stream
+	tree.format(astPath)			# Output the tree to the specified file
 
 
 # -- ARG PARSING --
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 	# Provide the user a chance to exit to protect potential overwrite of unintended files
 	# We *may* need to disable this for the final submission
 	if check:
-		try: input("Press enter continue...\n")
+		try: input("Press enter to continue...\n")
 		except KeyboardInterrupt:
 			exit(1)
 

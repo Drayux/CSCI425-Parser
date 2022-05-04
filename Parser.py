@@ -9,7 +9,7 @@ from ParseTable import ActionType
 from ParseTree import ParseTree
 from SymbolTable import SymbolAttributes, SymbolTable
 from TokenStream import TokenStream
-from LR_AST import LR_AST_EOP
+from LR_AST import LR_AST_EOP, LR_AST_SDT_Procedure
 
 # DEFINE LL AND LR PARSER CLASSES
 
@@ -47,7 +47,8 @@ class LLParser:
 
 			# Check for end of production marker
 			if symbol == '*':
-				if ast_Tree: AST.AST_SDT_Procedure((curNode)) # This applies AST procedures for REGEX, turn off if otherwise
+				# This applies AST procedures for REGEX, turn off if otherwise
+				if ast_Tree: AST.AST_SDT_Procedure((curNode))
 				curNode = curNode.parent
 				continue
 
@@ -120,38 +121,42 @@ class LLParser:
 
 # LR(0) Parser
 class LRParser:
-	def __init__(self, grammar, tablepath, symbolTableEmit = None):
+	def __init__(self, grammar, parsetablepath, symtablepath):
 		# Grammar can be passed as string to definition or grammar obj itself
 		if type(grammar) is not Grammar: grammar = Grammar(grammar)
 
-		self.grammar = grammar					# Grammar definition
-		self.table = LRTable(tablepath)
-		# self.table = LRTable(grammar)			# Generate the parse table (TODO), currently just read from file
-		self.symbolTableEmit = symbolTableEmit
+		self.grammar = grammar						# Grammar definition
+		self.parseTable = LRTable(parsetablepath)	# Generate the parse table (TODO), currently just read from file
 		self.symbolTable = SymbolTable()
+		self.tablePath = symtablepath
+		# self.symbolTableEmit = symbolTableEmit
 
 	def next(self, arr, stream = None):
 		if type(arr) is not list:
 			raise TypeError("Invalid usage of LRParser.next()")
 
- 		# - Called to get the next item in the stack -
+ 		# --- Called to get the next item in the stack ---
 		if stream is None:
 			try: return arr[-1]
 			except IndexError: return None
-		# --------------------------------------------
+		# ------------------------------------------------
 
 		if type(stream) is not TokenStream:
 			raise TypeError("Invalid usage of LRParser.next()")
 
-		# Otherwise, called to get next item in dequeue
+		# - Otherwise, called to get next item in dequeue -
 		# Will always pop for consistency with the TokenStream API
 		# Always returns a ParseTree type
 		if len(arr) > 0: return arr.pop(0)
 		try:
 			ret = stream.next()
-			return ParseTree(ret[0], None)
+			tree = ParseTree(ret[0], None)
+			tree.aux = ret[1]
+			tree.line = ret[2]
+			tree.col = ret[3]
+			return tree
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
-		# ----------------------------------------------
+		# --------------------------------------------------
 
 	def parse(self, stream: TokenStream):
 		stack = [ (0, None) ]		# Stack of state numbers
@@ -192,7 +197,8 @@ class LRParser:
 			# -- REDUCE ACTION --
 			if action.type == ActionType.REDUCE:
 				# Get the production rule
-				rule = self.grammar.ruleList()[action.value - 1]	# -1 offset is to adjust to 1-index of zlang.lr
+				# -1 offset is to adjust to 1-index of zlang.lr
+				rule = self.grammar.ruleList()[action.value - 1]
 				length = len(rule[1])
 				# print("RULE:", rule)		# DEBUG OUTPUT
 
@@ -225,14 +231,17 @@ class LRParser:
 				# Andrew: run sdt here..? should be fine
 				LR_AST_EOP(tree)
 
-				# Handle symbol table stuff. very scuffed!
+				# Handle symbol table stuff. ~~very~~ slightly less scuffed!
 				#print("DATA: {}".format(tree.data))
 				if "emit" in tree.data.lower():
-					self.symbolTableEmit(self.symbolTable)
+					self.symbolTable.EmitTable(self.tablePath)
+
 				elif "lbrace" in tree.data.lower() or "scope:open" in tree.data.lower():
 					self.symbolTable.OpenScope()
+
 				elif "rbrace" in tree.data.lower() or "scope:close" in tree.data.lower():
 					self.symbolTable.CloseScope()
+
 				elif "id:" in tree.data.lower():
 					self.symbolTable.EnterSymbol("test", SymbolAttributes("unknown_type"))
 
@@ -243,11 +252,16 @@ class LRParser:
 				symbol = tree
 
 				# Exit the parse if we've reduced the start symbol
-				if rule[0] == self.grammar.start: return tree
-				continue
+				if rule[0] == self.grammar.start:
+					# POST PARSE
+					# make sure to reduce the final MODULE node
+					LR_AST_SDT_Procedure(tree)
+					return tree
 
 			# -- NO ACTION --
-			raise ParseError("SYNTAX ERROR (No S/R action)")
+			# raise ParseError(f"SYNTAX ERROR ({symbol.line}, {symbol.col})")
+			print(f"OUTPUT :SYNTAX: {symbol.line} {symbol.col} :SYNTAX:")
+			exit(1)
 
 		# Debug testing
 		# result = self.table.getAction(10, '$')
@@ -259,37 +273,42 @@ class LRParser:
 		return str(self.table)
 
 
-def EmitSymbolTable(symbolTable: SymbolTable):
-	if len(sys.argv) < 3:
-		print("MISSING SYMBOL TABLE OUTPUT FILE CMDLINE ARG!")
-		return
-	with open(sys.argv[3], "w+") as f:
-		symbolTable.EmitTable(f)
+# Output now just uses path passed in from main
+# def EmitSymbolTable(symbolTable: SymbolTable):
+# 	if len(sys.argv) < 3:
+# 		print("MISSING SYMBOL TABLE OUTPUT FILE CMDLINE ARG!")
+# 		return
+# 	with open(sys.argv[3], "w+") as f:
+# 		symbolTable.EmitTable(f)
 
 # TABLE TESTING
 if __name__ == "__main__":
-	#source = "config/zobos/allgood-1.tok"
-	source = "config/zobos/symtable-1.tok"
+	treePath = "ZOBOSDEBUG/ast.dat"
+	tablePath = "ZOBOSDEBUG/symtable.sym"
+
+	#############################################
+	# CHANGE ME TO TEST DIFFERENT TOKEN STREAMS #
+	source = "config/zobos/allgood-1.tok"       #
+	#############################################
+
 	grammar = Grammar("config/zlang.cfg", False)
-	parser = LRParser(grammar, "config/zlang.lr", EmitSymbolTable)
+	parser = LRParser(grammar, "config/zlang.lr", tablePath)
 	stream = TokenStream(source, True)
 
 	print("GRAMMAR:")
 	print(grammar)
 
-	# print("LR TABLE:")
-	# print(parser)
+	print("LR TABLE:")
+	print(parser)
 
 	tree = parser.parse(stream)
 	#print(tree)
 
-	output = "ZOBOSDEBUG/ast"
-	from ParseTreeDebug import format_parse_tree
+	# tree.format(sys.stdout)
 	with open(output, "w+") as outf:
 		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
 		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
-		format_parse_tree(outf, tree)
-
+		tree.format(outf)
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")

@@ -2,6 +2,7 @@ import unittest
 
 import LR_AST
 from LR_AST import LR_AST_EOP
+from LR_AST import LR_AST_SDT_Procedure
 from ParseTree import ParseTree
 
 
@@ -420,6 +421,39 @@ class ASTTestCase(unittest.TestCase):
         self.assertEqual(t.getChild().children[1].data, "STMTS")
         self.assertEqual(t.getChild().children[2].data, "scope:close")
         self.assertEqual(t.getChild().children[1].getChild().data, "STATEMENT")
+
+    def test_MODULE_procedure(self):
+        # Tests MODULE and MODPARTS
+        #              MODULE
+        #            /        \
+        #       MODPARTS       $
+        #      /    |    \
+        #  FUNSIG  sc  MODPARTS
+        #               /    \
+        #             EMIT    sc
+        
+        # GOES TO
+        #            MODULE
+        #           /       \
+        #       FUNSIG      EMIT
+
+        t = ParseTree("MODULE", None)
+        t.addChild("MODPARTS")
+        t.addChild("$")
+        t.children[0].addChild("FUNSIG")
+        t.children[0].addChild("sc")
+        t.children[0].addChild("MODPARTS")
+        t.children[0].children[2].addChild("EMIT")
+        t.children[0].children[2].addChild("sc")
+        LR_AST_SDT_Procedure(t.children[0].children[2])  # SDT lowest level
+        LR_AST_EOP(t)   # SDT highest level
+        LR_AST_SDT_Procedure(t)  # Then SDT MODULE
+        self.assertEqual(t.data, "MODULE")
+        self.assertEqual(len(t.children), 2)
+        self.assertEqual(t.children[0].data, "FUNSIG")
+        self.assertEqual(t.children[1].data, "EMIT")
+        self.assertEqual(len(t.children[0].children), 0)
+        self.assertEqual(len(t.children[1].children), 0)
 
 
 if __name__ == '__main__':
