@@ -25,6 +25,10 @@ class SymbolAttributes():
     def __init__(self, type, cons):  # todo: more attributes
         self.type = type
         self.cons = cons
+        self.init = False
+
+    def initialize(self):
+        self.init = True
 
 class TableScope():
     def __init__(self):
@@ -181,6 +185,20 @@ class SymbolTable():
             par_count = len(pars.split("/")) 
             if arg_count != par_count:
                 self.ReportError("CALL", 0, 0)  # TODO: support row/column
+        #########################
+        # id: Nodes
+        #########################
+        if node.data.startswith("id:"):
+            i_id = remove_prefix(node, "id:")
+            entry = self.RetrieveSymbol(i_id)
+            if not entry:
+                self.ReportError("UNINIT", 0, 0)    # TODO: support row/column
+                return
+            (_, attr) = entry
+            if not attr.init:
+                self.ReportError("UNINIT", 0, 0)    # TODO: support row/column
+                return
+            
         #########################
         # Scope Nodes
         #########################
