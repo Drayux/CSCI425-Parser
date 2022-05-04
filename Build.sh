@@ -1,4 +1,4 @@
-echo "#!/bin/bash" > WRECK
-echo "python3 wreck.py \$1 \$2" >> WRECK
-chmod +x WRECK
+echo "#!/bin/bash" > ZOBOS
+echo "python3 zobos.py \$1 \$2" >> ZOBOS
+chmod +x ZOBOS
 source ~khellman/COMPGRADING/setup.sh ~khellman/COMPGRADING
