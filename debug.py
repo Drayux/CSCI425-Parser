@@ -72,7 +72,7 @@ def main(config, stream = None, output = None):
 	with open(output, "w") as outf:
 		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
 		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
-		format_parse_tree(outf, parseTree)
+		parseTree.format(outf)
 
 
 if __name__ == '__main__':

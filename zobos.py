@@ -8,7 +8,6 @@ import sys
 # Project imports
 from Grammar import Grammar
 from Parser import LRParser as Parser
-from SymbolTable import SymbolAttributes, SymbolTable
 from TokenStream import TokenStream
 
 
@@ -27,8 +26,9 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	stream = TokenStream(streamPath, True)
 
 	# Primary ZOBOS logic
+	print("TODO ZOBOS MAIN LOGIC (line 29)")
 	concreteTree = parser.parse(stream)		# Parse the token stream
-	print("TODO ZOBOS MAIN LOGIC (line 30)")
+	# TODO Convert tree
 	concreteTree.format(astPath)			# Output the tree to the specified file
 
 
