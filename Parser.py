@@ -121,14 +121,15 @@ class LLParser:
 
 # LR(0) Parser
 class LRParser:
-	def __init__(self, grammar, tablepath, symbolTableEmit = None):
+	def __init__(self, grammar, parsetablepath, symtablepath):
 		# Grammar can be passed as string to definition or grammar obj itself
 		if type(grammar) is not Grammar: grammar = Grammar(grammar)
 
-		self.grammar = grammar					# Grammar definition
-		self.table = LRTable(tablepath)			# Generate the parse table (TODO), currently just read from file
-		self.symbolTableEmit = symbolTableEmit
+		self.grammar = grammar						# Grammar definition
+		self.parseTable = LRTable(parsetablepath)	# Generate the parse table (TODO), currently just read from file
 		self.symbolTable = SymbolTable()
+		self.tablePath = symtablepath
+		# self.symbolTableEmit = symbolTableEmit
 
 	def next(self, arr, stream = None):
 		if type(arr) is not list:
@@ -230,14 +231,17 @@ class LRParser:
 				# Andrew: run sdt here..? should be fine
 				LR_AST_EOP(tree)
 
-				# Handle symbol table stuff. very scuffed!
+				# Handle symbol table stuff. ~~very~~ slightly less scuffed!
 				#print("DATA: {}".format(tree.data))
 				if "emit" in tree.data.lower():
-					self.symbolTableEmit(self.symbolTable)
+					self.symbolTable.EmitTable(self.tablePath)
+
 				elif "lbrace" in tree.data.lower() or "scope:open" in tree.data.lower():
 					self.symbolTable.OpenScope()
+
 				elif "rbrace" in tree.data.lower() or "scope:close" in tree.data.lower():
 					self.symbolTable.CloseScope()
+
 				elif "id:" in tree.data.lower():
 					self.symbolTable.EnterSymbol("test", SymbolAttributes("unknown_type"))
 
@@ -252,10 +256,7 @@ class LRParser:
 					# POST PARSE
 					# make sure to reduce the final MODULE node
 					LR_AST_SDT_Procedure(tree)
-
 					return tree
-
-				continue
 
 			# -- NO ACTION --
 			# raise ParseError(f"SYNTAX ERROR ({symbol.line}, {symbol.col})")
@@ -272,34 +273,38 @@ class LRParser:
 		return str(self.table)
 
 
-def EmitSymbolTable(symbolTable: SymbolTable):
-	if len(sys.argv) < 3:
-		print("MISSING SYMBOL TABLE OUTPUT FILE CMDLINE ARG!")
-		return
-	with open(sys.argv[3], "w+") as f:
-		symbolTable.EmitTable(f)
+# Output now just uses path passed in from main
+# def EmitSymbolTable(symbolTable: SymbolTable):
+# 	if len(sys.argv) < 3:
+# 		print("MISSING SYMBOL TABLE OUTPUT FILE CMDLINE ARG!")
+# 		return
+# 	with open(sys.argv[3], "w+") as f:
+# 		symbolTable.EmitTable(f)
 
 # TABLE TESTING
 if __name__ == "__main__":
-	source = "config/zobos/allgood-1.tok"
-	#source = "config/zobos/symtable-1.tok"
+	treePath = "ZOBOSDEBUG/ast.dat"
+	tablePath = "ZOBOSDEBUG/symtable.sym"
+
+	#############################################
+	# CHANGE ME TO TEST DIFFERENT TOKEN STREAMS #
+	source = "config/zobos/allgood-1.tok"       #
+	#############################################
 
 	grammar = Grammar("config/zlang.cfg", False)
-	parser = LRParser(grammar, "config/zlang.lr", EmitSymbolTable)
+	parser = LRParser(grammar, "config/zlang.lr", tablePath)
 	stream = TokenStream(source, True)
 
 	print("GRAMMAR:")
 	print(grammar)
 
-	# print("LR TABLE:")
-	# print(parser)
+	print("LR TABLE:")
+	print(parser)
 
 	tree = parser.parse(stream)
 	#print(tree)
 
 	# tree.format(sys.stdout)
-
-	output = "ZOBOSDEBUG/ast"
 	with open(output, "w+") as outf:
 		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
 		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")

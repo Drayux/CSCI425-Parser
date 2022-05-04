@@ -22,14 +22,12 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	global TABLEPATH
 
 	grammar = Grammar(GRAMMARPATH, False)
-	parser = Parser(grammar, TABLEPATH)
+	parser = Parser(grammar, TABLEPATH, tablePath)
 	stream = TokenStream(streamPath, True)
 
 	# Primary ZOBOS logic
-	print("TODO ZOBOS MAIN LOGIC (line 29)")
-	concreteTree = parser.parse(stream)		# Parse the token stream
-	# TODO Convert tree
-	concreteTree.format(astPath)			# Output the tree to the specified file
+	tree = parser.parse(stream)		# Parse the token stream
+	tree.format(astPath)			# Output the tree to the specified file
 
 
 # -- ARG PARSING --
