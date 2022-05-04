@@ -63,6 +63,10 @@ class SymbolTable():
             if val != None:
                 return table.table[name]
 
+    def Initialize(self, name):
+        (_, attr) = self.RetrieveSymbol(name)
+        attr.initialize()
+
     def ReportError(self, id, r, c):
         if id in ["UNINIT", "REIDENT"]:
             sys.stdout.write(f":WARN: {r} {c} :{id}:\n")
@@ -197,8 +201,7 @@ class SymbolTable():
             (_, attr) = entry
             if not attr.init:
                 self.ReportError("UNINIT", 0, 0)    # TODO: support row/column
-                return
-            
+                return            
         #########################
         # Scope Nodes
         #########################
