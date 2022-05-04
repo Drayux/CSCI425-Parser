@@ -9,7 +9,7 @@ from ParseTable import ActionType
 from ParseTree import ParseTree
 from SymbolTable import SymbolAttributes, SymbolTable
 from TokenStream import TokenStream
-from LR_AST import LR_AST_EOP
+from LR_AST import LR_AST_EOP, LR_AST_SDT_Procedure
 
 # DEFINE LL AND LR PARSER CLASSES
 
@@ -245,7 +245,13 @@ class LRParser:
 				symbol = tree
 
 				# Exit the parse if we've reduced the start symbol
-				if rule[0] == self.grammar.start: return tree
+				if rule[0] == self.grammar.start:
+					# POST PARSE
+					# make sure to reduce the final MODULE node
+					LR_AST_SDT_Procedure(tree)
+
+					return tree
+					
 				continue
 
 			# -- NO ACTION --
@@ -270,8 +276,8 @@ def EmitSymbolTable(symbolTable: SymbolTable):
 
 # TABLE TESTING
 if __name__ == "__main__":
-	#source = "config/zobos/allgood-1.tok"
-	source = "config/zobos/symtable-1.tok"
+	source = "config/zobos/allgood-1.tok"
+	#source = "config/zobos/symtable-1.tok"
 	grammar = Grammar("config/zlang.cfg", False)
 	parser = LRParser(grammar, "config/zlang.lr", EmitSymbolTable)
 	stream = TokenStream(source, True)
