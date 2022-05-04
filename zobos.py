@@ -27,7 +27,9 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	stream = TokenStream(streamPath, True)
 
 	# Primary ZOBOS logic
+	concreteTree = parser.parse(stream)		# Parse the token stream
 	print("TODO ZOBOS MAIN LOGIC (line 30)")
+	concreteTree.format(astPath)			# Output the tree to the specified file
 
 
 # -- ARG PARSING --
@@ -63,7 +65,7 @@ if __name__ == "__main__":
 	# Provide the user a chance to exit to protect potential overwrite of unintended files
 	# We *may* need to disable this for the final submission
 	if check:
-		try: input("Press enter continue...\n")
+		try: input("Press enter to continue...\n")
 		except KeyboardInterrupt:
 			exit(1)
 

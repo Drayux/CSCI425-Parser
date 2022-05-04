@@ -47,7 +47,8 @@ class LLParser:
 
 			# Check for end of production marker
 			if symbol == '*':
-				if ast_Tree: AST.AST_SDT_Procedure((curNode)) # This applies AST procedures for REGEX, turn off if otherwise
+				# This applies AST procedures for REGEX, turn off if otherwise
+				if ast_Tree: AST.AST_SDT_Procedure((curNode))
 				curNode = curNode.parent
 				continue
 
@@ -133,16 +134,16 @@ class LRParser:
 		if type(arr) is not list:
 			raise TypeError("Invalid usage of LRParser.next()")
 
- 		# - Called to get the next item in the stack -
+ 		# --- Called to get the next item in the stack ---
 		if stream is None:
 			try: return arr[-1]
 			except IndexError: return None
-		# --------------------------------------------
+		# ------------------------------------------------
 
 		if type(stream) is not TokenStream:
 			raise TypeError("Invalid usage of LRParser.next()")
 
-		# Otherwise, called to get next item in dequeue
+		# - Otherwise, called to get next item in dequeue -
 		# Will always pop for consistency with the TokenStream API
 		# Always returns a ParseTree type
 		if len(arr) > 0: return arr.pop(0)
@@ -154,7 +155,7 @@ class LRParser:
 			tree.col = ret[3]
 			return tree
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
-		# ----------------------------------------------
+		# --------------------------------------------------
 
 	def parse(self, stream: TokenStream):
 		stack = [ (0, None) ]		# Stack of state numbers
@@ -195,7 +196,8 @@ class LRParser:
 			# -- REDUCE ACTION --
 			if action.type == ActionType.REDUCE:
 				# Get the production rule
-				rule = self.grammar.ruleList()[action.value - 1]	# -1 offset is to adjust to 1-index of zlang.lr
+				# -1 offset is to adjust to 1-index of zlang.lr
+				rule = self.grammar.ruleList()[action.value - 1]
 				length = len(rule[1])
 				# print("RULE:", rule)		# DEBUG OUTPUT
 
@@ -252,7 +254,7 @@ class LRParser:
 					LR_AST_SDT_Procedure(tree)
 
 					return tree
-					
+
 				continue
 
 			# -- NO ACTION --
@@ -279,13 +281,9 @@ def EmitSymbolTable(symbolTable: SymbolTable):
 
 # TABLE TESTING
 if __name__ == "__main__":
-<<<<<<< HEAD
 	source = "config/zobos/allgood-1.tok"
 	#source = "config/zobos/symtable-1.tok"
-=======
-	#source = "config/zobos/allgood-1.tok"
-	source = "config/zobos/badtoken.tok"
->>>>>>> refs/remotes/origin/main
+
 	grammar = Grammar("config/zlang.cfg", False)
 	parser = LRParser(grammar, "config/zlang.lr", EmitSymbolTable)
 	stream = TokenStream(source, True)
@@ -299,13 +297,13 @@ if __name__ == "__main__":
 	tree = parser.parse(stream)
 	#print(tree)
 
+	# tree.format(sys.stdout)
+
 	output = "ZOBOSDEBUG/ast"
-	from ParseTreeDebug import format_parse_tree
 	with open(output, "w+") as outf:
 		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
 		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
-		format_parse_tree(outf, tree)
-
+		tree.format(outf)
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")
