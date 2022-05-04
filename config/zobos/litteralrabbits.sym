@@ -1,0 +1,6 @@
+0,const int,ONE
+0,const int//,rabbits
+1,int,current
+2,const string,begin
+2,int,prev
+3,int,tmp

@@ -1,0 +1,16 @@
+DECLARE in scope=0 name=true  const=True line=1 type=int col=11
+DECLARE in scope=0 name=x  line=2 valued=True type=int//float/float/float col=5
+DECLARE in scope=0 name=y  const=False line=4 type=int col=5
+USED identifier x marked as used.
+open scope 1
+DECLARE in scope=1 name=a  const=True line=6 valued=True type=float col=14
+DECLARE in scope=1 name=b  const=True line=6 valued=True type=float col=23
+DECLARE in scope=1 name=x  const=True line=6 valued=True type=float col=32
+DECLARE in scope=1 name=r  returns=True used=True type=int line=7 col=9
+open scope 2
+USED identifier a marked as used.
+USED identifier b marked as used.
+USED identifier x marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

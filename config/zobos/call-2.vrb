@@ -1,0 +1,36 @@
+DECLARE in scope=0 name=newyork  line=1 valued=True type=int// col=5
+DECLARE in scope=0 name=chicago  line=2 valued=True type=int//bool/int col=5
+DECLARE in scope=0 name=mc  line=3 valued=True type=float//int/int/int col=7
+DECLARE in scope=0 name=golden  line=4 valued=True type=bool//float col=6
+DECLARE in scope=0 name=silly  type=int// line=6 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=7 col=9
+open scope 2
+DECLARE in scope=2 name=s  const=False line=9 type=float col=11
+DECLARE in scope=2 name=t  const=False line=9 type=float col=19
+DECLARE in scope=2 name=n  const=False line=10 type=int col=9
+USED identifier newyork marked as used.
+USED identifier t marked as used.
+OUTPUT :ERROR: 10 13 :CALL:
+REASON function newyork declared at 1 5 needs 0 parameters, 1 provided at 10 13
+DECLARE in scope=2 name=c  const=False line=11 type=int col=9
+USED identifier chicago marked as used.
+USED identifier s marked as used.
+USED identifier mc marked as used.
+OUTPUT :ERROR: 12 9 :CALL:
+REASON function mc declared at 3 7 needs 3 parameters, 0 provided at 12 9
+USED identifier chicago (re)marked as used.
+USED identifier c marked as used.
+USED identifier r (re)marked as used.
+USED identifier golden marked as used.
+USED identifier mc (re)marked as used.
+USED identifier n marked as used.
+USED identifier newyork (re)marked as used.
+OUTPUT :ERROR: 13 44 :CALL:
+REASON function mc declared at 3 7 needs 3 parameters, 2 provided at 13 44
+OUTPUT :ERROR: 13 9 :CALL:
+REASON function chicago declared at 2 5 needs 2 parameters, 3 provided at 13 9
+USED identifier silly marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

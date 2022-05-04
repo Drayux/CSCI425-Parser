@@ -1,0 +1,3 @@
+int x = x + x;
+int y = y = y = y = y = y ;
+int z = z = z= z + z * z - z;

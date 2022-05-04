@@ -1,0 +1,23 @@
+int A( int b );
+
+int F( int g )
+returns r = 0
+{
+    if ( g > 1 ) {
+        r = A(F(A(g-1))); 
+    }
+}
+
+int A( int b )
+returns r = 0
+{
+    if( b > 2 ) {
+        r = A(A(b/2));
+    }
+}
+
+int main()
+returns r=0
+{
+    emit (( F(12) ));
+}

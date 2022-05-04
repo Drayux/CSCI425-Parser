@@ -1,0 +1,13 @@
+DECLARE in scope=0 name=x  const=False line=1 type=int col=5
+DECLARE in scope=0 name=y  const=False line=1 type=int col=9
+DECLARE in scope=0 name=z  const=False line=1 type=int col=13
+USED identifier z marked as used.
+USED identifier y marked as used.
+DECLARE in scope=0 name=k  const=False line=2 type=float col=7
+DECLARE in scope=0 name=m  const=False line=3 type=float col=7
+DECLARE in scope=0 name=n  const=False line=3 type=float col=11
+OUTPUT :WARN: 3 15 :REIDENT:
+REASON k previously declared at 2 7
+USED identifier k marked as used.
+USED identifier n marked as used.
+close scope 0 complete

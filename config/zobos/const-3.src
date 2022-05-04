@@ -1,0 +1,12 @@
+float r( float a )
+returns x = 0
+{ 
+    x = r(a);
+}
+
+float r( float a )
+returns x = 0
+{ 
+    x = r(a);
+}
+

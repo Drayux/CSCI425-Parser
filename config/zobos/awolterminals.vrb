@@ -1,0 +1,2 @@
+OUTPUT :SYNTAX: 1 70 :SYNTAX:
+Parsing error in state 93; input: $; expected=comma|div|eq|geq|gt|lbrace|leq|lt|minus|mod|mult|plus|rparen|sc

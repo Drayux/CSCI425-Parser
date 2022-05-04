@@ -1,0 +1,29 @@
+DECLARE in scope=0 name=silly  type=int// line=1 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=2 col=9
+open scope 2
+DECLARE in scope=2 name=x  const=False line=4 type=int col=9
+DECLARE in scope=2 name=y  const=False line=5 type=int col=9
+DECLARE in scope=2 name=z  const=False line=5 type=int col=12
+USED identifier x marked as used.
+OUTPUT :WARN: 5 16 :UNINIT:
+REASON x declared at 4 9 is being used at 5 16 uninitialized.
+USED identifier x (re)marked as used.
+OUTPUT :WARN: 6 14 :UNINIT:
+REASON x declared at 4 9 is being used at 6 14 uninitialized.
+open scope 3
+DECLARE in scope=3 name=j  const=False line=7 type=int col=13
+USED identifier y marked as used.
+OUTPUT :WARN: 7 17 :UNINIT:
+REASON y declared at 5 9 is being used at 7 17 uninitialized.
+USED identifier j marked as used.
+close scope 3 complete
+USED identifier x (re)marked as used.
+DECLARE in scope=2 name=m  const=True line=11 type=string col=12
+USED identifier m marked as used.
+USED identifier y (re)marked as used.
+USED identifier z marked as used.
+USED identifier silly marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

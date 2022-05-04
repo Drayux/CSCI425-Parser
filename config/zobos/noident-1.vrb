@@ -1,0 +1,19 @@
+DECLARE in scope=0 name=silly  type=int// line=1 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=2 col=9
+open scope 2
+DECLARE in scope=2 name=a  const=False line=5 type=int col=9
+DECLARE in scope=2 name=b  const=False line=5 type=int col=13
+USED identifier b marked as used.
+DECLARE in scope=2 name=t  const=False line=6 type=int col=9
+DECLARE in scope=2 name=u  const=False line=6 type=int col=12
+USED identifier u marked as used.
+DECLARE in scope=2 name=z  const=False line=8 type=int col=9
+USED identifier a marked as used.
+USED identifier b (re)marked as used.
+USED identifier t marked as used.
+USED identifier z marked as used.
+USED identifier silly marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

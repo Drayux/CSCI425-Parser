@@ -1,0 +1,15 @@
+bool silly()
+returns r = bool(0)
+{
+    int x = "3" + 2;
+    int m = 2.3 % 2;
+    string s = "hello cruel world" - " cruel ";
+    bool b = 1 < 0.0;
+    bool p = b < 1;
+    r = "abc" < "xyz";
+    float q = !(2+3) + ~3.14 * - "unary errors";
+    p = ! r;
+    r = ! p;
+    emit s, m, int(q+x);
+    r = silly();
+}

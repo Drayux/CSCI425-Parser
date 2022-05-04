@@ -1,0 +1,38 @@
+DECLARE in scope=0 name=silly  type=int// line=1 valued=True const=True col=5
+open scope 1
+DECLARE in scope=1 name=r  returns=True used=True type=int line=2 col=9
+open scope 2
+DECLARE in scope=2 name=x  const=False line=4 type=int col=9
+DECLARE in scope=2 name=q  const=False line=5 type=float col=11
+DECLARE in scope=2 name=e  const=False line=5 type=float col=14
+DECLARE in scope=2 name=d  const=False line=5 type=float col=17
+OUTPUT :WARN: 5 20 :REIDENT:
+REASON x previously declared at 4 9
+OUTPUT :WARN: 6 12 :REIDENT:
+REASON d previously declared at 5 17
+OUTPUT :WARN: 6 15 :REIDENT:
+REASON e previously declared at 5 14
+DECLARE in scope=2 name=f  const=True line=6 type=string col=18
+open scope 3
+DECLARE in scope=3 name=x  const=True line=8 type=string col=16
+OUTPUT :WARN: 9 15 :REIDENT:
+REASON x previously declared at 8 16
+DECLARE in scope=3 name=d  const=True line=10 type=bool col=20
+USED identifier x marked as used.
+USED identifier d marked as used.
+close scope 3 complete
+OUTPUT :WARN: 13 11 :REIDENT:
+REASON q previously declared at 5 11
+USED identifier d marked as used.
+USED identifier e marked as used.
+USED identifier q marked as used.
+USED identifier e (re)marked as used.
+USED identifier d (re)marked as used.
+USED identifier x marked as used.
+USED identifier f marked as used.
+USED identifier x (re)marked as used.
+USED identifier x (re)marked as used.
+USED identifier silly marked as used.
+close scope 2 complete
+close scope 1 complete
+close scope 0 complete

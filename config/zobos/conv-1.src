@@ -1,0 +1,15 @@
+bool silly()
+returns r = 0
+{
+    int x = "x";
+    float f = 1.0;
+    bool b;
+    b = f;
+    x = b;
+    b = x;
+    x = s;
+    x = f + int(2);
+    b = 2 < 3;
+    emit ( b );
+    r=silly();
+}

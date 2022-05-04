@@ -1,0 +1,24 @@
+const float epsilon = 0.00001;
+
+float babylon()
+returns guess = 3.1415926536
+{
+    float x = guess;
+    string done = "Square Root!";
+
+    bool gogogo = 1;
+    while( gogogo == 1 ) {
+        float abs = x - guess*guess;
+        if( abs < 0 ) abs = -abs;
+        if( abs > epsilon ) {
+            guess = (guess + x/guess)/2;
+        } else {
+            gogogo = !gogogo;
+        }
+        if( 0 < 0 ) {
+            emit symtable;
+        }
+    }
+    emit done, 0, 12;
+}
+
