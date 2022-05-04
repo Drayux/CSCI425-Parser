@@ -245,6 +245,17 @@ def procedure_PARAMLIST(node: ParseTree):
         node.removeChild(node.children[1])  # Remove the leftover
 
 
+def procedure_FUNSIG(node: ParseTree):
+    assert (len(node.children) == 5)
+    assert ("type" in node.children[0].data or node.children[0].data == "FUNTYPE")
+    assert ("id" in node.children[1].data)
+    assert (node.children[2].data == "lparen")
+    assert (node.children[3].data == "PARAMLIST")
+    assert (node.children[4].data == "rparen")
+    node.removeChild(node.children[4])  # Remove rparen
+    node.removeChild(node.children[2])  # Remove lparen
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -300,7 +311,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_MODPARTS(node)
     elif node.data == "PARAMLIST":
         procedure_PARAMLIST(node)
-        
+    elif node.data == "FUNSIG":
+        procedure_FUNSIG(node)
 
 
 def LR_AST_EOP(node: ParseTree):
