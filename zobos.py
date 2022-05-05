@@ -25,11 +25,11 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	grammar = Grammar(GRAMMARPATH, False)
 	parser = Parser(grammar, TABLEPATH)
 	stream = TokenStream(streamPath, True)
-	symtab = SymbolTable(open(tablePath, "w+"))
+	symtab = SymbolTable(open(tablePath, "w"))
 
 	# Primary ZOBOS logic
 	tree = parser.parse(stream)		# Parse the token stream
-	with open(astPath, "w+") as astFile:
+	with open(astPath, "w") as astFile:
 		tree.format(astFile)			# Output the tree to the specified file
 	symtab.populate_from_ast(tree)
 
