@@ -1,0 +1,9 @@
+const int one = 1;
+float boat( bool sink )
+returns torpedo = 4.19
+{
+    if( sink == 1 ) {
+        torpedo = 0;
+    }
+}
+emit dne, 0, 1

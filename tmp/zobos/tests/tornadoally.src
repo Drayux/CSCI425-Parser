@@ -1,0 +1,48 @@
+const bool true  = bool(1);
+const bool false = bool(0);
+
+int hail( int n, bool test)
+returns p = n
+{
+    bool g = true;
+    if( int(test) == int(true) ) {
+        g = (n % 2 == 0);
+    }
+    if( int(g) == int(true) ) {
+        p = 3*n+1;
+    }
+}
+
+
+int stone( int n, bool test);
+
+int main(int n)
+returns r = 0
+{
+    int count = 0;
+    int p, q=n;
+    if ( n > 1 ) {
+        count = count + 1;
+        p = hail( n, true );
+        if( p == n ) {
+            q = stone( n, false );
+        } else {
+            q = p;
+        }
+        r = main( q );
+    } else {
+        emit ( count );
+    }
+}
+
+int stone( int n, bool test)
+returns p = n
+{
+    bool g = true;
+    if( int(test) == int(true) ) {
+        g = ! (n % 2 == 0);
+    }
+    if( int(g) == int(true) ) p = n/2;
+}
+
+

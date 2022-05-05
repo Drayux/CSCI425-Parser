@@ -1,0 +1,8 @@
+int f(int c)
+returns r=0
+{
+    if( c > 0 ) {
+        r = f(c-1);
+    }
+    r = 1;
+}

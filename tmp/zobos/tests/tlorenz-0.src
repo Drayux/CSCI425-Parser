@@ -1,0 +1,16 @@
+int F()
+returns r =0
+{
+    int i = 3;
+    float f = 3.00;
+    string msg = "works!";
+    if( i == f ) {
+        emit msg, 0, 6;
+    } else if( f == i ) {
+        emit msg, 0, 6;
+    } else {
+        string msg = "nope";
+        emit msg, 0, 4;
+    }
+    r = F();
+}

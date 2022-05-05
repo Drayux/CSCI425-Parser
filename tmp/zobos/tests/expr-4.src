@@ -1,0 +1,6 @@
+int georgia( int on, bool my, float mind )
+returns r = 0
+{
+    float x = float(georgia);
+    r = georgia( on, my, mind+x );
+}

@@ -1,0 +1,12 @@
+int main()
+returns r = 0;
+{
+    if ( 0 < 1 ) {
+        x = 2;
+        float v;
+        if ( ! int(v) == float(3) * pi ) {
+            string uhoh = "this won't work;";
+        }}
+    }
+}
+string toldyaso = "boom.";

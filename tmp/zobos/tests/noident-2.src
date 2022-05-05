@@ -1,0 +1,8 @@
+int gman()
+returns r = 0
+{
+    int x = a + b;
+    int y = 0;
+    y = x + y;
+    r = gman();
+}

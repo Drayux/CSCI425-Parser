@@ -1,0 +1,13 @@
+string unneeded = "I don't really need to be declared first";
+string because  = "this is SYNTAX checking of the grammar";
+string semantic = "undeclared vars are SEMANTIC checking of the source.";
+bool main()
+returns r = bool(0)
+{
+    if ( x < 2 ) {
+        emit unneeded, (3+2), 5;
+        emit see_im_not_declared, 4, 2;
+        emit symtable;
+        emit because, (2 + 3*(4-2), 8;
+    }
+}

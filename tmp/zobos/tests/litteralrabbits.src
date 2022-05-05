@@ -1,0 +1,18 @@
+const int ONE = 1;
+int rabbits()
+returns current = ONE
+{
+    int prev = current;
+    string begin = "the Beguine";
+    emit begin, 4, 10+-3;
+    while ( current < 10000 ) {
+        int tmp = current;
+        current = current + prev;
+        prev = tmp;
+        emit symtable;
+        emit ( current );
+    }
+    string end = "inif";
+    emit end, 3, 1;
+    emit end, 0, 3;
+}

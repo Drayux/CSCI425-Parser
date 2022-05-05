@@ -1,0 +1,9 @@
+int x();
+int V() returns r = 0 { r=x(); }
+
+int silly(int a)
+returns r = 0
+{
+    int x = 42 + a;
+    r = silly( (x()) + (V()) );
+}

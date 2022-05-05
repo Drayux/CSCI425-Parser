@@ -1,0 +1,10 @@
+float b_function();
+
+int a_function()
+returns r = 0
+{
+    a_function = r;
+    float x = b_function;
+    r = a_function();
+    r = int(x);
+}

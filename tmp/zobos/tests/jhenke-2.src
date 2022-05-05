@@ -1,0 +1,18 @@
+int conv_and_expr_errors()
+returns r = 0
+{
+    int a, b, c, x;
+    a = b = c = x = "3" + 2;
+}
+
+int giveint();
+float givefloat();
+int wacko_assign()
+returns r = 0
+{
+    int x;
+    bool y;
+    x = giveint = z = 6;
+    x = givefloat = z = 6;
+    x = conv_and_expr_errors = z = 6;
+}

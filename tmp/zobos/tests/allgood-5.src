@@ -1,0 +1,9 @@
+int an_undefined_function( float t );
+float aFunction( int q, bool k )
+returns r = 3.14159*q
+{
+    if ( int(k) == q ) {
+        r = q*q + (an_undefined_function(r));
+        emit symtable;
+    }
+}
