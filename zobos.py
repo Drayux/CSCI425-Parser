@@ -21,8 +21,8 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	global GRAMMARPATH
 	global TABLEPATH
 
-	grammar = Grammar(GRAMMARPATH, False)
-	parser = Parser(grammar, TABLEPATH, tablePath)
+	#grammar = Grammar(GRAMMARPATH, False)
+	parser = Parser(GRAMMARPATH, TABLEPATH, tablePath)
 	stream = TokenStream(streamPath, True)
 
 	# Primary ZOBOS logic
