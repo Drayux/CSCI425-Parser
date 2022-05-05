@@ -293,7 +293,7 @@ if __name__ == "__main__":
 	#############################################
 
 	grammar = Grammar("config/zlang.cfg", False)
-	parser = LRParser(grammar, "config/zlang.lr", tablePath)
+	parser = LRParser(grammar, "config/zlang.lr")
 	stream = TokenStream(source, True)
 
 	print("GRAMMAR:")
