@@ -28,7 +28,7 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	symtab = SymbolTable(open(tablePath, "w"))
 
 	# Primary ZOBOS logic
-	tree = parser.parse(stream)		# Parse the token stream
+	tree = parser.parse(stream)			# Parse the token stream
 	with open(astPath, "w") as astFile:
 		tree.format(astFile)			# Output the tree to the specified file
 	symtab.populate_from_ast(tree)
@@ -37,7 +37,7 @@ def main(streamPath: str, astPath: str, tablePath: str):
 # -- ARG PARSING --
 if __name__ == "__main__":
 	if len(sys.argv) != 4:
-		print(f"Usage: {sys.argv[0]} <token stream (.tok)> <ast output (.dat)> <symtable output (.sym)")
+		print(f"Usage: {sys.argv[0]} <token stream (.tok)> <ast output (.ast)> <symtable output (.sym)")
 		exit(1)
 
 	# Print warnings for likely faulty use
@@ -52,10 +52,10 @@ if __name__ == "__main__":
 		print(f"WARNING: Potentially erroneous token stream (.tok) file: {streamPath}")
 		check = True
 
-	# Check if astPath ends with the .dat extension
+	# Check if astPath ends with the .ast extension
 	tmp = astPath.split('.')
-	if tmp[-1] != "dat":
-		print(f"WARNING: Potentially erroneous AST (.dat) file: {astPath}")
+	if tmp[-1] != "ast":
+		print(f"WARNING: Potentially erroneous AST (.ast) file: {astPath}")
 		check = True
 
 	# Check if tablePath ends with the .sym extension

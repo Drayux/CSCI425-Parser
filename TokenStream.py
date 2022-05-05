@@ -11,11 +11,11 @@ class TokenStream:
 			for line in inf:
 				data = line.strip().split()
 
-				ret = [data[0], None, -1, -1]	# Token type
+				ret = [data[0], None, -1, -1]	# Token type (string)
 				try:
-					ret[1] = data[1]			# Token value
-					ret[2] = data[2]			# Line of occurence
-					ret[3] = data[3]			# Col of occurence
+					ret[1] = data[1]			# Token value (string)
+					ret[2] = int(data[2])		# Line of occurence (int)
+					ret[3] = int(data[3])		# Col of occurence (int)
 				except IndexError: pass
 
 				yield ret

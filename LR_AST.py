@@ -180,10 +180,20 @@ def procedure_ASSIGN(node: ParseTree):
 
 def procedure_STATEMENT(node: ParseTree):
 	assert (len(node.children) in [ 1, 2 ])
-	if len(node.children) == 2:
+	if len(node.children) == 1:
+		child = node.children[0]
+		# assert (child.data == "BRACESTMTS")
+
+		if (child.data == "BRACESTMTS"):
+			# Replace node
+			node.data = child.data
+			node.children = child.children
+
+	# if len(node.children) == 2:
+	else:
 		assert (node.children[1].data == "sc")
 		node.removeChild(node.children[1])  # Remove sc token
-	assert (node.getChild().data in [ "BRACESTMTS", "DECLLIST", "ASSIGN", "=", "IF", "IFELSE", "WHILE", "EMIT" ])
+		assert (node.getChild().data in [ "BRACESTMTS", "DECLLIST", "ASSIGN", "=", "IF", "IFELSE", "WHILE", "EMIT" ])
 
 
 def procedure_MODULE(node: ParseTree):

@@ -148,11 +148,9 @@ class LRParser:
 		# Always returns a ParseTree type
 		if len(arr) > 0: return arr.pop(0)
 		try:
-			ret = stream.next()
-			tree = ParseTree(ret[0], None)
-			tree.aux = ret[1]
-			tree.line = ret[2]
-			tree.col = ret[3]
+			tmp = stream.next()
+			tree = ParseTree(tmp[0], None, (tmp[2], tmp[3]))
+			tree.aux = tmp[1]
 			return tree
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
 		# --------------------------------------------------
@@ -161,27 +159,25 @@ class LRParser:
 		stack = [ (0, None) ]		# Stack of state numbers
 		queue = []					# Queue of nonterminal transitions (call stream.next() if empty)
 
-		# Every stack element refers to an index in this array for storing intermediate trees
-		# trees = [ None for x in range(len(self.table.row)) ]
-
 		symbol = self.next(queue, stream)
+		lastLine = 0
+		lastCol = 0
 		# -- PARSING LOOP --
 		while True:
 			# Update the state
 			state = self.next(stack)
 
+			# Update the line values (for reporting syntax errors)
+			if symbol.line > 0: lastLine = symbol.line
+			if symbol.col > 0: lastCol = symbol.col
+
 			# DEBUG OUTPUT
 			# print("\nSTATE:", state[0])
-			# print("SYMBOL:", symbol.data)
+			# print("SYMBOL:", symbol.data, symbol.aux, symbol.line, symbol.col)
 
 			# Get the table value
 			action = self.parseTable.getAction(state[0], symbol.data)
 			# print("ACTION:", action)		# DEBUG OUTPUT
-
-			# try: action = self.table.getAction(state[0], symbol.data)
-			# except StopIteration:
-			# 	if type(symbol) is ParseTree and symbol.data == self.grammar.start: return symbol
-			# 	raise ParseError("SYNTAX ERROR (1)")
 
 			# -- SHIFT ACTION --
 			if action.type == ActionType.SHIFT:
@@ -203,6 +199,11 @@ class LRParser:
 
 				# Create the new rule tree
 				tree = ParseTree(rule[0], None)
+				###########################################################
+				# - Moves the terminal up the tree: not necessary maybe?? -
+				# tree.line = symbol.line
+				# tree.col = symbol.col
+				###########################################################
 				states = []
 
 				# Pop as many elements as there were rules
@@ -221,31 +222,7 @@ class LRParser:
 				# print(tree)
 				# print("================================")
 
-				########################################################################
-				########################################################################
-				# TODO:
-				# Move SDT EOP and symtable stuff out of here, since we don't have any
-				#   terminals at this point (need terminals for sym table)
-
-				# Andrew: run sdt here..? should be fine
 				if reduce: LR_AST_EOP(tree)
-
-				# Handle symbol table stuff. ~~very~~ slightly less scuffed!
-				#print("DATA: {}".format(tree.data))
-				#if "emit" in tree.data.lower():
-					#self.symbolTable.EmitTable(self.tablePath)
-
-				#elif "lbrace" in tree.data.lower() or "scope:open" in tree.data.lower():
-					#self.symbolTable.OpenScope()
-
-				#elif "rbrace" in tree.data.lower() or "scope:close" in tree.data.lower():
-					#self.symbolTable.CloseScope()
-
-				#elif "id:" in tree.data.lower():
-					#self.symbolTable.EnterSymbol("test", SymbolAttributes("unknown_type"))
-
-				########################################################################
-				########################################################################
 
 				queue.insert(0, symbol)		# Put the symbol back into the queue
 				symbol = tree
@@ -261,7 +238,7 @@ class LRParser:
 
 			# -- NO ACTION --
 			# raise ParseError(f"SYNTAX ERROR ({symbol.line}, {symbol.col})")
-			print(f"OUTPUT :SYNTAX: {symbol.line} {symbol.col} :SYNTAX:")
+			print(f"OUTPUT :SYNTAX: {lastLine} {lastCol} :SYNTAX:")
 			exit(1)
 
 		# Debug testing
