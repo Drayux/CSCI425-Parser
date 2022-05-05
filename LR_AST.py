@@ -317,6 +317,15 @@ def procedure_FUNCTION(node: ParseTree):
 	node.removeChild(node.children[1])  # Remove returns
 
 
+def procedure_EMIT(node: ParseTree):
+	new = ParseTree("EMIT", node.parent)
+	for child in node.children:
+		if child.data not in [ "emit", "lparen", "rparen" ]:
+			new.addChild(child)
+
+	replace_node_with_new_node(node, new)
+
+
 def procedure_DECLIDS(node: ParseTree):
 	# "First" element of the DECLIDS (end of DECLIDS tree)
 	if len(node.children) <= 1: return
@@ -408,6 +417,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 		procedure_FUNSIG(node)
 	elif node.data == "FUNCTION":
 		procedure_FUNCTION(node)
+	elif node.data == "EMIT":
+		procedure_EMIT(node)
 
 	# Weird ones
 	elif node.data == "DECLIDS":
