@@ -121,14 +121,12 @@ class LLParser:
 
 # LR(0) Parser
 class LRParser:
-	def __init__(self, grammar, parsetablepath, symtablepath):
+	def __init__(self, grammar, parsetablepath):
 		# Grammar can be passed as string to definition or grammar obj itself
 		if type(grammar) is not Grammar: grammar = Grammar(grammar)
 
 		self.grammar = grammar						# Grammar definition
 		self.parseTable = LRTable(parsetablepath)	# Generate the parse table (TODO), currently just read from file
-		self.symbolTable = SymbolTable()
-		self.tablePath = symtablepath
 		# self.symbolTableEmit = symbolTableEmit
 
 	def next(self, arr, stream = None):
@@ -233,17 +231,17 @@ class LRParser:
 
 				# Handle symbol table stuff. ~~very~~ slightly less scuffed!
 				#print("DATA: {}".format(tree.data))
-				if "emit" in tree.data.lower():
-					self.symbolTable.EmitTable(self.tablePath)
+				#if "emit" in tree.data.lower():
+					#self.symbolTable.EmitTable(self.tablePath)
 
-				elif "lbrace" in tree.data.lower() or "scope:open" in tree.data.lower():
-					self.symbolTable.OpenScope()
+				#elif "lbrace" in tree.data.lower() or "scope:open" in tree.data.lower():
+					#self.symbolTable.OpenScope()
 
-				elif "rbrace" in tree.data.lower() or "scope:close" in tree.data.lower():
-					self.symbolTable.CloseScope()
+				#elif "rbrace" in tree.data.lower() or "scope:close" in tree.data.lower():
+					#self.symbolTable.CloseScope()
 
-				elif "id:" in tree.data.lower():
-					self.symbolTable.EnterSymbol("test", SymbolAttributes("unknown_type"))
+				#elif "id:" in tree.data.lower():
+					#self.symbolTable.EnterSymbol("test", SymbolAttributes("unknown_type"))
 
 				########################################################################
 				########################################################################

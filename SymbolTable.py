@@ -45,8 +45,9 @@ class TableScope():
         self.table[name] = (name, attributes)
 
 class SymbolTable():
-    def __init__(self):
+    def __init__(self, out = sys.stdout):
         self.tableStack = [TableScope()]
+        self.out = out
 
     def __str__(self):
         output = ""
@@ -90,7 +91,7 @@ class SymbolTable():
     def DeclaredLocally(self, name):
         pass
 
-    def EmitTable(self, output):
+    def EmitTable(self):
         for (i, table) in enumerate(reversed(self.tableStack)):
             for key in table.table:
                 (name, attr) = table.table[key]
@@ -98,7 +99,7 @@ class SymbolTable():
                     typ = attr.type
                     if attr.cons:
                         typ = "const " + typ
-                    output.write(str(i) + "," + typ + "," + name + "\n")
+                    self.out.write(str(i) + "," + typ + "," + name + "\n")
 
     def populate_from_ast(self, node):
         # print(f"populating from: {node.data}")
@@ -235,7 +236,9 @@ class SymbolTable():
         # Emit Node
         #########################
         if node.data == "EMIT":
-            self.EmitTable(sys.stdout)
+            st = verify_node(node.children[0], "symtable")
+            if st:
+                self.EmitTable()
         #########################
         # Default Node
         #########################
@@ -265,7 +268,9 @@ def testPopulate():
     declid1_1.addChild(eq1)
     declist1.addChild(declid1_1)
     root.addChild(declist1)
-    root.addChild(ParseTree("EMIT", root))
+    emit = ParseTree("EMIT", root)
+    emit.addChild(ParseTree("symtable", emit))
+    root.addChild(emit)
     st = SymbolTable();
     st.populate_from_ast(root)
     (_, attr) = st.tableStack[0].table["m"] 
@@ -300,7 +305,9 @@ def testPopulateFn():
     brst.addChild(ParseTree("scope:open", brst))
     # Statements Node
     stms = ParseTree("STMTS", brst)
-    stms.addChild(ParseTree("EMIT", stms))
+    emit = ParseTree("EMIT", stms)
+    emit.addChild(ParseTree("symtable", emit)) 
+    stms.addChild(emit)
     brst.addChild(stms)
     brst.addChild(ParseTree("scope:close", brst))
     func.addChild(brst)
