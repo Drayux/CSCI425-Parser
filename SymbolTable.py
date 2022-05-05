@@ -41,8 +41,8 @@ class TableScope():
             return None
 
     def AddSymbol(self, name, attributes):
-        assert name not in self.table
-        self.table[name] = (name, attributes)
+        if name not in self.table:
+            self.table[name] = (name, attributes) 
 
 class SymbolTable():
     def __init__(self, out = sys.stdout):
@@ -140,8 +140,8 @@ class SymbolTable():
             brc_node = verify_node(node.children[2], "BRACESTMTS")
             self.OpenScope()
             for (p_typ, p_id) in params:
-                self.EnterSymbol(p_id, SymbolAttributes(p_typ, True))
-            self.EnterSymbol(r_id, SymbolAttributes(r_typ, False))
+                self.EnterSymbol(p_id, SymbolAttributes(p_typ, True, True))
+            self.EnterSymbol(r_id, SymbolAttributes(r_typ, False, True))
             stmts_node = verify_node(brc_node.children[1], "STMTS")
             self.populate_from_ast(stmts_node)
             self.CloseScope()
