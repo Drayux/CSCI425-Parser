@@ -206,7 +206,7 @@ def procedure_MODULE(node: ParseTree):
 
 def procedure_MODPARTS(node: ParseTree):
 	assert (len(node.children) in [ 1, 2, 3 ])
-	assert (node.children[0].data in [ "GCTDECLLIST", "GFTDECLLIST", "FUNSIG", "FUNCTION", "EMIT" ])
+	assert (node.children[0].data in [ "GCTDECLLIST", "GFTDECLLIST", "DECLLIST", "FUNSIG", "FUNCTION", "EMIT" ])
 	#assert (node.children[0].data in [ "GCTDECLLIST", "GFTDECLLIST", "FUNSIG", "FUNCTION", "EMIT",    "DECLLIST" ])
 	if len(node.children) > 1:
 		if node.children[0].data == "FUNCTION":
@@ -276,7 +276,7 @@ def procedure_FUNSIG(node: ParseTree):
 
 def procedure_ARGLIST(node: ParseTree):
 	# "First" element of the ARGLIST (end of ARGLIST tree)
-	if len(node.children) == 1: return
+	if len(node.children) <= 1: return
 
 	# Else ARGLIST has multiple arguments
 	new = ParseTree("ARGLIST", node.parent)
@@ -306,11 +306,32 @@ def procedure_FUNCTION(node: ParseTree):
 	node.removeChild(node.children[1])  # Remove returns
 
 
-def procedure_GCTDECLLIST(node: ParseTree):
+def procedure_DECLIDS(node: ParseTree):
+	# "First" element of the DECLIDS (end of DECLIDS tree)
+	if len(node.children) <= 1: return
+
+	# Else DECLIDS has multiple arguments
+	new = ParseTree("DECLIDS", node.parent)
+	for child in node.children:
+		if child.data == "DECLIDS":
+			for x in child.children: new.addChild(x)
+
+		elif child.data != "comma":
+			new.addChild(child)
+
+	replace_node_with_new_node(node, new)
+
+
+def procedure_DECLLIST(node: ParseTree):
 	# DOES NOT FOLLOW GRAMMAR EXACTLY!!
-	return
 	assert (len(node.children) == 2)
-	node.data = "DECLLIST"
+	new = ParseTree("DECLLIST", node.parent)
+	new.addChild(node.children[0])
+
+	for child in node.children[1].children:
+		new.addChild(child)
+
+	replace_node_with_new_node(node, new)
 
 
 def LR_AST_SDT_Procedure(node: ParseTree):
@@ -378,8 +399,12 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 		procedure_FUNCTION(node)
 
 	# Weird ones
+	elif node.data == "DECLIDS":
+		procedure_DECLIDS(node)
 	elif node.data == "GCTDECLLIST":
-		procedure_GCTDECLLIST(node)
+		procedure_DECLLIST(node)
+	elif node.data == "GFTDECLLIST":
+		procedure_DECLLIST(node)
 
 
 def LR_AST_EOP(node: ParseTree):

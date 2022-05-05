@@ -25,7 +25,7 @@ class SymbolAttributes():
     def __init__(self, type, cons, init = False):  # todo: more attributes
         self.type = type
         self.cons = cons
-        self.init = init 
+        self.init = init
 
     def initialize(self):
         self.init = True
@@ -58,7 +58,7 @@ class SymbolTable():
                     typ = attr.type
                     if attr.cons:
                         typ = "const " + typ
-                    output = output + (str(i) + "," + typ + "," + name + "\n") 
+                    output = output + (str(i) + "," + typ + "," + name + "\n")
         return output
 
     def OpenScope(self):
@@ -82,11 +82,11 @@ class SymbolTable():
 
     def ReportError(self, id, r, c):
         if id in ["UNINIT", "REIDENT"]:
-            sys.stdout.write(f":WARN: {r} {c} :{id}:\n")
+            sys.stdout.write(f"OUTPUT :WARN: {r} {c} :{id}:\n")
         elif id in ["CALL"]:
-            sys.stdout.write(f":ERROR: {r} {c} :{id}:\n")
+            sys.stdout.write(f"OUTPUT :ERROR: {r} {c} :{id}:\n")
         elif id in ["SYNTAX"]:
-            sys.stdout.write(f":SYNTAX: {r} {c} :{id}:\n")
+            sys.stdout.write(f"OUTPUT :SYNTAX: {r} {c} :{id}:\n")
 
     def DeclaredLocally(self, name):
         pass
@@ -107,9 +107,9 @@ class SymbolTable():
         # Function Node
         #####################
         if node.data == "FUNCTION":
-            r_typ = "" 
-            f_typ = ""  
-            r_id = "" 
+            r_typ = ""
+            f_typ = ""
+            r_id = ""
             f_id = ""
             params = []
             # Get return type and function name from FUNSIG node
@@ -132,9 +132,9 @@ class SymbolTable():
             f_typ = r_typ + "//"
             if params:
                 (p_typ, _) = params[0]
-                f_typ = f_typ + p_typ 
+                f_typ = f_typ + p_typ
             for (p_typ, _) in params[1:]:
-                f_typ = f_typ + "/" + p_typ     
+                f_typ = f_typ + "/" + p_typ
             self.EnterSymbol(f_id, SymbolAttributes(f_typ, True))
             # Recursively populate using body of fn from BRACESTMTS node
             brc_node = verify_node(node.children[2], "BRACESTMTS")
@@ -149,9 +149,9 @@ class SymbolTable():
         #########################
         # Declist Node
         #########################
-        if node.data == "DECLIST": 
+        if node.data == "DECLIST":
             d_typ = remove_prefix(node.children[0], "type:")
-            for child in node.children[1:]: 
+            for child in node.children[1:]:
                 dec_node = verify_node(child, "DECLID")
                 eq_node = verify_node(dec_node.children[0], "=")
                 d_id = remove_prefix(eq_node.children[0], "id:")
@@ -178,9 +178,9 @@ class SymbolTable():
             f_typ = r_typ + "//"
             if params:
                 (p_typ, _) = params[0]
-                f_typ = f_typ + p_typ 
+                f_typ = f_typ + p_typ
             for (p_typ, _) in params[1:]:
-                f_typ = f_typ + "/" + p_typ     
+                f_typ = f_typ + "/" + p_typ
             self.EnterSymbol(f_id, SymbolAttributes(f_typ, True))
             return
         #########################
@@ -194,9 +194,9 @@ class SymbolTable():
             # evaluate args
             for arg in args_node.children:
                 self.populate_from_ast(arg)
-            # check that fn id maps to fn 
+            # check that fn id maps to fn
             entry = self.RetrieveSymbol(f_id)
-            if not entry: 
+            if not entry:
                 self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
                 return
             (_, attr) = entry
@@ -207,7 +207,7 @@ class SymbolTable():
             # check that number of passed args matches expected
             if len(attr.type.split("//")) > 1:
                 pars = attr.type.split("//")[1]
-                par_count = len(pars.split("/")) 
+                par_count = len(pars.split("/"))
                 if arg_count != par_count:
                     self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
             return
@@ -224,7 +224,7 @@ class SymbolTable():
             (_, attr) = entry
             if not attr.init:
                 self.ReportError("UNINIT", node.line, node.col)
-                return            
+                return
         #########################
         # Scope Nodes
         #########################
@@ -245,14 +245,14 @@ class SymbolTable():
         for child in node.children:
             self.populate_from_ast(child)
 
-            
+
 # Testing for AST
 def testST():
     st = SymbolTable();
     assert (len(st.tableStack) == 1)
     st.OpenScope();
     assert (len(st.tableStack) == 2)
-    st.EnterSymbol("tmp", SymbolAttributes("int", False)) 
+    st.EnterSymbol("tmp", SymbolAttributes("int", False))
     (_, attr) = st.RetrieveSymbol("tmp")
     assert (attr.type == "int")
     print("Symbol Table Tests Pass!")
@@ -273,7 +273,7 @@ def testPopulate():
     root.addChild(emit)
     st = SymbolTable();
     st.populate_from_ast(root)
-    (_, attr) = st.tableStack[0].table["m"] 
+    (_, attr) = st.tableStack[0].table["m"]
     #print(f"type: {typ}")
     assert (attr.type == "string")
     print("Populate from AST Tests Pass!")
@@ -306,7 +306,7 @@ def testPopulateFn():
     # Statements Node
     stms = ParseTree("STMTS", brst)
     emit = ParseTree("EMIT", stms)
-    emit.addChild(ParseTree("symtable", emit)) 
+    emit.addChild(ParseTree("symtable", emit))
     stms.addChild(emit)
     brst.addChild(stms)
     brst.addChild(ParseTree("scope:close", brst))
@@ -314,7 +314,7 @@ def testPopulateFn():
     root.addChild(func)
     st = SymbolTable()
     st.populate_from_ast(root)
-    (_, attr) = st.tableStack[0].table["main"]  
+    (_, attr) = st.tableStack[0].table["main"]
     assert (attr.type == "int//int")
     print("Populate from AST with Fn Tests Pass!")
 
