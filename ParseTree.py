@@ -1,9 +1,8 @@
 class ParseTree:
-	def __init__(self, data, parent):
+	def __init__(self, data, parent, pos = (0, 0)):
 		self.data = data
 		self.aux = ""
-		self.line = -1		# Line and column params of the token stream (for use in ZOBOS)
-		self.col = -1
+		(self.line, self.col) = pos; 
 		self.parent = parent
 		self.children = []
 

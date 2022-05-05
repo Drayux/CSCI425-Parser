@@ -22,9 +22,13 @@ def verify_node(node, expected_data):
     return node
 
 class SymbolAttributes():
-    def __init__(self, type, cons):  # todo: more attributes
+    def __init__(self, type, cons, init = False):  # todo: more attributes
         self.type = type
         self.cons = cons
+        self.init = init 
+
+    def initialize(self):
+        self.init = True
 
 class TableScope():
     def __init__(self):
@@ -44,6 +48,18 @@ class SymbolTable():
     def __init__(self):
         self.tableStack = [TableScope()]
 
+    def __str__(self):
+        output = ""
+        for (i, table) in enumerate(reversed(self.tableStack)):
+            for key in table.table:
+                (name, attr) = table.table[key]
+                if attr:
+                    typ = attr.type
+                    if attr.cons:
+                        typ = "const " + typ
+                    output = output + (str(i) + "," + typ + "," + name + "\n") 
+        return output
+
     def OpenScope(self):
         self.tableStack.insert(0, TableScope())
 
@@ -58,6 +74,10 @@ class SymbolTable():
             val = table.SearchSymbol(name)
             if val != None:
                 return table.table[name]
+
+    def Initialize(self, name):
+        (_, attr) = self.RetrieveSymbol(name)
+        attr.initialize()
 
     def ReportError(self, id, r, c):
         if id in ["UNINIT", "REIDENT"]:
@@ -74,12 +94,14 @@ class SymbolTable():
         for (i, table) in enumerate(reversed(self.tableStack)):
             for key in table.table:
                 (name, attr) = table.table[key]
-                typ = attr.type
-                if attr.cons:
-                    typ = "const " + typ
-                output.write(str(i) + "," + typ + "," + name + "\n")
+                if attr:
+                    typ = attr.type
+                    if attr.cons:
+                        typ = "const " + typ
+                    output.write(str(i) + "," + typ + "," + name + "\n")
 
     def populate_from_ast(self, node):
+        # print(f"populating from: {node.data}")
         #####################
         # Function Node
         #####################
@@ -126,13 +148,13 @@ class SymbolTable():
         #########################
         # Declist Node
         #########################
-        if node.data == "DECLIST":
+        if node.data == "DECLIST": 
             d_typ = remove_prefix(node.children[0], "type:")
-            for child in node.children[1:]:
+            for child in node.children[1:]: 
                 dec_node = verify_node(child, "DECLID")
                 eq_node = verify_node(dec_node.children[0], "=")
                 d_id = remove_prefix(eq_node.children[0], "id:")
-                self.EnterSymbol(d_id, SymbolAttributes(d_typ, False))  # TODO: support const
+                self.EnterSymbol(d_id, SymbolAttributes(d_typ, False, True))  # TODO: support const
             return
         #####################################
         # Funsig Node (undefined functions)
@@ -159,6 +181,7 @@ class SymbolTable():
             for (p_typ, _) in params[1:]:
                 f_typ = f_typ + "/" + p_typ     
             self.EnterSymbol(f_id, SymbolAttributes(f_typ, True))
+            return
         #########################
         # Funcall Nodes
         #########################
@@ -172,15 +195,35 @@ class SymbolTable():
                 self.populate_from_ast(arg)
             # check that fn id maps to fn 
             entry = self.RetrieveSymbol(f_id)
-            if not entry:
-                self.ReportError("CALL", 0, 0)  # TODO: support row/column
+            if not entry: 
+                self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
                 return
             (_, attr) = entry
+            # check that has fn type
+            if not "//" in attr.type:
+                self.ReportError("CALL", node.line, node.col)
+                return
             # check that number of passed args matches expected
-            pars = attr.type.split("//")[1]
-            par_count = len(pars.split("/")) 
-            if arg_count != par_count:
-                self.ReportError("CALL", 0, 0)  # TODO: support row/column
+            if len(attr.type.split("//")) > 1:
+                pars = attr.type.split("//")[1]
+                par_count = len(pars.split("/")) 
+                if arg_count != par_count:
+                    self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
+            return
+        #########################
+        # id: Nodes
+        #########################
+        if node.data.startswith("id:"):
+            i_id = remove_prefix(node, "id:")
+            entry = self.RetrieveSymbol(i_id)
+            if not entry:
+                # print(self)
+                self.ReportError("UNINIT", node.line, node.col)
+                return
+            (_, attr) = entry
+            if not attr.init:
+                self.ReportError("UNINIT", node.line, node.col)
+                return            
         #########################
         # Scope Nodes
         #########################
@@ -270,32 +313,50 @@ def testPopulateFn():
 
 def testErrorCall():
     # Root Node
-    root = ParseTree("Module", None)
+    root = ParseTree("Module", None, (0, 0))
+    # Declist Node
+    decl = ParseTree("DECLIST", root)
+    decl.addChild(ParseTree("type:int", decl))
+    # Declid Node
+    did1 = ParseTree("DECLID", decl)
+    eq1 = ParseTree("=", did1)
+    eq1.addChild(ParseTree("id:a", eq1))
+    eq1.addChild(ParseTree("intval:1", eq1))
+    did1.addChild(eq1)
+    decl.addChild(did1)
+    # declid Node
+    did2 = ParseTree("DECLID", decl)
+    eq2 = ParseTree("=", did2)
+    eq2.addChild(ParseTree("id:b", eq2))
+    eq2.addChild(ParseTree("intval:1", eq2))
+    did2.addChild(eq2)
+    decl.addChild(did2)
+    root.addChild(decl)
     # Funsig Node (undefined func)
-    fnsg = ParseTree("FUNSIG", root)
-    fnsg.addChild(ParseTree("type:int", fnsg))
-    fnsg.addChild(ParseTree("id:main", fnsg))
+    fnsg = ParseTree("FUNSIG", root, (0, 1))
+    fnsg.addChild(ParseTree("type:int", fnsg, (0, 2)))
+    fnsg.addChild(ParseTree("id:main", fnsg, (0, 3)))
     # Parameter List Node
-    plst = ParseTree("PARAMLIST", fnsg)
+    plst = ParseTree("PARAMLIST", fnsg, (0, 4))
     # Parameter Node
-    parm = ParseTree("PARAM", plst)
-    parm.addChild(ParseTree("type:int", parm))
-    parm.addChild(ParseTree("id:x", parm))
+    parm = ParseTree("PARAM", plst, (0, 5))
+    parm.addChild(ParseTree("type:int", parm, (0, 6)))
+    parm.addChild(ParseTree("id:x", parm, (0, 7)))
     plst.addChild(parm)
     fnsg.addChild(plst)
     root.addChild(fnsg)
     # Function Call Node
-    fnc1 = ParseTree("FUNCALL", root)
-    fnc1.addChild(ParseTree("id:a", fnc1))
-    fnc1.addChild(ParseTree("ARGLIST", fnc1))
+    fnc1 = ParseTree("FUNCALL", root, (1, 0))
+    fnc1.addChild(ParseTree("id:a", fnc1, (1, 1)))
+    fnc1.addChild(ParseTree("ARGLIST", fnc1, (1, 2)))
     root.addChild(fnc1)
     # Function Call Node
-    fnc2 = ParseTree("FUNCALL", root)
-    fnc2.addChild(ParseTree("id:main", fnc2))
+    fnc2 = ParseTree("FUNCALL", root, (1, 3))
+    fnc2.addChild(ParseTree("id:main", fnc2, (1, 4)))
     # Arg List Node
-    args = ParseTree("ARGLIST", fnc2)
-    args.addChild(ParseTree("id:a", args))
-    args.addChild(ParseTree("id:b", args))
+    args = ParseTree("ARGLIST", fnc2, (1, 5))
+    args.addChild(ParseTree("id:a", args, (1, 6)))
+    args.addChild(ParseTree("id:b", args, (1, 7)))
     fnc2.addChild(args)
     root.addChild(fnc2)
     st = SymbolTable()
