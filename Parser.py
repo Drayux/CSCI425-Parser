@@ -128,6 +128,7 @@ class LRParser:
 		self.grammar = grammar						# Grammar definition
 		self.parseTable = LRTable(parsetablepath)	# Generate the parse table (TODO), currently just read from file
 		# self.symbolTableEmit = symbolTableEmit
+		#self.table = LRTable(grammar)
 
 	def next(self, arr, stream = None):
 		if type(arr) is not list:
@@ -174,7 +175,7 @@ class LRParser:
 			# print("SYMBOL:", symbol.data)
 
 			# Get the table value
-			action = self.table.getAction(state[0], symbol.data)
+			action = self.parseTable.getAction(state[0], symbol.data)
 			# print("ACTION:", action)		# DEBUG OUTPUT
 
 			# try: action = self.table.getAction(state[0], symbol.data)
@@ -256,6 +257,8 @@ class LRParser:
 					LR_AST_SDT_Procedure(tree)
 					return tree
 
+				continue
+
 			# -- NO ACTION --
 			# raise ParseError(f"SYNTAX ERROR ({symbol.line}, {symbol.col})")
 			print(f"OUTPUT :SYNTAX: {symbol.line} {symbol.col} :SYNTAX:")
@@ -268,7 +271,7 @@ class LRParser:
 		# raise NotImplementedError("LR(0) Parsing (Parser.py)")
 
 	def __str__(self):
-		return str(self.table)
+		return str(self.parseTable)
 
 
 # Output now just uses path passed in from main
@@ -302,11 +305,11 @@ if __name__ == "__main__":
 	tree = parser.parse(stream)
 	#print(tree)
 
-	# tree.format(sys.stdout)
-	with open(output, "w+") as outf:
-		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
-		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
-		tree.format(outf)
+	tree.format(sys.stdout)
+	# with open(output, "w+") as outf:
+	# 	print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
+	# 	print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
+	# 	tree.format(outf)
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")
