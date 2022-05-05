@@ -271,9 +271,10 @@ def procedure_FUNSIG(node: ParseTree):
 	assert (node.children[3].data == "PARAMLIST")
 	assert (node.children[4].data == "rparen")
 	node.removeChild(node.children[4])  # Remove rparen
-	node.removeChild(node.children[2])  # Remove lparen
 	if len(node.children[3].children) < 2:
 		node.removeChild(node.children[3])
+	node.removeChild(node.children[2])  # Remove lparen
+
 
 def procedure_ARGLIST(node: ParseTree):
 	# "First" element of the ARGLIST (end of ARGLIST tree)
