@@ -8,6 +8,7 @@ import sys
 # Project imports
 from Grammar import Grammar
 from Parser import LRParser as Parser
+from SymbolTable import SymbolTable
 from TokenStream import TokenStream
 
 
@@ -22,12 +23,14 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	global TABLEPATH
 
 	grammar = Grammar(GRAMMARPATH, False)
-	parser = Parser(grammar, TABLEPATH, tablePath)
+	parser = Parser(grammar, TABLEPATH)
 	stream = TokenStream(streamPath, True)
+	symtab = SymbolTable(open(tablePath, "w+"))
 
 	# Primary ZOBOS logic
 	tree = parser.parse(stream)		# Parse the token stream
 	tree.format(astPath)			# Output the tree to the specified file
+	symtab.populate_from_ast(tree)
 
 
 # -- ARG PARSING --
