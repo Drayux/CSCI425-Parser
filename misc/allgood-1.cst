@@ -1,0 +1,233 @@
+node0 MODULE
+node1 MODPARTS
+node2 $
+node3 GCTDECLLIST
+node4 sc
+node5 MODPARTS
+node6 GLOBTYPE
+node7 DECLIDS
+node8 FUNSIG
+node9 sc
+node10 MODPARTS
+node11 const
+node12 int
+node13 DECLID
+node14 FUNTYPE
+node15 id
+node16 lparen
+node17 PARAMLIST
+node18 rparen
+node19 GFTDECLLIST
+node20 sc
+node21 MODPARTS
+node22 ASSIGN
+node23 int
+node24 FUNTYPE
+node25 id
+node26 comma
+node27 PARAMLIST
+node28 FUNTYPE
+node29 DECLIDS
+node30 FUNCTION
+node31 id
+node32 assign
+node33 EXPR
+node34 float
+node35 FUNTYPE
+node36 id
+node37 comma
+node38 PARAMLIST
+node39 int
+node40 DECLID
+node41 FUNSIG
+node42 returns
+node43 id
+node44 assign
+node45 EXPR
+node46 BRACESTMTS
+node47 AEXPR
+node48 float
+node49 FUNTYPE
+node50 id
+node51 ASSIGN
+node52 FUNTYPE
+node53 id
+node54 lparen
+node55 PARAMLIST
+node56 rparen
+node57 AEXPR
+node58 lbrace
+node59 STMTS
+node60 rbrace
+node61 SUM
+node62 float
+node63 id
+node64 assign
+node65 EXPR
+node66 int
+node67 FUNTYPE
+node68 id
+node69 comma
+node70 PARAMLIST
+node71 SUM
+node72 STMTS
+node73 STATEMENT
+node74 PRODUCT
+node75 FUNCALL
+node76 float
+node77 FUNTYPE
+node78 id
+node79 comma
+node80 PARAMLIST
+node81 PRODUCT
+node82 ASSIGN
+node83 sc
+node84 VALUE
+node85 id
+node86 lparen
+node87 ARGLIST
+node88 rparen
+node89 float
+node90 FUNTYPE
+node91 id
+node92 VALUE
+node93 id
+node94 assign
+node95 EXPR
+node96 intval
+node97 ARGLIST
+node98 comma
+node99 EXPR
+node100 float
+node101 intval
+node102 AEXPR
+node103 ARGLIST
+node104 comma
+node105 EXPR
+node106 AEXPR
+node107 SUM
+node108 EXPR
+node109 AEXPR
+node110 SUM
+node111 PRODUCT
+node112 AEXPR
+node113 SUM
+node114 PRODUCT
+node115 VALUE
+node116 SUM
+node117 PRODUCT
+node118 VALUE
+node119 CAST
+node120 PRODUCT
+node121 VALUE
+node122 floatval
+node123 int
+node124 lparen
+node125 EXPR
+node126 rparen
+node127 VALUE
+node128 floatval
+node129 AEXPR
+node130 intval
+node131 SUM
+node132 SUM
+node133 PLUS
+node134 PRODUCT
+node135 SUM
+node136 PLUS
+node137 PRODUCT
+node138 plus
+node139 VALUE
+node140 PRODUCT
+node141 plus
+node142 VALUE
+node143 id
+node144 VALUE
+node145 id
+node146 id
+
+node0 node1 node2
+node1 node3 node4 node5
+node3 node6 node7
+node5 node8 node9 node10
+node6 node11 node12
+node7 node13
+node8 node14 node15 node16 node17 node18
+node10 node19 node20 node21
+node13 node22
+node14 node23
+node17 node24 node25 node26 node27
+node19 node28 node29
+node21 node30
+node22 node31 node32 node33
+node24 node34
+node27 node35 node36 node37 node38
+node28 node39
+node29 node40
+node30 node41 node42 node43 node44 node45 node46
+node33 node47
+node35 node48
+node38 node49 node50
+node40 node51
+node41 node52 node53 node54 node55 node56
+node45 node57
+node46 node58 node59 node60
+node47 node61
+node49 node62
+node51 node63 node64 node65
+node52 node66
+node55 node67 node68 node69 node70
+node57 node71
+node59 node72 node73
+node61 node74
+node65 node75
+node67 node76
+node70 node77 node78 node79 node80
+node71 node81
+node73 node82 node83
+node74 node84
+node75 node85 node86 node87 node88
+node77 node89
+node80 node90 node91
+node81 node92
+node82 node93 node94 node95
+node84 node96
+node87 node97 node98 node99
+node90 node100
+node92 node101
+node95 node102
+node97 node103 node104 node105
+node99 node106
+node102 node107
+node103 node108
+node105 node109
+node106 node110
+node107 node111
+node108 node112
+node109 node113
+node110 node114
+node111 node115
+node112 node116
+node113 node117
+node114 node118
+node115 node119
+node116 node120
+node117 node121
+node118 node122
+node119 node123 node124 node125 node126
+node120 node127
+node121 node128
+node125 node129
+node127 node130
+node129 node131
+node131 node132 node133 node134
+node132 node135 node136 node137
+node133 node138
+node134 node139
+node135 node140
+node136 node141
+node137 node142
+node139 node143
+node140 node144
+node142 node145
+node144 node146

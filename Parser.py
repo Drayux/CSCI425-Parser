@@ -157,7 +157,7 @@ class LRParser:
 		except StopIteration: return ParseTree(self.grammar.prodend, None)
 		# --------------------------------------------------
 
-	def parse(self, stream: TokenStream):
+	def parse(self, stream: TokenStream, reduce = True):
 		stack = [ (0, None) ]		# Stack of state numbers
 		queue = []					# Queue of nonterminal transitions (call stream.next() if empty)
 
@@ -228,7 +228,7 @@ class LRParser:
 				#   terminals at this point (need terminals for sym table)
 
 				# Andrew: run sdt here..? should be fine
-				LR_AST_EOP(tree)
+				if reduce: LR_AST_EOP(tree)
 
 				# Handle symbol table stuff. ~~very~~ slightly less scuffed!
 				#print("DATA: {}".format(tree.data))
@@ -254,7 +254,7 @@ class LRParser:
 				if rule[0] == self.grammar.start:
 					# POST PARSE
 					# make sure to reduce the final MODULE node
-					LR_AST_SDT_Procedure(tree)
+					if reduce: LR_AST_SDT_Procedure(tree)
 					return tree
 
 				continue
@@ -296,15 +296,13 @@ if __name__ == "__main__":
 	parser = LRParser(grammar, "config/zlang.lr")
 	stream = TokenStream(source, True)
 
-	print("GRAMMAR:")
-	print(grammar)
+	# print("GRAMMAR:")
+	# print(grammar)
+	#
+	# print("LR TABLE:")
+	# print(parser)
 
-	print("LR TABLE:")
-	print(parser)
-
-	tree = parser.parse(stream)
-	#print(tree)
-
+	tree = parser.parse(stream, False)
 	tree.format(sys.stdout)
 	# with open(output, "w+") as outf:
 	# 	print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
