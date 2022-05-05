@@ -57,6 +57,8 @@ class ParseTree:
 
 			if node.data == "\\\\":
 				node.data = "BAD NODE DATA: DOUBLE BACK SLASH"
+			elif '\"' in node.data:
+				node.data = node.data.strip('\"')
 
 			output.write("node{} {}\n".format(counter, node.data))
 			nodeMap[node] = "node{}".format(counter)
