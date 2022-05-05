@@ -130,7 +130,7 @@ class LRParser:
 		self.symbolTable = SymbolTable()
 		self.tablePath = symtablepath
 		# self.symbolTableEmit = symbolTableEmit
-		self.table = LRTable(grammar)
+		#self.table = LRTable(grammar)
 
 	def next(self, arr, stream = None):
 		if type(arr) is not list:
@@ -177,7 +177,7 @@ class LRParser:
 			# print("SYMBOL:", symbol.data)
 
 			# Get the table value
-			action = self.table.getAction(state[0], symbol.data)
+			action = self.parseTable.getAction(state[0], symbol.data)
 			# print("ACTION:", action)		# DEBUG OUTPUT
 
 			# try: action = self.table.getAction(state[0], symbol.data)
@@ -271,7 +271,7 @@ class LRParser:
 		# raise NotImplementedError("LR(0) Parsing (Parser.py)")
 
 	def __str__(self):
-		return str(self.table)
+		return str(self.parseTable)
 
 
 # Output now just uses path passed in from main
