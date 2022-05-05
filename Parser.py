@@ -302,7 +302,7 @@ if __name__ == "__main__":
 	# print("LR TABLE:")
 	# print(parser)
 
-	tree = parser.parse(stream, False)
+	tree = parser.parse(stream, True)
 	tree.format(sys.stdout)
 	# with open(output, "w+") as outf:
 	# 	print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
