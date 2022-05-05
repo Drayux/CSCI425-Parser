@@ -259,6 +259,8 @@ class LRParser:
 					LR_AST_SDT_Procedure(tree)
 					return tree
 
+				continue
+
 			# -- NO ACTION --
 			# raise ParseError(f"SYNTAX ERROR ({symbol.line}, {symbol.col})")
 			print(f"OUTPUT :SYNTAX: {symbol.line} {symbol.col} :SYNTAX:")
@@ -305,11 +307,11 @@ if __name__ == "__main__":
 	tree = parser.parse(stream)
 	#print(tree)
 
-	# tree.format(sys.stdout)
-	with open(output, "w+") as outf:
-		print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
-		print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
-		tree.format(outf)
+	tree.format(sys.stdout)
+	# with open(output, "w+") as outf:
+	# 	print(f"Sending parse tree to {output}. Execute the following command to view the tree:")
+	# 	print(f"cat {output} | ./treevis.py | dot -Tpng -o parse.png")
+	# 	tree.format(outf)
 
 	# cst stuff for wreck
 	# llgrammar = Grammar("config/regex.cfg")
