@@ -256,6 +256,17 @@ def procedure_FUNSIG(node: ParseTree):
     node.removeChild(node.children[4])  # Remove rparen
     node.removeChild(node.children[2])  # Remove lparen
 
+def procedure_ARGLIST(node: ParseTree):
+    new = ParseTree("ARGLIST", node.parent)
+    a = node
+    while a.children[0].data == "ARGLIST":
+        assert a.children[1].data == "comma"
+        expr = a.children[2]
+        new.addChild(expr)
+    expr = a.children[0]
+    new.addChild(expr.data) 
+    replace_node_with_new_node(node, new)
+
 
 def procedure_FUNCTION(node: ParseTree):
     assert (len(node.children) == 6)
@@ -322,6 +333,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_STMTS(node)
     elif node.data == "BRACESTMTS":
         procedure_BRACESTMTS(node)
+    elif node.data == "ARGLIST":
+        procedure_ARGLIST(node)
 
     # Non-control SDTs
     elif node.data == "ASSIGN":
