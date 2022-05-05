@@ -2,7 +2,7 @@ class ParseTree:
 	def __init__(self, data, parent, pos = (0, 0)):
 		self.data = data
 		self.aux = ""
-		(self.line, self.col) = pos; 
+		(self.line, self.col) = pos;
 		self.parent = parent
 		self.children = []
 
