@@ -263,6 +263,7 @@ def procedure_ARGLIST(node: ParseTree):
         assert a.children[1].data == "comma"
         expr = a.children[2]
         new.addChild(expr)
+        a = a.children[0]
     expr = a.children[0]
     new.addChild(expr.data) 
     replace_node_with_new_node(node, new)
