@@ -79,6 +79,12 @@ def procedure_WHILE(node: ParseTree):
 	node.removeChild(node.children[0])  # Remove while
 
 
+def procecure_EXPR(node: ParseTree):
+	assert (len(node.children) == 1)
+	node.data = node.children[0].data
+	node.children = node.children[0].children
+
+
 def procedure_UNARY(node: ParseTree):
 	operater = node.children[0]
 	if operater.data == "not":
@@ -122,6 +128,7 @@ def procedure_CAST(node: ParseTree):
 	node.data = node.children[0].data  # Takes the casting
 	node.removeChild(node.children[3])  # removes rparen
 	node.removeChild(node.children[1])  # removes lparen
+	node.removeChild(node.children[0])	# removes cast type
 
 
 def procedure_STMTS(node: ParseTree):
@@ -156,7 +163,7 @@ def procedure_ASSIGN(node: ParseTree):
 	assert (len(node.children) == 3)
 	assert ("id" in node.children[0].data)
 	assert (node.children[1].data == "assign")
-	assert (node.children[2].data in [ "EXPR", "ASSIGN" ])
+	# assert (node.children[2].data in [ "EXPR", "ASSIGN" ])	# Removed for EXPR procecure
 	node.data = "="  # ASSIGN -> =
 	node.removeChild(node.children[1])  # Remove assign token
 
@@ -275,7 +282,7 @@ def procedure_FUNCTION(node: ParseTree):
 	assert (node.children[1].data == "returns")
 	assert ("id" in node.children[2].data)
 	assert (node.children[3].data == "assign")
-	assert (node.children[4].data == "EXPR")
+	# assert (node.children[4].data == "EXPR")		# Removed for EXPR procedure
 	assert (node.children[5].data == "BRACESTMTS")
 	node.children[3].data = "="  # assign -> =
 	node.children[3].addChild(node.children[2])  # Adopt id
@@ -317,6 +324,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 		procedure_IFELSE(node)
 	elif node.data == "WHILE":
 		procedure_WHILE(node)
+	elif node.data == "EXPR":
+		procecure_EXPR(node)
 	elif node.data == "UNARY":
 		procedure_UNARY(node)
 	elif node.data == "SUM" or \
