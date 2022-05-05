@@ -33,6 +33,9 @@ def main(streamPath: str, astPath: str, tablePath: str):
 
 # -- ARG PARSING --
 if __name__ == "__main__":
+	# TEMP
+	for a in sys.argv:
+		print("ARG: {}".format(a))
 	if len(sys.argv) != 4:
 		print(f"Usage: {sys.argv[0]} <token stream (.tok)> <ast output (.dat)> <symtable output (.sym)")
 		exit(1)
