@@ -271,8 +271,6 @@ def procedure_FUNSIG(node: ParseTree):
 	assert (node.children[3].data == "PARAMLIST")
 	assert (node.children[4].data == "rparen")
 	node.removeChild(node.children[4])  # Remove rparen
-	if len(node.children[3].children) < 2:
-		node.removeChild(node.children[3])
 	node.removeChild(node.children[2])  # Remove lparen
 
 
