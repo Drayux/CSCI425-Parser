@@ -23,7 +23,7 @@ def procedure_FUNTYPE(node: ParseTree):
 	replace_node_with_new_node(node, newNode)
 
 
-def procedure_GLOBTYPE(node: ParseTree):
+def procedure_TYPE(node: ParseTree):
 	childData = "type:"
 	for x, child in enumerate(node.children):
 		if x != 0: childData += " "
@@ -33,7 +33,9 @@ def procedure_GLOBTYPE(node: ParseTree):
 
 
 def procedure_leaf(node: ParseTree):
-	node.data = node.data + ":" + SubstituteHex(node.aux)
+	aux = SubstituteHex(node.aux)
+	if node.data == "stringval": aux = aux[1:-1]		# Prune quotes from string val
+	node.data = node.data + ":" + aux
 
 
 def procedure_VALUE(node: ParseTree):
@@ -320,7 +322,7 @@ def procedure_FUNCTION(node: ParseTree):
 def procedure_EMIT(node: ParseTree):
 	new = ParseTree("EMIT", node.parent)
 	for child in node.children:
-		if child.data not in [ "emit", "lparen", "rparen" ]:
+		if child.data not in [ "emit", "lparen", "rparen", "comma" ]:
 			new.addChild(child)
 
 	replace_node_with_new_node(node, new)
@@ -363,7 +365,7 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 	if node.data == "FUNTYPE":
 		procedure_FUNTYPE(node)
 	elif node.data == "GLOBTYPE":
-		procedure_GLOBTYPE(node)
+		procedure_TYPE(node)
 	elif node.data == "id" or \
 			node.data == "intval" or \
 			node.data == "floatval" or \
@@ -421,8 +423,12 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 		procedure_EMIT(node)
 
 	# Weird ones
+	elif node.data == "DECLTYPE":
+		procedure_TYPE(node)
 	elif node.data == "DECLIDS":
 		procedure_DECLIDS(node)
+	elif node.data == "DECLLIST":
+		procedure_DECLLIST(node)
 	elif node.data == "GCTDECLLIST":
 		procedure_DECLLIST(node)
 	elif node.data == "GFTDECLLIST":
