@@ -226,7 +226,8 @@ def procedure_PARAMLIST(node: ParseTree):
 	if len(node.children) == 1:
 		assert (node.getChild().data == "NOPARAMS")
 		assert (len(node.getChild().children) == 0)
-		# Remove self?
+		# Just remove the NOPARAMS
+		node.removeChild(node.getChild())
 	elif len(node.children) == 2:
 		assert ("type" in node.children[0].data or node.children[0].data == "FUNTYPE")
 		assert ("id" in node.children[1].data)
