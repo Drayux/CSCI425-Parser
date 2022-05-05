@@ -1,6 +1,7 @@
 import sys
 
 from ParseTree import ParseTree
+from Util import SubstituteHex
 
 LAMBDA = "lambda"
 charLAMBDA = "_lambda"
@@ -22,8 +23,17 @@ def procedure_FUNTYPE(node: ParseTree):
 	replace_node_with_new_node(node, newNode)
 
 
+def procedure_GLOBTYPE(node: ParseTree):
+	childData = "type:"
+	for x, child in enumerate(node.children):
+		if x != 0: childData += " "
+		childData += child.data
+	newNode = ParseTree(childData, None)
+	replace_node_with_new_node(node, newNode)
+
+
 def procedure_leaf(node: ParseTree):
-	node.data = node.data + ":" + node.aux
+	node.data = node.data + ":" + SubstituteHex(node.aux)
 
 
 def procedure_VALUE(node: ParseTree):
@@ -298,6 +308,7 @@ def procedure_FUNCTION(node: ParseTree):
 
 def procedure_GCTDECLLIST(node: ParseTree):
 	# DOES NOT FOLLOW GRAMMAR EXACTLY!!
+	return
 	assert (len(node.children) == 2)
 	node.data = "DECLLIST"
 
@@ -311,7 +322,7 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 	if node.data == "FUNTYPE":
 		procedure_FUNTYPE(node)
 	elif node.data == "GLOBTYPE":
-		procedure_FUNTYPE(node)
+		procedure_GLOBTYPE(node)
 	elif node.data == "id" or \
 			node.data == "intval" or \
 			node.data == "floatval" or \
@@ -367,9 +378,8 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 		procedure_FUNCTION(node)
 
 	# Weird ones
-	#elif node.data == "GCTDECLLIST":
-	#    pass
-		#procedure_GCTDECLLIST(node)
+	elif node.data == "GCTDECLLIST":
+		procedure_GCTDECLLIST(node)
 
 
 def LR_AST_EOP(node: ParseTree):
