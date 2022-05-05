@@ -28,7 +28,7 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	symtab = SymbolTable(open(tablePath, "w"))
 
 	# Primary ZOBOS logic
-	tree = parser.parse(stream, False)		# Parse the token stream
+	tree = parser.parse(stream)			# Parse the token stream
 	with open(astPath, "w") as astFile:
 		tree.format(astFile)			# Output the tree to the specified file
 	symtab.populate_from_ast(tree)
