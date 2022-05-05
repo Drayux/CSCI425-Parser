@@ -23,7 +23,7 @@ def find(s, i):
 # Contains set of grammar production rules and preliminary parse operations
 # If third parameter is true, grammar is LR (else LL assumed)
 class Grammar:
-	def __init__(self, path, LL = True):
+	def __init__(self, path, LL = False):
 		self.rules = {}                                 # Dict of lists of nonterminals/symbols
 		self.empty = 'lambda'                           # Name of empty rule character (as seen in the config file)
 		self.prodend = '$'                              # Character representing the end of production
