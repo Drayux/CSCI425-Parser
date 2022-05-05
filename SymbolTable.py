@@ -42,7 +42,7 @@ class TableScope():
 
     def AddSymbol(self, name, attributes):
         if name not in self.table:
-            self.table[name] = (name, attributes) 
+            self.table[name] = (name, attributes)
 
 class SymbolTable():
     def __init__(self, out = sys.stdout):
@@ -118,7 +118,7 @@ class SymbolTable():
             f_id = remove_prefix(fnsig_node.children[1], "id:")
             # Get fn parameters from PARAMLIST node
             pl_node = verify_node(fnsig_node.children[2], "PARAMLIST")
-            if pl_node.children[0].data == "NOPARAMS" : return
+            if len(pl_node.children) == 0: return
             for child in pl_node.children:
                 # Get individual fn parameter from a PARAM node
                 param_node = verify_node(child, "PARAM")
@@ -158,7 +158,7 @@ class SymbolTable():
                 dec_node = verify_node(child, "DECLID")
                 eq_node = verify_node(dec_node.children[0], "=")
                 d_id = remove_prefix(eq_node.children[0], "id:")
-                self.EnterSymbol(d_id, SymbolAttributes(d_typ, d_const, True)) 
+                self.EnterSymbol(d_id, SymbolAttributes(d_typ, d_const, True))
             return
         #####################################
         # Funsig Node (undefined functions)
