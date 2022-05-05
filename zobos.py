@@ -21,8 +21,8 @@ def main(streamPath: str, astPath: str, tablePath: str):
 	global GRAMMARPATH
 	global TABLEPATH
 
-	#grammar = Grammar(GRAMMARPATH, False)
-	parser = Parser(GRAMMARPATH, TABLEPATH, tablePath)
+	grammar = Grammar(GRAMMARPATH, False)
+	parser = Parser(grammar, TABLEPATH, tablePath)
 	stream = TokenStream(streamPath, True)
 
 	# Primary ZOBOS logic
@@ -63,9 +63,9 @@ if __name__ == "__main__":
 
 	# Provide the user a chance to exit to protect potential overwrite of unintended files
 	# We *may* need to disable this for the final submission
-	if check:
-		try: input("Press enter to continue...\n")
-		except KeyboardInterrupt:
-			exit(1)
+	# if check:
+	# 	try: input("Press enter to continue...\n")
+	# 	except KeyboardInterrupt:
+	# 		exit(1)
 
 	main(streamPath, astPath, tablePath)
