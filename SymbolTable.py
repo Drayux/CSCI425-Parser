@@ -185,7 +185,8 @@ class SymbolTable():
                 f_typ = f_typ + p_typ
             for (p_typ, _) in params[1:]:
                 f_typ = f_typ + "/" + p_typ
-            self.EnterSymbol(f_id, SymbolAttributes(f_typ, True))
+            # "When a function prototype is encountered, the symbol is considered not const, but already initialized."
+            self.EnterSymbol(f_id, SymbolAttributes(f_typ, cons=False, init=True))
             return
         #########################
         # Funcall Nodes
