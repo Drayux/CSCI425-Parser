@@ -190,6 +190,7 @@ def procedure_MODULE(node: ParseTree):
 def procedure_MODPARTS(node: ParseTree):
     assert (len(node.children) in [ 1, 2, 3 ])
     assert (node.children[0].data in [ "GCTDECLLIST", "GFTDECLLIST", "FUNSIG", "FUNCTION", "EMIT" ])
+    #assert (node.children[0].data in [ "GCTDECLLIST", "GFTDECLLIST", "FUNSIG", "FUNCTION", "EMIT",    "DECLLIST" ])
     if len(node.children) > 1:
         if node.children[0].data == "FUNCTION":
             assert (node.children[1].data == "MODPARTS")
@@ -256,6 +257,28 @@ def procedure_FUNSIG(node: ParseTree):
     node.removeChild(node.children[2])  # Remove lparen
 
 
+def procedure_FUNCTION(node: ParseTree):
+    assert (len(node.children) == 6)
+    assert (node.children[0].data == "FUNSIG")
+    assert (node.children[1].data == "returns")
+    assert ("id" in node.children[2].data)
+    assert (node.children[3].data == "assign")
+    assert (node.children[4].data == "EXPR")
+    assert (node.children[5].data == "BRACESTMTS")
+    node.children[3].data = "="  # assign -> =
+    node.children[3].addChild(node.children[2])  # Adopt id
+    node.children[3].addChild(node.children[4])  # Adopt EXPR
+    node.removeChild(node.children[4])  # Remove EXPR
+    node.removeChild(node.children[2])  # Remove id
+    node.removeChild(node.children[1])  # Remove returns
+
+
+def procedure_GCTDECLLIST(node: ParseTree):
+    # DOES NOT FOLLOW GRAMMAR EXACTLY!!
+    assert (len(node.children) == 2)
+    node.data = "DECLLIST"
+
+
 def LR_AST_SDT_Procedure(node: ParseTree):
     """
     This will transform the node to its AST counterpart using the correct SDT
@@ -313,6 +336,13 @@ def LR_AST_SDT_Procedure(node: ParseTree):
         procedure_PARAMLIST(node)
     elif node.data == "FUNSIG":
         procedure_FUNSIG(node)
+    elif node.data == "FUNCTION":
+        procedure_FUNCTION(node)
+
+    # Weird ones
+    #elif node.data == "GCTDECLLIST":
+    #    pass
+        #procedure_GCTDECLLIST(node)
 
 
 def LR_AST_EOP(node: ParseTree):
