@@ -263,16 +263,20 @@ def procedure_FUNSIG(node: ParseTree):
 	node.removeChild(node.children[4])  # Remove rparen
 	node.removeChild(node.children[2])  # Remove lparen
 
+
 def procedure_ARGLIST(node: ParseTree):
+	# "First" element of the ARGLIST (end of ARGLIST tree)
+	if len(node.children) == 1: return
+
+	# Else ARGLIST has multiple arguments
 	new = ParseTree("ARGLIST", node.parent)
-	a = node
-	while a.children[0].data == "ARGLIST":
-		assert a.children[1].data == "comma"
-		expr = a.children[2]
-		new.addChild(expr)
-		a = a.children[0]
-	expr = a.children[0]
-	new.addChild(expr.data)
+	for child in node.children:
+		if child.data == "ARGLIST":
+			for x in child.children: new.addChild(x)
+
+		elif child.data != "comma":
+			new.addChild(child)
+
 	replace_node_with_new_node(node, new)
 
 
