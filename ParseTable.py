@@ -145,7 +145,7 @@ class LRParseTable:
 	def parseFile(self, file):
 		result_list = []
 		# open file and put it in an array of lines
-		with file as f:
+		with open(file) as f:
 			lines = f.readlines()
 
 			# Read in the first line with all the grammar symbols
