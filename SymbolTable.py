@@ -149,13 +149,15 @@ class SymbolTable():
         #########################
         # Declist Node
         #########################
-        if node.data == "DECLIST":
+        if node.data == "DECLLIST":
             d_typ = remove_prefix(node.children[0], "type:")
+            d_const = False
+            if d_typ.startswith("const"): d_const = True
             for child in node.children[1:]:
                 dec_node = verify_node(child, "DECLID")
                 eq_node = verify_node(dec_node.children[0], "=")
                 d_id = remove_prefix(eq_node.children[0], "id:")
-                self.EnterSymbol(d_id, SymbolAttributes(d_typ, False, True))  # TODO: support const
+                self.EnterSymbol(d_id, SymbolAttributes(d_typ, d_const, True)) 
             return
         #####################################
         # Funsig Node (undefined functions)
