@@ -225,7 +225,7 @@ def procedure_PARAMLIST(node: ParseTree):
 	# Flatten structure into single PARAMLIST with n PARAM children
 	if len(node.children) == 1:
 		assert (node.getChild().data == "NOPARAMS")
-		assert (len(node.getChild.children) == 0)
+		assert (len(node.getChild().children) == 0)
 		# Remove self?
 	elif len(node.children) == 2:
 		assert ("type" in node.children[0].data or node.children[0].data == "FUNTYPE")
