@@ -130,6 +130,7 @@ class LRParser:
 		self.symbolTable = SymbolTable()
 		self.tablePath = symtablepath
 		# self.symbolTableEmit = symbolTableEmit
+		self.table = LRTable(grammar)
 
 	def next(self, arr, stream = None):
 		if type(arr) is not list:
