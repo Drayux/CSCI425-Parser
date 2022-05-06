@@ -176,13 +176,13 @@ class SymbolTable():
             f_id = remove_prefix(fnsig_node.children[1], "id:")
             # Get fn parameters from PARAMLIST node
             pl_node = verify_node(fnsig_node.children[2], "PARAMLIST")
-            if pl_node.children[0].data == "NOPARAMS" : return
-            for child in pl_node.children:
+            if pl_node.children and pl_node.children[0].data == "NOPARAMS" : 
+                for child in pl_node.children:
                 # Get individual fn parameter from a PARAM node
-                param_node = verify_node(child, "PARAM")
-                p_typ = remove_prefix(param_node.children[0], "type:")
-                p_id = remove_prefix(param_node.children[1], "id:")
-                params.append((p_typ, p_id))
+                    param_node = verify_node(child, "PARAM")
+                    p_typ = remove_prefix(param_node.children[0], "type:")
+                    p_id = remove_prefix(param_node.children[1], "id:")
+                    params.append((p_typ, p_id))
             # Add fn entry to SymbolTable
             # NOTE: f_typ has format: return_type//param1_type/param2type/.../paramlast_type
             f_typ = r_typ + "//"
@@ -197,7 +197,7 @@ class SymbolTable():
         #########################
         # Funcall Nodes
         #########################
-        if node.data == "FUNCALL":
+        if node.data == "FUNCALL":  
             # collect ast data
             f_id = remove_prefix(node.children[0], "id:")
             args_node = verify_node(node.children[1], "ARGLIST")
@@ -218,9 +218,10 @@ class SymbolTable():
             # check that number of passed args matches expected
             if len(attr.type.split("//")) > 1:
                 pars = attr.type.split("//")[1]
-                par_count = len(pars.split("/"))
-                if arg_count != par_count:
-                    self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
+                if pars:
+                    par_count = len(pars.split("/"))
+                    if arg_count != par_count:
+                        self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
             return
         #########################
         # id: Nodes
