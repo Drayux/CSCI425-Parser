@@ -155,6 +155,7 @@ class SymbolTable():
         if node.data == "DECLLIST":
             d_typ = remove_prefix(node.children[0], "type:")
             d_const = False
+            d_init = False
             if d_typ.startswith("const"): 
                 d_const = True
                 d_typ = d_typ.lstrip("const ")
@@ -162,9 +163,13 @@ class SymbolTable():
                 d_const = True
             for child in node.children[1:]:
                 dec_node = verify_node(child, "DECLID")
-                eq_node = verify_node(dec_node.children[0], "=")
-                d_id = remove_prefix(eq_node.children[0], "id:")
-                self.EnterSymbol(d_id, SymbolAttributes(d_typ, d_const, True)) 
+                if dec_node.children[0] == "=":
+                    eq_node = verify_node(dec_node.children[0], "=")
+                    d_id = remove_prefix(eq_node.children[0], "id:")
+                    d_init = True
+                else:
+                    d_id = remove_prefix(dec_node.children[0], "id:")
+                self.EnterSymbol(d_id, SymbolAttributes(d_typ, d_const, d_init))
             return
         #####################################
         # Funsig Node (undefined functions)
