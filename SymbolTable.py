@@ -177,6 +177,7 @@ class SymbolTable():
                 if dec_node.children[0].data == "=":
                     eq_node = verify_node(dec_node.children[0], "=")
                     d_id = remove_prefix(eq_node.children[0], "id:")
+                    self.populate_from_ast(eq_node.children[1])
                     d_init = True
                 else:
                     d_id = remove_prefix(dec_node.children[0], "id:")
@@ -235,9 +236,11 @@ class SymbolTable():
             if len(attr.type.split("//")) > 1:
                 pars = attr.type.split("//")[1]
                 if pars:
-                    par_count = len(pars.split("/"))
+                    par_count = len(pars.split("/")) 
                     if arg_count != par_count:
                         self.ReportError("CALL", node.line, node.col)  # TODO: support row/column
+                elif arg_count != 0:
+                    self.ReportError("CALL", node.line, node.col)
             return
         #########################
         # id: Nodes
