@@ -111,7 +111,7 @@ class SymbolTable():
                     self.out.write(str(i) + "," + typ + "," + name + "\n")
 
     def populate_from_ast(self, node):
-        # print(f"populating from: {node.data}")
+        #print(f"populating from: {node.data}")
         #####################
         # Function Node
         #####################
@@ -211,7 +211,7 @@ class SymbolTable():
         #########################
         # Funcall Nodes
         #########################
-        if node.data == "FUNCALL":  
+        if node.data == "FUNCALL":   
             # collect ast data
             f_id = remove_prefix(node.children[0], "id:")
             args_node = verify_node(node.children[1], "ARGLIST")
@@ -257,6 +257,7 @@ class SymbolTable():
             l_id = remove_prefix(node.children[0], "id:")
             self.Initialize(l_id)
             self.populate_from_ast(node.children[1])
+            return
 
         #########################
         # Scope Nodes

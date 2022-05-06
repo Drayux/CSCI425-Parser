@@ -7,19 +7,24 @@ LAMBDA = "lambda"
 charLAMBDA = "_lambda"
 
 
-def RootReplace(node: ParseTree, data, children):
+def RootReplace(node: ParseTree, data, children, line = -1, col = -1):
 	node.data = data
 	node.children = children
+	if line != -1:
+		node.line = line
+	if col != -1:
+		node.col = col
 
 
 def replace_node_with_new_node(node: ParseTree, new_node: ParseTree):
-	RootReplace(node, new_node.data, new_node.children)
+	RootReplace(node, new_node.data, new_node.children, new_node.line, new_node.col)
 	return
 
 
 def procedure_FUNTYPE(node: ParseTree):
-	childData = "type:" + node.children[0].data
-	newNode = ParseTree(childData, None)
+	child = node.children[0]
+	childData = "type:" + child.data	
+	newNode = ParseTree(childData, None, (child.line, child.col))
 	replace_node_with_new_node(node, newNode)
 
 
@@ -28,7 +33,7 @@ def procedure_TYPE(node: ParseTree):
 	for x, child in enumerate(node.children):
 		if x != 0: childData += " "
 		childData += child.data
-	newNode = ParseTree(childData, None)
+	newNode = ParseTree(childData, None, (node.line, node.col))
 	replace_node_with_new_node(node, newNode)
 
 
@@ -40,6 +45,7 @@ def procedure_leaf(node: ParseTree):
 
 def procedure_VALUE(node: ParseTree):
 	if len(node.children) == 1:
+	#	print(f"value child_data: {node.children[0].data}, line: {node.line}, col: {node.col}")
 		childData = node.getChild().data
 		if childData == "plus": node.getChild().data = "+"
 		if childData == "minus": node.getChild().data = "-"
@@ -48,6 +54,7 @@ def procedure_VALUE(node: ParseTree):
 		if childData == "mod": node.getChild().data = "%"
 		replace_node_with_new_node(node, node.getChild())
 	elif node.getChild().data == "rparen":
+	#	print(f"value child_data: {node.children[1].data}, line: {node.line}, col: {node.col}")
 		replace_node_with_new_node(node, node.children[1])
 
 
@@ -91,12 +98,13 @@ def procedure_WHILE(node: ParseTree):
 	node.removeChild(node.children[0])  # Remove while
 
 
-def procecure_EXPR(node: ParseTree):
+def procedure_EXPR(node: ParseTree):
 	assert (len(node.children) == 1)
 	# print(f"EXPR line: {node.line}, col: {node.col}")
-	node.data = node.children[0].data	
+	# node.data = node.children[0].data	
 	# print(f"EXPR new data: {node.data}")
-	node.children = node.children[0].children
+	# node.children = node.children[0].children
+	replace_node_with_new_node(node, node.children[0])
 
 
 def procedure_UNARY(node: ParseTree):
@@ -119,9 +127,12 @@ def procedure_BINARY(node: ParseTree):
 
 
 def procedure_FUNCALL(node: ParseTree):
-	# print(f"funcall, line: {node.line}, col: {node.col}")
+	#print(f"funcall, line: {node.line}, col: {node.col}")
 	node.removeChild(node.getChild())  # Removes rparen
 	node.removeChild(node.children[1])  # Removes lparen
+	# print(f"id line: {node.children[0].line}, col: {node.children[0].col}")
+	node.line = node.children[0].line
+	node.col = node.children[0].col
 
 
 def procedure_BOOLS(node: ParseTree):
@@ -295,7 +306,7 @@ def procedure_ARGLIST(node: ParseTree):
 	if len(node.children) <= 1: return
 
 	# Else ARGLIST has multiple arguments
-	new = ParseTree("ARGLIST", node.parent)
+	new = ParseTree("ARGLIST", node.parent, (node.line, node.col))
 	for child in node.children:
 		if child.data == "ARGLIST":
 			for x in child.children: new.addChild(x)
@@ -323,7 +334,7 @@ def procedure_FUNCTION(node: ParseTree):
 
 
 def procedure_EMIT(node: ParseTree):
-	new = ParseTree("EMIT", node.parent)
+	new = ParseTree("EMIT", node.parent, (node.line, node.col))
 	for child in node.children:
 		if child.data not in [ "emit", "lparen", "rparen", "comma" ]:
 			new.addChild(child)
@@ -336,7 +347,7 @@ def procedure_DECLIDS(node: ParseTree):
 	if len(node.children) <= 1: return
 
 	# Else DECLIDS has multiple arguments
-	new = ParseTree("DECLIDS", node.parent)
+	new = ParseTree("DECLIDS", node.parent, (node.line, node.col))
 	for child in node.children:
 		if child.data == "DECLIDS":
 			for x in child.children: new.addChild(x)
@@ -350,7 +361,7 @@ def procedure_DECLIDS(node: ParseTree):
 def procedure_DECLLIST(node: ParseTree):
 	# DOES NOT FOLLOW GRAMMAR EXACTLY!!
 	assert (len(node.children) == 2)
-	new = ParseTree("DECLLIST", node.parent)
+	new = ParseTree("DECLLIST", node.parent, (node.line, node.col))
 	new.addChild(node.children[0])
 
 	for child in node.children[1].children:
@@ -365,6 +376,7 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 	:param node:
 	:return: None / Transformation
 	"""
+	# print(f"{node.data}: ({node.line}, {node.col})")
 	if node.data == "FUNTYPE":
 		procedure_FUNTYPE(node)
 	elif node.data == "GLOBTYPE":
@@ -386,7 +398,7 @@ def LR_AST_SDT_Procedure(node: ParseTree):
 	elif node.data == "WHILE":
 		procedure_WHILE(node)
 	elif node.data == "EXPR":
-		procecure_EXPR(node)
+		procedure_EXPR(node)
 	elif node.data == "UNARY":
 		procedure_UNARY(node)
 	elif node.data == "SUM" or \
