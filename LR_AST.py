@@ -93,7 +93,9 @@ def procedure_WHILE(node: ParseTree):
 
 def procecure_EXPR(node: ParseTree):
 	assert (len(node.children) == 1)
-	node.data = node.children[0].data
+	print(f"EXPR line: {node.line}, col: {node.col}")
+	node.data = node.children[0].data	
+	print(f"EXPR new data: {node.data}")
 	node.children = node.children[0].children
 
 
@@ -117,6 +119,7 @@ def procedure_BINARY(node: ParseTree):
 
 
 def procedure_FUNCALL(node: ParseTree):
+	print(f"funcall, line: {node.line}, col: {node.col}")
 	node.removeChild(node.getChild())  # Removes rparen
 	node.removeChild(node.children[1])  # Removes lparen
 
@@ -171,7 +174,7 @@ def procedure_BRACESTMTS(node: ParseTree):
 	node.children[2] = ParseTree("scope:close", None)
 
 
-def procedure_ASSIGN(node: ParseTree):
+def procedure_ASSIGN(node: ParseTree):	
 	assert (len(node.children) == 3)
 	assert ("id" in node.children[0].data)
 	assert (node.children[1].data == "assign")

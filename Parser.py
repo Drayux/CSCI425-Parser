@@ -201,8 +201,8 @@ class LRParser:
 				tree = ParseTree(rule[0], None)
 				###########################################################
 				# - Moves the terminal up the tree: not necessary maybe?? -
-				# tree.line = symbol.line
-				# tree.col = symbol.col
+				tree.line = symbol.line
+				tree.col = symbol.col
 				###########################################################
 				states = []
 
