@@ -54,6 +54,7 @@ class SymbolTable():
     def __init__(self, out = sys.stdout):
         self.tableStack = [TableScope()]
         self.out = out
+        self.exit_status = 0
 
     def __str__(self):
         output = ""
@@ -94,6 +95,7 @@ class SymbolTable():
             sys.stdout.write(f"OUTPUT :WARN: {r} {c} :{id}:\n")
         elif id in ["CALL"]:
             sys.stdout.write(f"OUTPUT :ERROR: {r} {c} :{id}:\n")
+            self.exit_status = 1
         elif id in ["SYNTAX"]:
             sys.stdout.write(f"OUTPUT :SYNTAX: {r} {c} :{id}:\n")
 
@@ -279,6 +281,7 @@ class SymbolTable():
         #########################
         for child in node.children:
             self.populate_from_ast(child)
+        return self.exit_status
 
 
 # Testing for AST
