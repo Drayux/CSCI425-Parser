@@ -118,7 +118,7 @@ class SymbolTable():
             f_id = remove_prefix(fnsig_node.children[1], "id:")
             # Get fn parameters from PARAMLIST node
             pl_node = verify_node(fnsig_node.children[2], "PARAMLIST")
-            if len(pl_node.children) == 0 or pl_node.children[0].data == "NOPARAMS" : return
+            #if len(pl_node.children) == 0 or pl_node.children[0].data == "NOPARAMS" : return
             for child in pl_node.children:
                 # Get individual fn parameter from a PARAM node
                 param_node = verify_node(child, "PARAM")
@@ -140,11 +140,13 @@ class SymbolTable():
             # Recursively populate using body of fn from BRACESTMTS node
             brc_node = verify_node(node.children[2], "BRACESTMTS")
             self.OpenScope()
+            self.EnterSymbol(r_id, SymbolAttributes(r_typ, False, True))
+            self.OpenScope()
             for (p_typ, p_id) in params:
                 self.EnterSymbol(p_id, SymbolAttributes(p_typ, True, True))
-            self.EnterSymbol(r_id, SymbolAttributes(r_typ, False, True))
             stmts_node = verify_node(brc_node.children[1], "STMTS")
             self.populate_from_ast(stmts_node)
+            self.CloseScope()
             self.CloseScope()
             return
         #########################
@@ -153,7 +155,11 @@ class SymbolTable():
         if node.data == "DECLLIST":
             d_typ = remove_prefix(node.children[0], "type:")
             d_const = False
-            if d_typ.startswith("const"): d_const = True
+            if d_typ.startswith("const"): 
+                d_const = True
+                d_typ = d_typ.lstrip("const ")
+            if d_typ == "string":
+                d_const = True
             for child in node.children[1:]:
                 dec_node = verify_node(child, "DECLID")
                 eq_node = verify_node(dec_node.children[0], "=")
@@ -241,8 +247,9 @@ class SymbolTable():
         # Emit Node
         #########################
         if node.data == "EMIT":
-            st = verify_node(node.children[0], "symtable")
-            if st:
+            if node.children[0].data.startswith("symtable"):
+                st = remove_prefix(node.children[0], "symtabl")
+                # print(f"value of st: {st}") 
                 self.EmitTable()
         #########################
         # Default Node
