@@ -44,6 +44,12 @@ class TableScope():
         if name not in self.table:
             self.table[name] = (name, attributes) 
 
+    def Initialize(self, name):
+        if name in self.table:
+            (_, attr) = self.table[name] 
+            self.table[name] = (name, SymbolAttributes(attr.type, attr.cons, True))
+
+
 class SymbolTable():
     def __init__(self, out = sys.stdout):
         self.tableStack = [TableScope()]
@@ -77,8 +83,11 @@ class SymbolTable():
                 return table.table[name]
 
     def Initialize(self, name):
-        (_, attr) = self.RetrieveSymbol(name)
-        attr.initialize()
+        for table in self.tableStack:
+            if name in table.table:
+                table.Initialize(name)
+
+        
 
     def ReportError(self, id, r, c):
         if id in ["UNINIT", "REIDENT"]:
@@ -140,10 +149,10 @@ class SymbolTable():
             # Recursively populate using body of fn from BRACESTMTS node
             brc_node = verify_node(node.children[2], "BRACESTMTS")
             self.OpenScope()
-            self.EnterSymbol(r_id, SymbolAttributes(r_typ, False, True))
-            self.OpenScope()
+            self.EnterSymbol(r_id, SymbolAttributes(r_typ, False, True)) 
             for (p_typ, p_id) in params:
                 self.EnterSymbol(p_id, SymbolAttributes(p_typ, True, True))
+            self.OpenScope()
             stmts_node = verify_node(brc_node.children[1], "STMTS")
             self.populate_from_ast(stmts_node)
             self.CloseScope()
@@ -242,6 +251,14 @@ class SymbolTable():
             if not attr.init:
                 self.ReportError("UNINIT", node.line, node.col)
                 return
+        #########################
+        # = nodes
+        #########################
+        if node.data == "=":
+            l_id = remove_prefix(node.children[0], "id:")
+            self.Initialize(l_id)
+            self.populate_from_ast(node.children[1])
+
         #########################
         # Scope Nodes
         #########################
