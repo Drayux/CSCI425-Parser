@@ -190,7 +190,7 @@ class SymbolTable():
             f_id = remove_prefix(fnsig_node.children[1], "id:")
             # Get fn parameters from PARAMLIST node
             pl_node = verify_node(fnsig_node.children[2], "PARAMLIST")
-            if pl_node.children and pl_node.children[0].data == "NOPARAMS" : 
+            if pl_node.children and pl_node.children[0].data != "NOPARAMS" : 
                 for child in pl_node.children:
                 # Get individual fn parameter from a PARAM node
                     param_node = verify_node(child, "PARAM")
