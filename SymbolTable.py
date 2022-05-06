@@ -172,7 +172,7 @@ class SymbolTable():
                 d_const = True
             for child in node.children[1:]:
                 dec_node = verify_node(child, "DECLID")
-                if dec_node.children[0] == "=":
+                if dec_node.children[0].data == "=":
                     eq_node = verify_node(dec_node.children[0], "=")
                     d_id = remove_prefix(eq_node.children[0], "id:")
                     d_init = True
@@ -244,7 +244,6 @@ class SymbolTable():
             i_id = remove_prefix(node, "id:")
             entry = self.RetrieveSymbol(i_id)
             if not entry:
-                # print(self)
                 self.ReportError("UNINIT", node.line, node.col)
                 return
             (_, attr) = entry

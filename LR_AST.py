@@ -93,9 +93,9 @@ def procedure_WHILE(node: ParseTree):
 
 def procecure_EXPR(node: ParseTree):
 	assert (len(node.children) == 1)
-	print(f"EXPR line: {node.line}, col: {node.col}")
+	# print(f"EXPR line: {node.line}, col: {node.col}")
 	node.data = node.children[0].data	
-	print(f"EXPR new data: {node.data}")
+	# print(f"EXPR new data: {node.data}")
 	node.children = node.children[0].children
 
 
@@ -119,7 +119,7 @@ def procedure_BINARY(node: ParseTree):
 
 
 def procedure_FUNCALL(node: ParseTree):
-	print(f"funcall, line: {node.line}, col: {node.col}")
+	# print(f"funcall, line: {node.line}, col: {node.col}")
 	node.removeChild(node.getChild())  # Removes rparen
 	node.removeChild(node.children[1])  # Removes lparen
 
