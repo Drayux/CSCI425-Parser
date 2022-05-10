@@ -1,0 +1,42 @@
+label @0w a
+label @1w q
+label @2w x
+label @3w y
+label @4w z
+init @5w
+load R2, #1
+store R2, @0w
+load R2, #2
+store R2, @1w
+load R2, @0w
+load R2, @1w
+ifz R2, @13i(pc)
+load R2, #6
+store R2, @2w
+load R2, @1w
++ R2, R2, #7
+store R2, @3w
+load R2, #8
+store R2, @4w
+load R2, @4w
+load R2, @3w
+ifz R2, @2i(pc)
+load R2, @2w
+emit R2
+jump @13i(pc)
+load R2, #4
+store R2, @2w
+load R2, #5
+store R2, @3w
+load R2, @0w
++ R2, R2, #9
+store R2, @4w
+load R2, @4w
+ifz R2, @2i(pc)
+load R2, @3w
+emit R2
+load R2, @0w
+emit R2
+load R2, @4w
+emit R2
+return

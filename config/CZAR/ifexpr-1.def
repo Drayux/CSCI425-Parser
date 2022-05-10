@@ -1,0 +1,23 @@
+0 parent :MODULE
+0-0 parent :DECLLIST
+0-0-0 leaf :type :int type:int line:1 const:F col:1
+0-0-1 parent :DECLID
+0-0-1-0 parent :x3d binary:assign line:1 col:7 domain:int op:binary
+0-0-1-0-0 leaf :id :a line:1 col:5
+0-0-1-0-1 leaf :intval :1 line:1 col:9 domain:int
+0-1 parent :IF
+0-1-0 parent :x3c binary:lt domain:bool line:2 col:8 op:binary
+0-1-0-0 leaf :id :a line:2 col:6 domain:int
+0-1-0-1 leaf :intval :1 line:2 col:10 domain:int
+0-1-1 parent :STATEMENT
+0-1-1-0 parent :EMIT
+0-1-1-0-0 leaf :id :a line:2 col:20 domain:int
+
+0-0-1-0 0-0-1-0-0 0-0-1-0-1
+0-0-1 0-0-1-0
+0-0 0-0-0 0-0-1
+0-1-0 0-1-0-0 0-1-0-1
+0-1-1-0 0-1-1-0-0
+0-1-1 0-1-1-0
+0-1 0-1-0 0-1-1
+0 0-0 0-1

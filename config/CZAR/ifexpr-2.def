@@ -1,0 +1,52 @@
+0 parent :MODULE
+0-0 parent :DECLLIST
+0-0-0 leaf :type :int type:int line:1 const:F col:1
+0-0-1 parent :DECLID
+0-0-1-0 parent :x3d binary:assign line:1 col:7 domain:int op:binary
+0-0-1-0-0 leaf :id :a line:1 col:5
+0-0-1-0-1 leaf :intval :1 line:1 col:9 domain:int
+0-1 parent :DECLLIST
+0-1-0 leaf :type :int type:int line:2 const:F col:1
+0-1-1 parent :DECLID
+0-1-1-0 parent :x3d binary:assign line:2 col:7 domain:int op:binary
+0-1-1-0-0 leaf :id :q line:2 col:5
+0-1-1-0-1 parent :x2b binary:plus domain:int line:2 col:11 op:binary
+0-1-1-0-1-0 leaf :intval :3 line:2 col:9 domain:int
+0-1-1-0-1-1 leaf :id :a line:2 col:13 domain:int
+0-2 parent :IFELSE
+0-2-0 parent :x3e binary:gt domain:bool line:3 col:8 op:binary
+0-2-0-0 leaf :id :a line:3 col:6 domain:int
+0-2-0-1 leaf :id :q line:3 col:10 domain:int
+0-2-1 parent :BRACESTMTS
+0-2-1-0 leaf :scope :open line:3 col:14
+0-2-1-1 parent :STMTS
+0-2-1-1-0 parent :STATEMENT
+0-2-1-1-0-0 parent :EMIT
+0-2-1-1-0-0-0 leaf :id :a line:4 col:8 domain:int
+0-2-1-2 leaf :scope :close line:5 col:1
+0-2-2 parent :BRACESTMTS
+0-2-2-0 leaf :scope :open line:5 col:8
+0-2-2-1 parent :STMTS
+0-2-2-1-0 parent :STATEMENT
+0-2-2-1-0-0 parent :EMIT
+0-2-2-1-0-0-0 leaf :id :q line:6 col:11 domain:int
+0-2-2-2 leaf :scope :close line:7 col:1
+
+0-0-1-0 0-0-1-0-0 0-0-1-0-1
+0-0-1 0-0-1-0
+0-0 0-0-0 0-0-1
+0-1-1-0-1 0-1-1-0-1-0 0-1-1-0-1-1
+0-1-1-0 0-1-1-0-0 0-1-1-0-1
+0-1-1 0-1-1-0
+0-1 0-1-0 0-1-1
+0-2-0 0-2-0-0 0-2-0-1
+0-2-1-1-0-0 0-2-1-1-0-0-0
+0-2-1-1-0 0-2-1-1-0-0
+0-2-1-1 0-2-1-1-0
+0-2-1 0-2-1-0 0-2-1-1 0-2-1-2
+0-2-2-1-0-0 0-2-2-1-0-0-0
+0-2-2-1-0 0-2-2-1-0-0
+0-2-2-1 0-2-2-1-0
+0-2-2 0-2-2-0 0-2-2-1 0-2-2-2
+0-2 0-2-0 0-2-1 0-2-2
+0 0-0 0-1 0-2

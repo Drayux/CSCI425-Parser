@@ -1,0 +1,10 @@
+int a = 1;
+int q = 2;
+int c = 3;
+int d = 4;
+int e = 5;
+int t = 6;
+int g = 7;
+int h = 8;
+int z = (((a+q)*(q+c))*((c+d)*(d+e)))*(((d+e)*(e+t))*((t+g)*(g+h)));
+emit (z);

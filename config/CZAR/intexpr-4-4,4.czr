@@ -1,0 +1,7 @@
+init @0w
+load R2, #2
+chs R2
+load R3, #1
+- R2, R3, R2
+emit R2
+return

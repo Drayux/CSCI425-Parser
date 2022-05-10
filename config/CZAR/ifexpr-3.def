@@ -1,0 +1,129 @@
+0 parent :MODULE
+0-0 parent :DECLLIST
+0-0-0 leaf :type :int type:int line:1 const:F col:1
+0-0-1 parent :DECLID
+0-0-1-0 parent :x3d binary:assign line:1 col:7 domain:int op:binary
+0-0-1-0-0 leaf :id :a line:1 col:5
+0-0-1-0-1 leaf :intval :1 line:1 col:9 domain:int
+0-1 parent :DECLLIST
+0-1-0 leaf :type :int type:int line:2 const:F col:1
+0-1-1 parent :DECLID
+0-1-1-0 parent :x3d binary:assign line:2 col:7 domain:int op:binary
+0-1-1-0-0 leaf :id :q line:2 col:5
+0-1-1-0-1 leaf :intval :2 line:2 col:9 domain:int
+0-2 parent :DECLLIST
+0-2-0 leaf :type :int type:int line:3 const:F col:1
+0-2-1 parent :DECLID
+0-2-1-0 leaf :id :x78 line:3 col:5
+0-2-2 parent :DECLID
+0-2-2-0 leaf :id :y line:3 col:8
+0-2-3 parent :DECLID
+0-2-3-0 leaf :id :z line:3 col:11
+0-3 parent :IFELSE
+0-3-0 parent :x3e binary:gt domain:bool line:4 col:8 op:binary
+0-3-0-0 leaf :id :a line:4 col:6 domain:int
+0-3-0-1 leaf :id :q line:4 col:10 domain:int
+0-3-1 parent :BRACESTMTS
+0-3-1-0 leaf :scope :open line:4 col:14
+0-3-1-1 parent :STMTS
+0-3-1-1-0 parent :STATEMENT
+0-3-1-1-0-0 parent :x3d binary:assign line:5 col:7 domain:int op:binary
+0-3-1-1-0-0-0 leaf :id :x78 line:5 col:5
+0-3-1-1-0-0-1 leaf :intval :6 line:5 col:9 domain:int
+0-3-1-1-1 parent :STATEMENT
+0-3-1-1-1-0 parent :x3d binary:assign line:6 col:4 domain:int op:binary
+0-3-1-1-1-0-0 leaf :id :y line:6 col:2
+0-3-1-1-1-0-1 parent :x2b binary:plus domain:int line:6 col:8 op:binary
+0-3-1-1-1-0-1-0 leaf :id :q line:6 col:6 domain:int
+0-3-1-1-1-0-1-1 leaf :intval :7 line:6 col:10 domain:int
+0-3-1-1-2 parent :STATEMENT
+0-3-1-1-2-0 parent :x3d binary:assign line:7 col:4 domain:int op:binary
+0-3-1-1-2-0-0 leaf :id :z line:7 col:2
+0-3-1-1-2-0-1 leaf :intval :8 line:7 col:6 domain:int
+0-3-1-1-3 parent :STATEMENT
+0-3-1-1-3-0 parent :IF
+0-3-1-1-3-0-0 parent :x3e binary:gt domain:bool line:8 col:9 op:binary
+0-3-1-1-3-0-0-0 leaf :id :z line:8 col:7 domain:int
+0-3-1-1-3-0-0-1 leaf :id :y line:8 col:11 domain:int
+0-3-1-1-3-0-1 parent :STATEMENT
+0-3-1-1-3-0-1-0 parent :EMIT
+0-3-1-1-3-0-1-0-0 leaf :id :x78 line:8 col:21 domain:int
+0-3-1-2 leaf :scope :close line:9 col:1
+0-3-2 parent :BRACESTMTS
+0-3-2-0 leaf :scope :open line:9 col:8
+0-3-2-1 parent :STMTS
+0-3-2-1-0 parent :STATEMENT
+0-3-2-1-0-0 parent :x3d binary:assign line:10 col:4 domain:int op:binary
+0-3-2-1-0-0-0 leaf :id :x78 line:10 col:2
+0-3-2-1-0-0-1 leaf :intval :4 line:10 col:6 domain:int
+0-3-2-1-1 parent :STATEMENT
+0-3-2-1-1-0 parent :x3d binary:assign line:11 col:4 domain:int op:binary
+0-3-2-1-1-0-0 leaf :id :y line:11 col:2
+0-3-2-1-1-0-1 leaf :intval :5 line:11 col:6 domain:int
+0-3-2-1-2 parent :STATEMENT
+0-3-2-1-2-0 parent :x3d binary:assign line:12 col:4 domain:int op:binary
+0-3-2-1-2-0-0 leaf :id :z line:12 col:2
+0-3-2-1-2-0-1 parent :x2b binary:plus domain:int line:12 col:8 op:binary
+0-3-2-1-2-0-1-0 leaf :id :a line:12 col:6 domain:int
+0-3-2-1-2-0-1-1 leaf :intval :9 line:12 col:10 domain:int
+0-3-2-1-3 parent :STATEMENT
+0-3-2-1-3-0 parent :IF
+0-3-2-1-3-0-0 parent :x3c binary:lt domain:bool line:13 col:9 op:binary
+0-3-2-1-3-0-0-0 leaf :id :z line:13 col:7 domain:int
+0-3-2-1-3-0-0-1 leaf :intval :0 line:13 col:11 domain:int
+0-3-2-1-3-0-1 parent :STATEMENT
+0-3-2-1-3-0-1-0 parent :EMIT
+0-3-2-1-3-0-1-0-0 leaf :id :y line:13 col:21 domain:int
+0-3-2-1-4 parent :STATEMENT
+0-3-2-1-4-0 parent :EMIT
+0-3-2-1-4-0-0 leaf :id :a line:14 col:7 domain:int
+0-3-2-2 leaf :scope :close line:15 col:1
+0-4 parent :MODPARTS
+0-4-0 parent :EMIT
+0-4-0-0 leaf :id :z line:16 col:6 domain:int
+
+0-0-1-0 0-0-1-0-0 0-0-1-0-1
+0-0-1 0-0-1-0
+0-0 0-0-0 0-0-1
+0-1-1-0 0-1-1-0-0 0-1-1-0-1
+0-1-1 0-1-1-0
+0-1 0-1-0 0-1-1
+0-2-1 0-2-1-0
+0-2-2 0-2-2-0
+0-2-3 0-2-3-0
+0-2 0-2-0 0-2-1 0-2-2 0-2-3
+0-3-0 0-3-0-0 0-3-0-1
+0-3-1-1-0-0 0-3-1-1-0-0-0 0-3-1-1-0-0-1
+0-3-1-1-0 0-3-1-1-0-0
+0-3-1-1-1-0-1 0-3-1-1-1-0-1-0 0-3-1-1-1-0-1-1
+0-3-1-1-1-0 0-3-1-1-1-0-0 0-3-1-1-1-0-1
+0-3-1-1-1 0-3-1-1-1-0
+0-3-1-1-2-0 0-3-1-1-2-0-0 0-3-1-1-2-0-1
+0-3-1-1-2 0-3-1-1-2-0
+0-3-1-1-3-0-0 0-3-1-1-3-0-0-0 0-3-1-1-3-0-0-1
+0-3-1-1-3-0-1-0 0-3-1-1-3-0-1-0-0
+0-3-1-1-3-0-1 0-3-1-1-3-0-1-0
+0-3-1-1-3-0 0-3-1-1-3-0-0 0-3-1-1-3-0-1
+0-3-1-1-3 0-3-1-1-3-0
+0-3-1-1 0-3-1-1-0 0-3-1-1-1 0-3-1-1-2 0-3-1-1-3
+0-3-1 0-3-1-0 0-3-1-1 0-3-1-2
+0-3-2-1-0-0 0-3-2-1-0-0-0 0-3-2-1-0-0-1
+0-3-2-1-0 0-3-2-1-0-0
+0-3-2-1-1-0 0-3-2-1-1-0-0 0-3-2-1-1-0-1
+0-3-2-1-1 0-3-2-1-1-0
+0-3-2-1-2-0-1 0-3-2-1-2-0-1-0 0-3-2-1-2-0-1-1
+0-3-2-1-2-0 0-3-2-1-2-0-0 0-3-2-1-2-0-1
+0-3-2-1-2 0-3-2-1-2-0
+0-3-2-1-3-0-0 0-3-2-1-3-0-0-0 0-3-2-1-3-0-0-1
+0-3-2-1-3-0-1-0 0-3-2-1-3-0-1-0-0
+0-3-2-1-3-0-1 0-3-2-1-3-0-1-0
+0-3-2-1-3-0 0-3-2-1-3-0-0 0-3-2-1-3-0-1
+0-3-2-1-3 0-3-2-1-3-0
+0-3-2-1-4-0 0-3-2-1-4-0-0
+0-3-2-1-4 0-3-2-1-4-0
+0-3-2-1 0-3-2-1-0 0-3-2-1-1 0-3-2-1-2 0-3-2-1-3 0-3-2-1-4
+0-3-2 0-3-2-0 0-3-2-1 0-3-2-2
+0-3 0-3-0 0-3-1 0-3-2
+0-4-0 0-4-0-0
+0-4 0-4-0
+0 0-0 0-1 0-2 0-3 0-4

@@ -1,0 +1,20 @@
+label @0w x
+label @1w y
+label @2w z
+label @3w q
+init @4w
+load R2, #1
+store R2, @0w
+load R2, #2
+store R2, @1w
+load R2, #3
+store R2, @2w
+load R2, @2w
+load R3, @1w
+* R2, R3, R2
+load R3, @0w
++ R2, R3, R2
+store R2, @3w
+load R2, @3w
+emit R2
+return

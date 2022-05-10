@@ -1,0 +1,47 @@
+label @0w x
+label @1w !0
+data @1w #374837.27
+label @2w y
+label @3w !1
+data @3w #0.35
+label @4w msg
+label @5w !2
+data @5w ax20message
+label @8w a
+label @9w !3
+data @9w #374838
+label @10w q
+label @11w !4
+data @11w #377584
+label @12w c
+label @13w z
+init @14w
+load F2, @1w
+store F2, @0w
+load F2, @3w
+store F2, @2w
+load R2, #20
+store R2, @4w
+load R2, @9w
+store R2, @8w
+load R2, @11w
+store R2, @10w
+load R2, @10w
+- R2, R2, #1
+load R3, @10w
+- R2, R3, R2
+store R2, @12w
+load F2, @2w
+load F3, @0w
+* F2, F3, F2
+load F3, @0w
++ F2, F2, F3
+store F2, @13w
+load F2, @13w
+emit F2
+load R2, @8w
+* R2, R2, #0
+load R3, @12w
+load R0, #16
+emit @R0, R2, R3
+return

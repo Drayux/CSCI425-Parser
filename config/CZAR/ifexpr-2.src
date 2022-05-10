@@ -1,0 +1,9 @@
+int a = 1;
+int q = 3 + a;
+if ( a > q ) {
+	emit (a);
+} else {
+    emit (q);
+}
+
+   

@@ -1,0 +1,11 @@
+0 parent :MODULE
+0-0 parent :EMIT
+0-0-0 parent :x2d binary:minus domain:int line:1 col:9 op:binary
+0-0-0-0 leaf :intval :1 line:1 col:7 domain:int
+0-0-0-1 parent :x2d domain:int unary:minus line:1 col:11 op:unary
+0-0-0-1-0 leaf :intval :2 line:1 col:12 domain:int
+
+0-0-0-1 0-0-0-1-0
+0-0-0 0-0-0-0 0-0-0-1
+0-0 0-0-0
+0 0-0

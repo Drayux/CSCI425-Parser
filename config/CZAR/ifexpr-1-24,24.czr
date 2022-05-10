@@ -1,0 +1,9 @@
+label @0w a
+init @1w
+load R2, #1
+store R2, @0w
+load R2, @0w
+ifz R2, @2i(pc)
+load R2, @0w
+emit R2
+return

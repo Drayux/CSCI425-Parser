@@ -1,0 +1,61 @@
+label @0w a
+label @1w q
+label @2w c
+label @3w d
+label @4w e
+label @5w t
+label @6w g
+label @7w h
+label @8w z
+init @9w
+load R2, #1
+store R2, @0w
+load R2, #2
+store R2, @1w
+load R2, #3
+store R2, @2w
+load R2, #4
+store R2, @3w
+load R2, #5
+store R2, @4w
+load R2, #6
+store R2, @5w
+load R2, #7
+store R2, @6w
+load R2, #8
+store R2, @7w
+load R2, @7w
+load R3, @6w
++ R2, R3, R2
+load R3, @6w
+load R4, @5w
++ R3, R4, R3
+* R2, R3, R2
+load R3, @5w
+load R4, @4w
++ R3, R4, R3
+load R4, @4w
+load R5, @3w
++ R4, R5, R4
+* R3, R4, R3
+* R2, R3, R2
+load R3, @4w
+load R4, @3w
++ R3, R4, R3
+load R4, @3w
+load R5, @2w
++ R4, R5, R4
+* R3, R4, R3
+load R4, @2w
+load R5, @1w
++ R4, R5, R4
+load R5, @1w
+load R6, @0w
++ R5, R6, R5
+* R4, R5, R4
+* R3, R4, R3
+* R2, R3, R2
+store R2, @8w
+load R2, @8w
+emit R2
+return

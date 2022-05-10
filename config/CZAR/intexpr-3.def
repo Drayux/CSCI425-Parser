@@ -1,0 +1,132 @@
+0 parent :MODULE
+0-0 parent :DECLLIST
+0-0-0 leaf :type :int type:int line:1 const:F col:1
+0-0-1 parent :DECLID
+0-0-1-0 parent :x3d binary:assign line:1 col:7 domain:int op:binary
+0-0-1-0-0 leaf :id :a line:1 col:5
+0-0-1-0-1 leaf :intval :1 line:1 col:9 domain:int
+0-1 parent :DECLLIST
+0-1-0 leaf :type :int type:int line:2 const:F col:1
+0-1-1 parent :DECLID
+0-1-1-0 parent :x3d binary:assign line:2 col:7 domain:int op:binary
+0-1-1-0-0 leaf :id :q line:2 col:5
+0-1-1-0-1 leaf :intval :2 line:2 col:9 domain:int
+0-2 parent :DECLLIST
+0-2-0 leaf :type :int type:int line:3 const:F col:1
+0-2-1 parent :DECLID
+0-2-1-0 parent :x3d binary:assign line:3 col:7 domain:int op:binary
+0-2-1-0-0 leaf :id :c line:3 col:5
+0-2-1-0-1 leaf :intval :3 line:3 col:9 domain:int
+0-3 parent :DECLLIST
+0-3-0 leaf :type :int type:int line:4 const:F col:1
+0-3-1 parent :DECLID
+0-3-1-0 parent :x3d binary:assign line:4 col:7 domain:int op:binary
+0-3-1-0-0 leaf :id :d line:4 col:5
+0-3-1-0-1 leaf :intval :4 line:4 col:9 domain:int
+0-4 parent :DECLLIST
+0-4-0 leaf :type :int type:int line:5 const:F col:1
+0-4-1 parent :DECLID
+0-4-1-0 parent :x3d binary:assign line:5 col:7 domain:int op:binary
+0-4-1-0-0 leaf :id :e line:5 col:5
+0-4-1-0-1 leaf :intval :5 line:5 col:9 domain:int
+0-5 parent :DECLLIST
+0-5-0 leaf :type :int type:int line:6 const:F col:1
+0-5-1 parent :DECLID
+0-5-1-0 parent :x3d binary:assign line:6 col:7 domain:int op:binary
+0-5-1-0-0 leaf :id :t line:6 col:5
+0-5-1-0-1 leaf :intval :6 line:6 col:9 domain:int
+0-6 parent :DECLLIST
+0-6-0 leaf :type :int type:int line:7 const:F col:1
+0-6-1 parent :DECLID
+0-6-1-0 parent :x3d binary:assign line:7 col:7 domain:int op:binary
+0-6-1-0-0 leaf :id :g line:7 col:5
+0-6-1-0-1 leaf :intval :7 line:7 col:9 domain:int
+0-7 parent :DECLLIST
+0-7-0 leaf :type :int type:int line:8 const:F col:1
+0-7-1 parent :DECLID
+0-7-1-0 parent :x3d binary:assign line:8 col:7 domain:int op:binary
+0-7-1-0-0 leaf :id :h line:8 col:5
+0-7-1-0-1 leaf :intval :8 line:8 col:9 domain:int
+0-8 parent :DECLLIST
+0-8-0 leaf :type :int type:int line:9 const:F col:1
+0-8-1 parent :DECLID
+0-8-1-0 parent :x3d binary:assign line:9 col:7 domain:int op:binary
+0-8-1-0-0 leaf :id :z line:9 col:5
+0-8-1-0-1 parent :x2a binary:mult domain:int line:9 col:38 op:binary
+0-8-1-0-1-0 parent :x2a binary:mult domain:int line:9 col:23 op:binary
+0-8-1-0-1-0-0 parent :x2a binary:mult domain:int line:9 col:16 op:binary
+0-8-1-0-1-0-0-0 parent :x2b binary:plus domain:int line:9 col:13 op:binary
+0-8-1-0-1-0-0-0-0 leaf :id :a line:9 col:12 domain:int
+0-8-1-0-1-0-0-0-1 leaf :id :q line:9 col:14 domain:int
+0-8-1-0-1-0-0-1 parent :x2b binary:plus domain:int line:9 col:19 op:binary
+0-8-1-0-1-0-0-1-0 leaf :id :q line:9 col:18 domain:int
+0-8-1-0-1-0-0-1-1 leaf :id :c line:9 col:20 domain:int
+0-8-1-0-1-0-1 parent :x2a binary:mult domain:int line:9 col:30 op:binary
+0-8-1-0-1-0-1-0 parent :x2b binary:plus domain:int line:9 col:27 op:binary
+0-8-1-0-1-0-1-0-0 leaf :id :c line:9 col:26 domain:int
+0-8-1-0-1-0-1-0-1 leaf :id :d line:9 col:28 domain:int
+0-8-1-0-1-0-1-1 parent :x2b binary:plus domain:int line:9 col:33 op:binary
+0-8-1-0-1-0-1-1-0 leaf :id :d line:9 col:32 domain:int
+0-8-1-0-1-0-1-1-1 leaf :id :e line:9 col:34 domain:int
+0-8-1-0-1-1 parent :x2a binary:mult domain:int line:9 col:53 op:binary
+0-8-1-0-1-1-0 parent :x2a binary:mult domain:int line:9 col:46 op:binary
+0-8-1-0-1-1-0-0 parent :x2b binary:plus domain:int line:9 col:43 op:binary
+0-8-1-0-1-1-0-0-0 leaf :id :d line:9 col:42 domain:int
+0-8-1-0-1-1-0-0-1 leaf :id :e line:9 col:44 domain:int
+0-8-1-0-1-1-0-1 parent :x2b binary:plus domain:int line:9 col:49 op:binary
+0-8-1-0-1-1-0-1-0 leaf :id :e line:9 col:48 domain:int
+0-8-1-0-1-1-0-1-1 leaf :id :t line:9 col:50 domain:int
+0-8-1-0-1-1-1 parent :x2a binary:mult domain:int line:9 col:60 op:binary
+0-8-1-0-1-1-1-0 parent :x2b binary:plus domain:int line:9 col:57 op:binary
+0-8-1-0-1-1-1-0-0 leaf :id :t line:9 col:56 domain:int
+0-8-1-0-1-1-1-0-1 leaf :id :g line:9 col:58 domain:int
+0-8-1-0-1-1-1-1 parent :x2b binary:plus domain:int line:9 col:63 op:binary
+0-8-1-0-1-1-1-1-0 leaf :id :g line:9 col:62 domain:int
+0-8-1-0-1-1-1-1-1 leaf :id :h line:9 col:64 domain:int
+0-9 parent :EMIT
+0-9-0 leaf :id :z line:10 col:7 domain:int
+
+0-0-1-0 0-0-1-0-0 0-0-1-0-1
+0-0-1 0-0-1-0
+0-0 0-0-0 0-0-1
+0-1-1-0 0-1-1-0-0 0-1-1-0-1
+0-1-1 0-1-1-0
+0-1 0-1-0 0-1-1
+0-2-1-0 0-2-1-0-0 0-2-1-0-1
+0-2-1 0-2-1-0
+0-2 0-2-0 0-2-1
+0-3-1-0 0-3-1-0-0 0-3-1-0-1
+0-3-1 0-3-1-0
+0-3 0-3-0 0-3-1
+0-4-1-0 0-4-1-0-0 0-4-1-0-1
+0-4-1 0-4-1-0
+0-4 0-4-0 0-4-1
+0-5-1-0 0-5-1-0-0 0-5-1-0-1
+0-5-1 0-5-1-0
+0-5 0-5-0 0-5-1
+0-6-1-0 0-6-1-0-0 0-6-1-0-1
+0-6-1 0-6-1-0
+0-6 0-6-0 0-6-1
+0-7-1-0 0-7-1-0-0 0-7-1-0-1
+0-7-1 0-7-1-0
+0-7 0-7-0 0-7-1
+0-8-1-0-1-0-0-0 0-8-1-0-1-0-0-0-0 0-8-1-0-1-0-0-0-1
+0-8-1-0-1-0-0-1 0-8-1-0-1-0-0-1-0 0-8-1-0-1-0-0-1-1
+0-8-1-0-1-0-0 0-8-1-0-1-0-0-0 0-8-1-0-1-0-0-1
+0-8-1-0-1-0-1-0 0-8-1-0-1-0-1-0-0 0-8-1-0-1-0-1-0-1
+0-8-1-0-1-0-1-1 0-8-1-0-1-0-1-1-0 0-8-1-0-1-0-1-1-1
+0-8-1-0-1-0-1 0-8-1-0-1-0-1-0 0-8-1-0-1-0-1-1
+0-8-1-0-1-0 0-8-1-0-1-0-0 0-8-1-0-1-0-1
+0-8-1-0-1-1-0-0 0-8-1-0-1-1-0-0-0 0-8-1-0-1-1-0-0-1
+0-8-1-0-1-1-0-1 0-8-1-0-1-1-0-1-0 0-8-1-0-1-1-0-1-1
+0-8-1-0-1-1-0 0-8-1-0-1-1-0-0 0-8-1-0-1-1-0-1
+0-8-1-0-1-1-1-0 0-8-1-0-1-1-1-0-0 0-8-1-0-1-1-1-0-1
+0-8-1-0-1-1-1-1 0-8-1-0-1-1-1-1-0 0-8-1-0-1-1-1-1-1
+0-8-1-0-1-1-1 0-8-1-0-1-1-1-0 0-8-1-0-1-1-1-1
+0-8-1-0-1-1 0-8-1-0-1-1-0 0-8-1-0-1-1-1
+0-8-1-0-1 0-8-1-0-1-0 0-8-1-0-1-1
+0-8-1-0 0-8-1-0-0 0-8-1-0-1
+0-8-1 0-8-1-0
+0-8 0-8-0 0-8-1
+0-9 0-9-0
+0 0-0 0-1 0-2 0-3 0-4 0-5 0-6 0-7 0-8 0-9

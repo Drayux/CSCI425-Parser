@@ -1,0 +1,16 @@
+int a = 1;
+int q = 2;
+int x, y, z;
+if ( a > q ) {
+    x = 6;
+	y = q + 7;
+	z = 8;
+	if ( z > y ) emit (x);
+} else {
+	x = 4;
+	y = 5;
+	z = a + 9;
+	if ( z < 0 ) emit (y);
+	emit(a);
+}
+emit(z);

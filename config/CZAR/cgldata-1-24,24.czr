@@ -1,0 +1,19 @@
+label @0w x
+label @1w !0
+data @1w #9876543
+label @2w y
+label @3w !1
+data @3w #1.34
+label @4w !2
+data @4w #197483.00
+init @5w
+load R2, @1w
+store R2, @0w
+load F2, @3w
+chs F2
+store F2, @2w
+load F2, @4w
+load F3, @2w
++ F2, F3, F2
+emit F2
+return

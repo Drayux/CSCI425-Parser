@@ -1,0 +1,9 @@
+const float x = 374837.27;
+float y = 0.34839;
+string msg = "a message";
+int a = 374838;
+int q = 377584;
+int c = q - ( q-1 );
+float  z = x * y + x;
+emit (z);
+emit msg, a*0, c;
