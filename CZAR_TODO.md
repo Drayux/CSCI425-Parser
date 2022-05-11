@@ -20,7 +20,7 @@ EXTRA CREDIT
 
 1. Constant globals literals such as value too large for immediate values,
    string data, and emit statements
-   2. if-then and if-then-else control structures
+2. if-then and if-then-else control structures
 
 
 TODOS:
@@ -68,7 +68,7 @@ TODOS:
 		but strings can be stored at any offset.
 	- [ ] Store or calculate the required data segment in bytes
 - [ ] Frames ??? we are not doing functions
-- [ ] tree CG as a basis for generating the instructions for each expression tree
+- [ ] treeCG as a basis for generating the instructions for each expression tree
 	- [ ] When LOADing global values, use their memory locations calculated in
 	  dataSeg and stored with the identifier in the symbol table
 	- [ ] Handle assign nodes with STORE instructions
