@@ -28,7 +28,7 @@ TODOS:
 - [ ] Input
 	- [ ] Argument 1
 		- [ ] R_n,F_n
-			- [ ] This is the absolute number of general purpose and
+			- [X] This is the absolute number of general purpose and
 			  floatingpoint registers in the CPU. 
 			  	- Example input: 16,16 ; 8,5 
 			- [ ] Registers use integer notation, so first register will be
