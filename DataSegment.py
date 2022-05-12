@@ -32,7 +32,7 @@ class DataSegment():
             entry = self.map[var]
             if entry.value == value:
                 return entry.pos
-        return 0
+        return None
  
     def visit_pass(self, node):
         IMM_MAX = 2047  # TODO: determine actual immediate bounds

@@ -39,14 +39,14 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
         value = root_AST.data[7:]
         instruction = "load " + r1 + ", #" + value
         tooBigForLoadImmediate = not (intMin <= int(value) <= intMax)
-        if tooBigForLoadImmediate:
-            instruction = "load " + r1 + ", @" + str(data_Seg.find_value(value))
+        if tooBigForLoadImmediate or data_Seg.find_value(int(value)) is not None:
+            instruction = "load " + r1 + ", @" + str(data_Seg.find_value(int(value)))
     elif root_AST.data.startswith("floatval:"):
         value = root_AST.data[9:]
         instruction = "load " + f1 + ", #" + value
         tooBigForLoadImmediate = not (floatMin <= float(value) <= floatMax)
-        if tooBigForLoadImmediate:
-            instruction = "load " + f1 + ", @" + str(data_Seg.find_value(value))
+        if tooBigForLoadImmediate or data_Seg.find_value(float(value)) is not None:
+            instruction = "load " + f1 + ", @" + str(data_Seg.find_value(float(value)))
     elif root_AST.data.startswith("id:"):
         value = root_AST.data[3:]
         instruction = "load " + rx + ", @" + str(data_Seg.find_value(value))
@@ -69,7 +69,7 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
             instruction = treeCG(right, regList_GP, regList_FP, data_Seg)
             list_of_instructions_essentially.extend(instruction)
             value = left.data[3:]
-            instruction = "store " + rx + ", @" + str(data_Seg.find_value(value))
+            instruction = "store " + rx + ", @" + str(data_Seg.map[value].pos)
             list_of_instructions_essentially.append(instruction)
             return list_of_instructions_essentially
     else:

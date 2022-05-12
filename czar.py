@@ -41,7 +41,7 @@ def main():
 		root_AST.registerNeeds()
 
 		# Using the register needs, develop - Konch
-		list_of_instructions = treeCG(root_AST, regList_GP, regList_FP, data_Seg)
+		list_of_instructions = treeCG(root_AST, regList_GP[2:], regList_FP[2:], data_Seg)
 
 		# Do Jumps for ec
 
