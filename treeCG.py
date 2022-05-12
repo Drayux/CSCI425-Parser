@@ -104,7 +104,7 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
                 list_of_instructions_essentially.append("push" + rx1)
                 instruction = treeCG(right, regList_GP, regList_FP, data_Seg)
                 list_of_instructions_essentially.extend(instruction)
-                list_of_instructions_essentially.append("pop" + rx2)
+                list_of_instructions_essentially.append("pop " + rx2)
                 list_of_instructions_essentially.append(value+" "+rx1+", "+rx2+", "+rx1)
                 return list_of_instructions_essentially
             if left.regCount > right.regCount:
