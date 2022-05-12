@@ -42,7 +42,7 @@ def main():
 
 		# Using the register needs, develop - Konch
 		list_of_instructions = treeCG(root_AST, regList_GP[2:], regList_FP[2:], data_Seg)
-
+		list_of_instructions.append("return")
 		# Do Jumps for ec
 
 		# Print to czr_OutFile

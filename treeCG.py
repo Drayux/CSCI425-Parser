@@ -49,19 +49,28 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
 
     if root_AST.data.startswith("intval:"):
         value = root_AST.data[7:]
-        instruction = "load " + r1 + ", #" + value
+        instruction = "load " + r1 + ", #" + value + "w"
         tooBigForLoadImmediate = not (intMin <= int(value) <= intMax)
         if tooBigForLoadImmediate or data_Seg.find_value(int(value)) is not None:
-            instruction = "load " + r1 + ", @" + str(data_Seg.find_value(int(value)))
+            instruction = "load " + r1 + ", @" + str(data_Seg.find_value(int(value))) + "w"
     elif root_AST.data.startswith("floatval:"):
         value = root_AST.data[9:]
-        instruction = "load " + f1 + ", #" + value
+        instruction = "load " + f1 + ", #" + value + "w"
         tooBigForLoadImmediate = not (floatMin <= float(value) <= floatMax)
         if tooBigForLoadImmediate or data_Seg.find_value(float(value)) is not None:
-            instruction = "load " + f1 + ", @" + str(data_Seg.find_value(float(value)))
+            instruction = "load " + f1 + ", @" + str(data_Seg.find_value(float(value))) + "w"
     elif root_AST.data.startswith("id:"):
         value = root_AST.data[3:]
-        instruction = "load " + rx1 + ", @" + str(data_Seg.find_value(value))
+        instruction = "load " + rx1 + ", @" + str(data_Seg.map[value].pos) + "w"
+    elif root_AST.data == "EMIT":
+        for childNode in root_AST.children:
+            list_of_instructions_essentially.extend(treeCG(childNode, regList_GP, regList_FP, data_Seg))
+            if childNode.dictionary["domain"] == "float":
+                rx1 = f1
+            else:
+                rx1 = r1
+            list_of_instructions_essentially.append("emit " + rx1)
+            return list_of_instructions_essentially
     elif "op" in keys:
         if root_AST.dictionary["op"] == "unary":
             if root_AST.dictionary["unary"] == "minus":
