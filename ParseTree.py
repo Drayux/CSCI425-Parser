@@ -7,8 +7,9 @@ class ParseTree:
 		self.children = []
 		# Below added for CZAR
 		self.const = False
-		self.dictionary = dict
+		self.dictionary = {}
 		self.regCount = 0
+
 
 	# Adds child in the rightmost location
 	# Returns the new child

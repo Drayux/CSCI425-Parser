@@ -70,11 +70,11 @@ TODOS:
 - [ ] Frames ??? we are not doing functions
 - [X] registerNeeds() calculates the register needs for each node
 - [ ] treeCG as a basis for generating the instructions for each expression tree
-    - [ ] When LOADing global values, use their memory locations calculated in
+    - [X] When LOADing global values, use their memory locations calculated in
       dataSeg and stored with the identifier in the symbol table
-    - [ ] Handle assign nodes with STORE instructions
+    - [X] Handle assign nodes with STORE instructions
     - [ ] Handle immediate arithmetic operations ( + R3, R3, #x0f )
-    - [ ] Handle immediate LOADs such as LD R4,#2
+    - [X] Handle immediate LOADs such as LD R4,#2
 - [ ] imageData
     - [ ] DATA where global variables, const, and synthetic variables are stored
     - [ ] EXEC all program instructions
