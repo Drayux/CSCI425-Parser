@@ -31,7 +31,7 @@ TODOS:
 			- [X] This is the absolute number of general purpose and
 			  floatingpoint registers in the CPU. 
 			  	- Example input: 16,16 ; 8,5 
-			- [ ] Registers use integer notation, so first register will be
+			- [X] Registers use integer notation, so first register will be
 			  called R0
 			- [ ] GP and floating point values/registers are 4 bytes
 			- [ ] Instructions are 4 bytes
@@ -41,17 +41,17 @@ TODOS:
 			- [ ] Immediate integer values can be : [−16384,16383] 
 			- [ ] Immediate floating points can be : [0,1310.71] 
 				- FP only supports 2 decimal places worth of precision
-	- [ ] Argument 2
-		- [ ] Annotated AST
-			- [ ] File type will be of type .def
+	- [X] Argument 2
+		- [X] Annotated AST
+			- [X] File type will be of type .def
 				- Example: [program.def]
-			- [ ] Will be read into out ParseTree object
+			- [X] Will be read into out ParseTree object
 				- there will be no logic/syntax/semantic errors.
-			- [ ] Read in the node values
-				- [ ] parent or leaf
-				- [ ] node type, prefixed with :
-				- [ ] a value, prefixed with : LEAVES ONLY 
-				- [ ] attributes in key:value format
+			- [X] Read in the node values
+				- [X] parent or leaf
+				- [X] node type, prefixed with :
+				- [X] a value, prefixed with : LEAVES ONLY 
+				- [X] attributes in key:value format
 	- [ ] Argument 3
 		- [ ] The output file with the assembly language
 

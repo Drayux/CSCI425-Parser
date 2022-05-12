@@ -1,7 +1,7 @@
 import sys
 
 import ParseTree
-from ReadAST import ReadAST
+from ReadAST import ReadAst
 from SymbolTable import SymbolTable
 
 num_GP_Reg = 0
@@ -23,7 +23,7 @@ def main():
 		print(num_GP_Reg)
 
 		# Reading in the AST file into a ParseTree - Konch
-		root_AST: ParseTree = ReadAST(def_AST)
+		root_AST: ParseTree = ReadAst(def_AST)
 
 		# Create Symbol table object, pass in the AST - Chris
 		sym_Table = SymbolTable()

@@ -5,6 +5,9 @@ class ParseTree:
 		(self.line, self.col) = pos
 		self.parent = parent
 		self.children = []
+		# Below added for CZAR
+		self.const = False
+		self.dictionary = dict
 
 	# Adds child in the rightmost location
 	# Returns the new child
