@@ -112,6 +112,41 @@ class SymbolTable():
                         typ = "const " + typ
                     self.out.write(str(i) + "," + typ + "," + name + "\n")
 
+    def visit_pass(self, node):
+        IMM_MAX = 2047  # TODO: determine actual immediate bounds
+        #########################
+        # Declist Node
+        #########################
+        if node.data == "DECLLIST":
+            d_typ = remove_prefix(node.children[0], "type:")
+            d_const = False
+            d_init = False
+            if d_typ.startswith("const"): 
+                d_const = True
+                d_typ = d_typ.lstrip("const ")
+            if d_typ == "string":
+                d_const = True
+            for child in node.children[1:]:
+                dec_node = verify_node(child, "DECLID")
+                if dec_node.children[0].data == "=":
+                    eq_node = verify_node(dec_node.children[0], "=")
+                    d_id = remove_prefix(eq_node.children[0], "id:")
+                    self.visit_pass(eq_node.children[1])
+                    d_init = True
+                else:
+                    d_id = remove_prefix(dec_node.children[0], "id:")
+                self.EnterSymbol(d_id, SymbolAttributes(d_typ, d_const, d_init))
+            return
+        ###########################
+        # Int/Float Val
+        ###########################
+        if "val" in node.data:
+            data = 0    #TODO: get data from node
+            if data > IMM_MAX:
+                self.EnterSymbol("!0", SymbolAttributes("int", True, True))
+        for child in node.children:
+            self.visit_pass(child)
+
     def populate_from_ast(self, node):
         #print(f"populating from: {node.data}")
         #####################

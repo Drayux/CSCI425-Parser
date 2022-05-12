@@ -28,7 +28,7 @@ def main():
 
 		# Create Symbol table object, pass in the AST - Chris
 		sym_Table = SymbolTable()
-		sym_Table.populate_from_ast(root_AST)
+		sym_Table.visit_pass(root_AST)
 
 		# Take from the symbol table and make dataSegments for it,
 		# make a map of symbols and literals to the dataspace stored - Chris
@@ -49,6 +49,12 @@ def main():
 		imageInit(list_of_instructions_essential, next_dataSegment, czr_OutFile)
 
 
+def imageData(data_segment, output):
+    for var in self.map:
+        (pos, _) = self.map[var]
+        output.write(f"label @{pos} {var}")
+        if "val" in var:
+            output.write(f"data @{pos} *Unimplemented*")    # TODO: support initial values
 
 
 if __name__ == "__main__":
