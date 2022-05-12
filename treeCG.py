@@ -18,9 +18,13 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
     list_of_instructions_essentially = []
     instruction = ""
     r1 = regList_GP[0]
-    r2 = regList_GP[1]
+    r2 = None
+    if len(regList_GP) > 1:
+        r2 = regList_GP[1]
     f1 = regList_FP[0]
-    f2 = regList_FP[1]
+    f2 = None
+    if len(regList_FP) > 1:
+        f2 = regList_FP[1]
     rx1 = None
     rx2 = None
     keys = []
