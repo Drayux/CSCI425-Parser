@@ -92,3 +92,9 @@ TODOS:
       and emit statements.
           - this is all the treeCG generated instructions at global scope.
     - [ ] write a single return statement when done
+
+
+Questions I have:
+
+- fp numbers can be [0,1310.71], but cgldata has a floating point of #197483.00, what dis
+- some inputs have 4,4 for reg count, but instructions say 5 is the minimum number of regs

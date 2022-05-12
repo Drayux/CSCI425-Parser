@@ -42,7 +42,7 @@ def ReadAst(def_AST):
             elif node_Type == "intval":
                 node_Type = "intval:" + attributes[3][1:]
             elif node_Type == "floatval":
-                inty , decimaly = attributes[3].split("x2e")
+                inty, decimaly = attributes[3].split("x2e")
                 decimaly = decimaly[:2]
                 node_Type = "floatval" + inty + "." + decimaly
             elif node_Type.startswith("x"):
@@ -73,6 +73,5 @@ def ReadAst(def_AST):
             new_Node.const = const
             new_Node.dictionary = dict(res)
             addNodeToTree(placement.split("-")[1:], new_Node, root_AST)
-
 
     return root_AST

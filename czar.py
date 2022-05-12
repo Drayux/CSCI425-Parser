@@ -4,6 +4,7 @@ import ParseTree
 from ReadAST import ReadAst
 from SymbolTable import SymbolTable
 from DataSegment import DataSegment
+from treeCG import treeCG
 
 num_GP_Reg = 0
 num_FP_Reg = 0
@@ -21,10 +22,19 @@ def main():
 	with open(def_File, "r") as def_AST, open(czr_File, "w") as czr_OutFile:
 		# Read in the number of regs
 		num_GP_Reg, num_FP_Reg = num_Regs.split(",")
-		print(num_GP_Reg)
+		regList_GP = []
+		regList_FP = []
+		for i in range(int(num_GP_Reg)): regList_GP.append("R"+str(i))
+		for i in range(int(num_FP_Reg)): regList_FP.append("F"+str(i))
 
 		# Reading in the AST file into a ParseTree - Konch
 		root_AST: ParseTree = ReadAst(def_AST)
+
+		# Develop register needs - Konch
+		root_AST.registerNeeds()
+
+		# Using the register needs, develop - Konch
+		list_of_instructions_essential = treeCG(root_AST, num_GP_Reg, num_FP_Reg)
 
 		# Create Symbol table object, pass in the AST - Chris
 		sym_Table = SymbolTable()
@@ -34,11 +44,6 @@ def main():
 		# make a map of symbols and literals to the dataspace stored - Chris
 		data_Seg = DataSegment(sym_Table)
 
-		# Develop register needs - Konch
-		root_AST.registerNeeds()
-
-		# Using the register needs, develop - Konch
-		list_of_instructions_essential = treeCG(root_AST, num_GP_Reg, num_FP_Reg)
 
 		# Do Jumps for ec
 
