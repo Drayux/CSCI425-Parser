@@ -8,9 +8,6 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
     """
 
     list_of_instructions_essentially = []
-    list_of_instructions_essentially.append("test")
-    list_of_instructions_essentially.append("list")
-
     instruction = ""
     r1 = regList_GP[0]
     r2 = regList_GP[1]
@@ -53,7 +50,13 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
     elif root_AST.data.startswith("id:"):
         value = root_AST.data[3:]
         instruction = "load " + rx + ", @" + str(data_Seg.find_value(value))
-    elif "binary" in keys:
+    elif "op" in keys:
+        if root_AST.dictionary["op"] == "unary":
+            if root_AST.dictionary["unary"] == "minus":
+                instruction = treeCG(root_AST.children[0], regList_GP, regList_FP, data_Seg)
+                instruction.append("chs " + rx)
+                list_of_instructions_essentially.extend(instruction)
+                return list_of_instructions_essentially
         left = root_AST.children[0]
         right = root_AST.children[1]
         if left.regCount > right.regCount:
@@ -62,20 +65,23 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
         else:
             first = right
             second = left
-        if root_AST.dictionary["binary"] == "assign":
-            instruction = treeCG(root_AST.children[1], regList_GP, regList_FP, data_Seg)
+        if root_AST.data == "=":
+            instruction = treeCG(right, regList_GP, regList_FP, data_Seg)
             list_of_instructions_essentially.extend(instruction)
             value = left.data[3:]
             instruction = "store " + rx + ", @" + str(data_Seg.find_value(value))
             list_of_instructions_essentially.append(instruction)
             return list_of_instructions_essentially
+    else:
+        for nodeChild in root_AST.children:
+            instruction = treeCG(nodeChild, regList_GP, regList_FP, data_Seg)
+            if instruction != "":
+                list_of_instructions_essentially.extend(instruction)
+        return list_of_instructions_essentially
 
-    list_of_instructions_essentially.append(instruction)
+    if instruction != "":
+        list_of_instructions_essentially.append(instruction)
 
     return list_of_instructions_essentially
 
 
-if __name__ == "__main__":
-    nodey = ParseTree("id:100.00", None)
-    nodey.dictionary.update({"type": "int"})
-    treeCG(nodey, ["R1", "R2"], ["F1", "F2"], None)
