@@ -3,6 +3,7 @@ import sys
 import ParseTree
 from ReadAST import ReadAST
 from SymbolTable import SymbolTable
+from DataSegment import DataSegment
 
 num_GP_Reg = 0
 num_FP_Reg = 0
@@ -31,7 +32,7 @@ def main():
 
 		# Take from the symbol table and make dataSegments for it,
 		# make a map of symbols and literals to the dataspace stored - Chris
-		data_Seg = dataSeg(sym_Table)
+		data_Seg = DataSegment(sym_Table)
 
 		# Develop register needs - Konch
 		root_AST.registerNeeds()
