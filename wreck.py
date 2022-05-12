@@ -70,7 +70,6 @@ def CompileRegex(regex, language):
 	# 3. convert to AST
 	# 4. generate L and T tables
 
-# -- TODO -- #
 
 	# 5. Change L an T table into an NFA file
 	#print("...")
@@ -93,7 +92,6 @@ def main():
 		basicLanguageList.sort()
 
 		# Determine the lambda character
-		# POTENTIAL TODO: Wraparound does not check
 		charVal = ord(basicLanguageList[-1]) + 1
 		hexVal = hex(charVal % 256)[2:]
 		lambdaStr = f"x{'0' if len(hexVal) < 2 else ''}{hexVal}"

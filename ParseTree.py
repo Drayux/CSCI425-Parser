@@ -8,6 +8,7 @@ class ParseTree:
 		# Below added for CZAR
 		self.const = False
 		self.dictionary = dict
+		self.regCount = 0
 
 	# Adds child in the rightmost location
 	# Returns the new child
@@ -94,6 +95,25 @@ class ParseTree:
 	# Not the prettiest output but good enough for testing
 	def __str__(self):
 		return f"ROOT: {self.data}\n" + self.output("RT")
+
+	def registerNeeds(self):
+		"""Used in CZAR, calculates the number of registers required to complete a task """
+		data = self.data
+
+		for childNode in self.children:
+			numregs = childNode.registerNeeds()
+			if self.regCount == numregs:
+				self.regCount += 1
+			elif self.regCount < numregs:
+				self.regCount = numregs
+
+		if data.startswith("id:") or \
+			data.startswith("intval:") or\
+			data.startswith("floatval:"):
+			self.regCount = 1
+
+		return self.regCount
+
 
 # Some tree output debugging code
 if __name__ == "__main__":
