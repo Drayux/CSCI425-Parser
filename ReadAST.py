@@ -56,7 +56,7 @@ def ReadAst(def_AST):
                 continue
 
             for attribute in attributes[x:]:
-                print(attribute)
+                #print(attribute)
 
                 if attribute.startswith("type:"):
                     node_Type = attribute
