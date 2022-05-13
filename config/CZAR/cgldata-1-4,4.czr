@@ -10,7 +10,7 @@ init @5w
 load R2, @1w
 store R2, @0w
 load F2, @3w
-chs F2
+chs F2, F2
 store F2, @2w
 load F2, @4w
 load F3, @2w

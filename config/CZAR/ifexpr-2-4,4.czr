@@ -7,8 +7,9 @@ load R2, @0w
 load R3, #3
 + R2, R3, R2
 store R2, @1w
-load R2, @0w
 load R2, @1w
+load R3, @0w
+> R2, R3, R2
 ifz R2, @3i(pc)
 load R2, @0w
 emit R2

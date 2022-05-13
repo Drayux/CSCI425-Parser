@@ -8,9 +8,10 @@ load R2, #1
 store R2, @0w
 load R2, #2
 store R2, @1w
-load R2, @0w
 load R2, @1w
-ifz R2, @13i(pc)
+load R3, @0w
+> R2, R3, R2
+ifz R2, @14i(pc)
 load R2, #6
 store R2, @2w
 load R2, @1w
@@ -18,12 +19,13 @@ load R2, @1w
 store R2, @3w
 load R2, #8
 store R2, @4w
-load R2, @4w
 load R2, @3w
+load R3, @4w
+> R2, R3, R2
 ifz R2, @2i(pc)
 load R2, @2w
 emit R2
-jump @13i(pc)
+jump @14i(pc)
 load R2, #4
 store R2, @2w
 load R2, #5
@@ -32,6 +34,7 @@ load R2, @0w
 + R2, R2, #9
 store R2, @4w
 load R2, @4w
+< R2, R2, #0
 ifz R2, @2i(pc)
 load R2, @3w
 emit R2
