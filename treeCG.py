@@ -53,13 +53,13 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
 
     if root_AST.data.startswith("intval:"):
         value = root_AST.data[7:]
-        instruction = "load " + r1 + ", #" + value + "w"
+        instruction = "load " + r1 + ", #" + value
         tooBigForLoadImmediate = not (intMin <= int(value) <= intMax)
         if tooBigForLoadImmediate or data_Seg.find_value(int(value)) is not None:
             instruction = "load " + r1 + ", @" + str(data_Seg.find_value(int(value))) + "w"
     elif root_AST.data.startswith("floatval:"):
         value = root_AST.data[9:]
-        instruction = "load " + f1 + ", #" + value + "w"
+        instruction = "load " + f1 + ", #" + value
         tooBigForLoadImmediate = not (floatMin <= float(value) <= floatMax)
         if tooBigForLoadImmediate or data_Seg.find_value(float(value)) is not None:
             instruction = "load " + f1 + ", @" + str(data_Seg.find_value(float(value))) + "w"
@@ -79,7 +79,7 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
         if root_AST.dictionary["op"] == "unary":
             if root_AST.dictionary["unary"] == "minus":
                 instruction = treeCG(root_AST.children[0], regList_GP, regList_FP, data_Seg)
-                instruction.append("chs " + rx1)
+                instruction.append("chs " + rx1 + ", " + rx1)
                 list_of_instructions_essentially.extend(instruction)
                 return list_of_instructions_essentially
         left = root_AST.children[0]
