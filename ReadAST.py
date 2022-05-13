@@ -46,6 +46,8 @@ def ReadAst(def_AST):
                 floaty = (float(inty[1:] + "." + decimaly))
                 floaty = round(floaty, 2)
                 node_Type = "floatval:" + str(floaty)
+            elif node_Type == "stringval":
+                node_Type = "stringval:" + Util.SubstituteHex(attributes[3][1:])
             elif node_Type.startswith("x"):
                 node_Type = Util.SubstituteHex(node_Type)
             else:

@@ -63,6 +63,9 @@ def treeCG(root_AST: ParseTree, regList_GP, regList_FP, data_Seg: DataSegment):
         tooBigForLoadImmediate = not (floatMin <= float(value) <= floatMax)
         if tooBigForLoadImmediate or data_Seg.find_value(float(value)) is not None:
             instruction = "load " + f1 + ", @" + str(data_Seg.find_value(float(value))) + "w"
+    elif root_AST.data.startswith("stringval:"):
+        value = root_AST.data[10:]
+        instruction = "load " + r1 + ", #" + str(data_Seg.find_value(value) * 4)
     elif root_AST.data.startswith("id:"):
         value = root_AST.data[3:]
         instruction = "load " + rx1 + ", @" + str(data_Seg.map[value].pos) + "w"

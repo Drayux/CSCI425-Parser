@@ -35,6 +35,7 @@ class DataSegment():
         return None
  
     def visit_pass(self, node):
+        print(f"visiting node: {node.data}")
         IMM_MAX = 2047  # TODO: determine actual immediate bounds
         #########################
         # Declist Node
@@ -67,6 +68,13 @@ class DataSegment():
                 data = float(remove_prefix(node, "floatval:"))
                 self.map[f"!{self.counter}"] = Entry(f"!{self.counter}", self.size, data)
                 self.size += 1
+                self.counter += 1
+            elif node.data.startswith("stringval:"):
+                data = remove_prefix(node, "stringval:")
+                self.map[f"!{self.counter}"] = Entry(f"!{self.counter}", self.size, data)
+                self.size += int(len(data) / 4)
+                if len(data) % 4 != 0:
+                    self.size += 1
                 self.counter += 1
 
             

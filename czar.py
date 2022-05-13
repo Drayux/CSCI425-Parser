@@ -1,10 +1,12 @@
 import sys
 
 import ParseTree
+import Util
 from ReadAST import ReadAst
 from SymbolTable import SymbolTable
 from treeCG import treeCG
 from DataSegment import DataSegment, Entry
+
 
 num_GP_Reg = 0
 num_FP_Reg = 0
@@ -58,12 +60,15 @@ def imageData(data_segment, output):
         entry = data_segment.map[var]
         output.write(f"label @{entry.pos}w {entry.name}\n")
         if entry.value:
-            output.write(f"data @{entry.pos}w {entry.value}\n")    # TODO: support initial values
+            if isinstance(entry.value, str):
+                output.write(f"data @{entry.pos}w {Util.SubstituteHexInverse(entry.value)}\n")
+            else:
+                output.write(f"data @{entry.pos}w #{entry.value}\n")
 
 
 
 def imageInit(a, b, c):
-    init = len(b.map)
+    init = b.size
     c.write("init @" + str(init) + "w\n")
     for instruction in a:
         c.write(instruction+ "\n")
